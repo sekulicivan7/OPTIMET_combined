@@ -206,7 +206,7 @@ Vector<t_complex> source_vectorSH_K1ana_parallel(Geometry &geometry,
   t_uint const pMax = nMaxS * (nMaxS + 2);
 
   int TMax = nobj * pMax;
-
+  std::cout<<TMax<<std::endl;
   Vector<t_complex> result, resultK, resultKK, result3, result1;
   Vector<t_complex> X_int_proc;
 

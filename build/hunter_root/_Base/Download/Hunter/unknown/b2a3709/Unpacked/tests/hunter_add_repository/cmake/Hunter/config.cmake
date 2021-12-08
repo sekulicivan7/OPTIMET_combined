@@ -1,1 +1,0 @@
-hunter_config(FlakeyBlamey VERSION "3.2.4" REPOSITORY_NAME fakey REPOSITORY_VERSION 0.0.1)

@@ -1,4 +1,0 @@
-/home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/rebuild_cache.dir
-/home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/edit_cache.dir
-/home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/Optimet3D.dir
-/home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/optilib.dir
