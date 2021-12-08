@@ -33,7 +33,7 @@ void MatrixBelos::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_,Vec
     int N = nMaxS * (nMaxS + 2);
     int nobj = geometry->objects.size();
     double tol = 1e-6;
-    int maxit = 520;
+    int maxit = 340;
     Vector<t_complex> Q;
 
     if (geometry->ACA_cond_){

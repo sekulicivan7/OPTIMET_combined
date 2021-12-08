@@ -1,0 +1,8 @@
+[ 94%] Built target optilib
+[100%] Built target Optimet3D
+The size of the FF scattering matrix in MB is122667
+The size of the SH scattering matrix in MB is152324
+GMRES converged at iteration	340
+The relative residual is	0.113241
+GMRES converged at iteration	142
+The relative residual is	9.5213e-07

@@ -55,7 +55,7 @@ void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vect
                       Vector<t_complex> &X_int_SH, std::vector<double *> CGcoeff) const {
  
     double tol = 1e-6;
-    int maxit = 520;
+    int maxit = 340;
     Vector<t_complex> Q;
     
     if (geometry->ACA_cond_){

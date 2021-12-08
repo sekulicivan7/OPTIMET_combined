@@ -49,7 +49,7 @@ public:
     // fundamental frequency
 
     double tol = 1e-6;
-    int maxit = 520;
+    int maxit = 1000;
 
     if (geometry->ACA_cond_)
     X_sca_ = Gmres_Zcomp(S_comp_FF, Q, tol, maxit, *geometry);

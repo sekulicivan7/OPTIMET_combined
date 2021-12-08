@@ -1,5 +1,5 @@
 <simulation>
-  <harmonics nmax="2"/>
+  <harmonics nmax="5"/>
 <ACA compression="yes" />
 </simulation>
 <source type="planewave">

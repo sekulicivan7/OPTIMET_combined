@@ -21,6 +21,7 @@
 #include <iostream>
 #include <chrono>
 #include <Eigen/Dense>
+#include <Eigen/Sparse>
 using namespace std::chrono;
 
 namespace optimet {
@@ -537,6 +538,7 @@ preconditioned_scattering_matrix(std::vector<Scatterer>::const_iterator const &f
 
     
       if(iteri == iterj) {
+        
         result.block(x, y, 2 * n, 2 * n) = Matrix<t_complex>::Identity(2 * n, 2 * n);
 
         
@@ -548,7 +550,7 @@ preconditioned_scattering_matrix(std::vector<Scatterer>::const_iterator const &f
         result.block(x + n, y + n, n, n) = AB.diagonal.transpose();
         result.block(x, y + n, n, n) = AB.offdiagonal.transpose();
         result.block(x + n, y, n, n) = AB.offdiagonal.transpose();
-        result.block(x, y, 2 * n, 2 * n) = (-Tmatrix) * result.block(x, y, 2 * n, 2 * n);
+        result.block(x, y, 2 * n, 2 * n) = -(Tmatrix)*result.block(x, y, 2 * n, 2 * n);
         
   
     }
@@ -567,14 +569,14 @@ void Scattering_matrix_ACA_FF_parallel(Geometry const &geometry, std::shared_ptr
   auto const n = nMax * (nMax + 2);
   Matrix<t_complex> Tmatrix (2*n , 2*n), U, V;
   Matrix<t_complex> CoupSubm (2*n, 2*n);
-  double distance;
+  double distance, sizeMAT(0.0);
   int nobj = geometry.objects.size();
   
   mpi::Communicator communicator;
   int rank = communicator.rank();
   int size = communicator.size();
   int gran1, gran2, Ncp_proc;
-  Vector<int> sizeMAT_vec(size);
+  Vector<double> sizeMAT_vec(size);
   
   if (rank < (nobj % size)) {
     gran1 = rank * (nobj/size + 1);
@@ -587,7 +589,7 @@ void Scattering_matrix_ACA_FF_parallel(Geometry const &geometry, std::shared_ptr
    Ncp_proc = nobj*(gran2 - gran1);
    S_comp.resize(Ncp_proc);
    
-   int brojac(0), sizeMAT(0);
+   int brojac(0);
    
  
   for(int ii = gran1; ii < gran2; ++ii) {
@@ -598,9 +600,80 @@ void Scattering_matrix_ACA_FF_parallel(Geometry const &geometry, std::shared_ptr
        
     
       if(ii == jj) {
+        
         S_comp[brojac].S_sub= Matrix<t_complex>::Identity(2 * n, 2 * n);
         S_comp[brojac].dim = 2 * n;
-        sizeMAT = sizeMAT + (S_comp[brojac].S_sub.size())*16;
+        sizeMAT = sizeMAT + (S_comp[brojac].S_sub.size())*(16.0/1e6);
+        
+      } else {
+      
+        distance = Tools::findDistance(geometry.objects[ii].vR, geometry.objects[jj].vR);
+      
+        Coupling const AB(geometry.objects[ii].vR - geometry.objects[jj].vR, incWave->waveK, nMax);
+        
+        CoupSubm.block(0, 0, n, n) = AB.diagonal.transpose();
+        CoupSubm.block(n, n, n, n) = AB.diagonal.transpose();
+        CoupSubm.block(0, n, n, n) = AB.offdiagonal.transpose();
+        CoupSubm.block(n, 0, n, n) = AB.offdiagonal.transpose();
+        CoupSubm = - Tmatrix * CoupSubm;
+        
+
+        if (distance >= 4.0*(geometry.objects[ii].radius + geometry.objects[jj].radius)){ //admissibility criterion for ACA
+        
+        ACA_compression(U , V, CoupSubm);
+        
+        S_comp[brojac].U = U;
+        S_comp[brojac].V = V;
+        S_comp[brojac].dim = 2 * n;
+        sizeMAT = sizeMAT + (S_comp[brojac].U.size())*(16.0/1e6) + (S_comp[brojac].V.size())*(16.0/1e6); 
+        }
+        
+        else{
+        S_comp[brojac].S_sub =  CoupSubm;
+        S_comp[brojac].dim = 2 * n;
+        sizeMAT = sizeMAT + (S_comp[brojac].S_sub.size())*(16.0/1e6);
+        } 
+        
+
+   }
+
+  brojac++;
+  } 
+
+ }
+// sum all the partial sizes of matrices
+MPI_Gather(&sizeMAT, 1, MPI_DOUBLE, &sizeMAT_vec(0), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+if(rank==0)
+std::cout<<"The size of the FF scattering matrix in MB is"<< sizeMAT_vec.sum()<<std::endl;
+ 
+}
+
+void Scattering_matrix_ACA_FF(Geometry const &geometry, std::shared_ptr<Excitation const> incWave, std::vector<Matrix_ACA> &S_comp){
+
+ 
+  auto const nMax = geometry.objects[0].nMax;
+  auto const n = nMax * (nMax + 2);
+  Matrix<t_complex> Tmatrix (2*n , 2*n), U, V;
+  Matrix<t_complex> CoupSubm (2*n, 2*n);
+  double distance, sizeMAT(0.0);
+  int nobj = geometry.objects.size();
+  S_comp.resize(nobj*nobj);
+  
+  
+ 
+  for(int ii = 0; ii != nobj; ++ii) {
+      
+     geometry.objects[ii].getTLocal(Tmatrix, incWave->omega(), geometry.bground);
+     
+    
+    for(int jj = 0; jj != nobj; ++jj) {
+
+    
+      if(ii == jj) {
+        S_comp[nobj*ii + jj].S_sub= Matrix<t_complex>::Identity(2 * n, 2 * n);
+        S_comp[nobj*ii + jj].dim = 2 * n;
+        sizeMAT = sizeMAT + (S_comp[ii*nobj + jj].S_sub.size())*(16.0/1e6);
         
       } else {
       
@@ -619,86 +692,16 @@ void Scattering_matrix_ACA_FF_parallel(Geometry const &geometry, std::shared_ptr
         
         ACA_compression(U , V, CoupSubm);
         
-        S_comp[brojac].U = U;
-        S_comp[brojac].V = V;
-        S_comp[brojac].dim = 2 * n;
-        sizeMAT = sizeMAT + (S_comp[brojac].U.size())*16 + (S_comp[brojac].V.size())*16; 
-        }
-        
-        else{
-        S_comp[brojac].S_sub =  CoupSubm;
-        S_comp[brojac].dim = 2 * n;
-        sizeMAT = sizeMAT + (S_comp[brojac].S_sub.size())*16;
-        } 
-        
-
-   }
-
-  brojac++;
-  } 
-
- }
-// sum all the partial sizes of matrices
-MPI_Gather(&sizeMAT, 1, MPI_INT, &sizeMAT_vec(0), 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-if(rank==0)
-std::cout<<"The size of the FF scattering matrix in MB is"<< sizeMAT_vec.sum()/1e6<<std::endl;
- 
-}
-
-void Scattering_matrix_ACA_FF(Geometry const &geometry, std::shared_ptr<Excitation const> incWave, std::vector<Matrix_ACA> &S_comp){
-
- 
-  auto const nMax = geometry.objects[0].nMax;
-  auto const n = nMax * (nMax + 2);
-  Matrix<t_complex> Tmatrix (2*n , 2*n), U, V;
-  Matrix<t_complex> CoupSubm (2*n, 2*n);
-  double distance, rows, cols;
-  int nobj = geometry.objects.size();
-  S_comp.resize(nobj*nobj);
-  int sizeMAT(0);
-  
- 
-  for(int jj = 0; jj != nobj; ++jj) {
-      
-     geometry.objects[jj].getTLocal(Tmatrix, incWave->omega(), geometry.bground);
-     
-    
-    for(int ii = 0; ii != nobj; ++ii) {
-
-    
-      if(ii == jj) {
-        S_comp[nobj*ii + jj].S_sub= Matrix<t_complex>::Identity(2 * n, 2 * n);
-        S_comp[nobj*ii + jj].dim = 2 * n;
-        sizeMAT = sizeMAT + (S_comp[ii*nobj + jj].S_sub.size())*16;
-        
-      } else {
-      
-        distance = Tools::findDistance(geometry.objects[ii].vR, geometry.objects[jj].vR);
-      
-        Coupling const AB(geometry.objects[ii].vR - geometry.objects[jj].vR, incWave->waveK, nMax);
-        
-        CoupSubm.block(0, 0, n, n) = AB.diagonal.transpose();
-        CoupSubm.block(n, n, n, n) = AB.diagonal.transpose();
-        CoupSubm.block(0, n, n, n) = AB.offdiagonal.transpose();
-        CoupSubm.block(n, 0, n, n) = AB.offdiagonal.transpose();
-        CoupSubm = - CoupSubm * (Tmatrix);
-        
-
-        if (distance >= 2.0*(geometry.objects[ii].radius + geometry.objects[jj].radius)){ //admissibility criterion for ACA
-        
-        ACA_compression(U , V, CoupSubm);
-        
         S_comp[nobj*ii + jj].U = U;
         S_comp[nobj*ii + jj].V = V;
         S_comp[nobj*ii + jj].dim = 2 * n; 
-        sizeMAT = sizeMAT + (S_comp[ii*nobj + jj].U.size())*16 + (S_comp[ii*nobj + jj].V.size())*16;
+        sizeMAT = sizeMAT + (S_comp[ii*nobj + jj].U.size())*(16.0/1e6) + (S_comp[ii*nobj + jj].V.size())*(16.0/1e6);
         }
         
         else{
         S_comp[nobj*ii + jj].S_sub =  CoupSubm; 
         S_comp[nobj*ii + jj].dim = 2 * n;
-        sizeMAT = sizeMAT + (S_comp[ii*nobj + jj].S_sub.size())*16;
+        sizeMAT = sizeMAT + (S_comp[ii*nobj + jj].S_sub.size())*(16.0/1e6);
         }
         
 
@@ -708,7 +711,7 @@ void Scattering_matrix_ACA_FF(Geometry const &geometry, std::shared_ptr<Excitati
   
         }
         
-  std::cout<<"The size of the FF matrix in MB is"  << sizeMAT/1e6<< std::endl;      
+  std::cout<<"The size of the FF matrix in MB is"  <<sizeMAT<< std::endl;      
   
 }
 
@@ -819,14 +822,14 @@ void Scattering_matrix_ACA_SH_parallel(Geometry const &geometry, std::shared_ptr
   auto const n = nMaxS * (nMaxS + 2);
   Matrix<t_complex> TmatrixSH (2*n , 2*n), U, V;
   Matrix<t_complex> CoupSubmSH (2*n, 2*n);
-  double distance, rows, cols;
+  double distance, sizeMAT(0.0);
   int nobj = geometry.objects.size();
 
   mpi::Communicator communicator;
   int rank = communicator.rank();
   int size = communicator.size();
   int gran1, gran2, Ncp_proc;
-  Vector<int> sizeMAT_vec(size);
+  Vector<double> sizeMAT_vec(size);
 
   if (rank < (nobj % size)) {
     gran1 = rank * (nobj/size + 1);
@@ -838,7 +841,7 @@ void Scattering_matrix_ACA_SH_parallel(Geometry const &geometry, std::shared_ptr
 
    Ncp_proc = nobj*(gran2 - gran1);
    S_comp.resize(Ncp_proc);
-   int brojac(0), sizeMAT(0);
+   int brojac(0);
   
  
   for(int ii = gran1; ii < gran2; ++ii) {
@@ -852,7 +855,7 @@ void Scattering_matrix_ACA_SH_parallel(Geometry const &geometry, std::shared_ptr
       if(ii == jj) {
         S_comp[brojac].S_sub= Matrix<t_complex>::Identity(2 * n, 2 * n);
         S_comp[brojac].dim = 2 * n;
-        sizeMAT = sizeMAT + (S_comp[brojac].S_sub.size())*16;
+        sizeMAT = sizeMAT + (S_comp[brojac].S_sub.size())*(16.0/1e6);
         
       } else {
       
@@ -874,14 +877,14 @@ void Scattering_matrix_ACA_SH_parallel(Geometry const &geometry, std::shared_ptr
         S_comp[brojac].U = U;
         S_comp[brojac].V = V;
         S_comp[brojac].dim = 2 * n;
-        sizeMAT = sizeMAT + (S_comp[brojac].U.size())*16 + (S_comp[brojac].V.size())*16;
+        sizeMAT = sizeMAT + (S_comp[brojac].U.size())*(16.0/1e6) + (S_comp[brojac].V.size())*(16.0/1e6);
          
         }
         
         else{
         S_comp[brojac].S_sub =  CoupSubmSH;
         S_comp[brojac].dim = 2 * n;
-        sizeMAT = sizeMAT + (S_comp[brojac].S_sub.size())*16;   
+        sizeMAT = sizeMAT + (S_comp[brojac].S_sub.size())*(16.0/1e6);   
         } 
         
 
@@ -891,10 +894,10 @@ void Scattering_matrix_ACA_SH_parallel(Geometry const &geometry, std::shared_ptr
   
  }
 
-MPI_Gather(&sizeMAT, 1, MPI_INT, &sizeMAT_vec(0), 1, MPI_INT, 0, MPI_COMM_WORLD);
+MPI_Gather(&sizeMAT, 1, MPI_DOUBLE, &sizeMAT_vec(0), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
 if(rank==0)
-std::cout<<"The size of the SH scattering matrix in MB is"<< sizeMAT_vec.sum()/1e6<<std::endl;
+std::cout<<"The size of the SH scattering matrix in MB is"<<sizeMAT_vec.sum()<<std::endl;
   
 }
 
@@ -904,10 +907,10 @@ void Scattering_matrix_ACA_SH(Geometry const &geometry, std::shared_ptr<Excitati
   auto const n = nMaxS * (nMaxS + 2);
   Matrix<t_complex> TmatrixSH (2*n , 2*n), U, V;
   Matrix<t_complex> CoupSubmSH (2*n, 2*n);
-  double distance, rows, cols;
+  double distance, sizeMAT(0.0);
   int nobj = geometry.objects.size();
   S_comp.resize(nobj*nobj);
-  int sizeMAT(0);
+  
  
   for(int ii = 0; ii != nobj; ++ii) {
       
@@ -920,7 +923,7 @@ void Scattering_matrix_ACA_SH(Geometry const &geometry, std::shared_ptr<Excitati
       if(ii == jj) {
         S_comp[nobj*ii + jj].S_sub= Matrix<t_complex>::Identity(2 * n, 2 * n);
         S_comp[nobj*ii + jj].dim = 2 * n;
-        sizeMAT = sizeMAT + (S_comp[ii*nobj + jj].S_sub.size())*16;
+        sizeMAT = sizeMAT + (S_comp[ii*nobj + jj].S_sub.size())*(16.0/1e6);
         
       } else {
       
@@ -935,20 +938,20 @@ void Scattering_matrix_ACA_SH(Geometry const &geometry, std::shared_ptr<Excitati
         CoupSubmSH = - (TmatrixSH) * CoupSubmSH;
         
 
-        if (distance >= 2.0*(geometry.objects[ii].radius + geometry.objects[jj].radius)){ //admissibility criterion for ACA
+        if (distance >= 4.0*(geometry.objects[ii].radius + geometry.objects[jj].radius)){ //admissibility criterion for ACA
 
         ACA_compression(U , V, CoupSubmSH);
         
         S_comp[nobj*ii + jj].U = U;
         S_comp[nobj*ii + jj].V = V;
         S_comp[nobj*ii + jj].dim = 2 * n;
-        sizeMAT = sizeMAT + (S_comp[ii*nobj + jj].U.size())*16 + (S_comp[ii*nobj + jj].V.size())*16;
+        sizeMAT = sizeMAT + (S_comp[ii*nobj + jj].U.size())*(16.0/1e6) + (S_comp[ii*nobj + jj].V.size())*(16.0/1e6);
         }
         
         else{
         S_comp[nobj*ii + jj].S_sub =  CoupSubmSH; 
         S_comp[nobj*ii + jj].dim = 2 * n;
-        sizeMAT = sizeMAT + (S_comp[ii*nobj + jj].S_sub.size())*16;
+        sizeMAT = sizeMAT + (S_comp[ii*nobj + jj].S_sub.size())*(16.0/1e6);
         }
 
     }
@@ -957,7 +960,7 @@ void Scattering_matrix_ACA_SH(Geometry const &geometry, std::shared_ptr<Excitati
   
         }
         
- std::cout<<"The size of the SH matrix in MB is"  << sizeMAT/1e6<< std::endl;         
+ std::cout<<"The size of the SH matrix in MB is"  << sizeMAT<< std::endl;         
 }
 
 
@@ -1093,26 +1096,30 @@ return imax;
 
 // gmres solver for compressed matrices, compressed blocks are always square, with number of rows kmax
 Vector<t_complex> Gmres_Zcomp(std::vector<Matrix_ACA>const &S_comp, Vector<t_complex>const &Y, double tol, int maxit, Geometry const &geometry){
-int N = Y.size(); // right hand side
 
+int N = Y.size(); // right hand side
 int n = 0;
+mpi::Communicator communicator;
+int rank = communicator.rank();
 Vector<t_complex> x0 = Vector<t_complex>::Zero(N);
-Vector<t_complex> vn , w , vt , gi(2), gipom, ym ,x;
+Vector<t_complex> vn(N) , w(N) , vt(N) , gi(2), gipom, ym, x;
 Vector<t_complex> xn = Vector<t_complex>::Zero(N);
 Vector<double> err(1);
 
-Matrix<t_complex> v = Matrix<t_complex>::Zero(N , maxit+1);
+Eigen::SparseMatrix<t_complex, Eigen::ColMajor> v(N , maxit+1);
+Eigen::SparseVector<t_complex> Y_sps(N), w_sps(N);
 Matrix<t_complex> H = Matrix<t_complex>::Zero(maxit + 1 , maxit);
 Matrix<t_complex> Rigi(2,2) , Ri(2 , 1), Ripom;
 
 double beta = Y.norm();
-v.col(0) = Y / beta ;
+Y_sps = Y.sparseView();
+v.col(0) = Y_sps / beta ;
 double abs_y = Y.norm();
 err(0) = 1.0 ; 
 
 while ((n < (maxit)) && (err(n) > tol)){
 
-vn = v.col(n);
+vn= v.col(n);
 
 #ifdef OPTIMET_MPI
 w = matvec_parallel(S_comp , vn, geometry);// matrix-vector product for compressed matrices
@@ -1127,7 +1134,8 @@ w = w - H(t , n) * vt;
 }
 
 H(n+1 , n) = w.norm();
-v.col(n+1) = w / H(n+1,n);
+w_sps = w.sparseView();
+v.col(n+1) = w_sps / H(n+1,n);
  
 if(n>0)
 Rigi.conservativeResize(n+2 , n+2);
@@ -1155,9 +1163,15 @@ gipom = gi.segment(0 , n);
 ym = Ripom.colPivHouseholderQr().solve(gipom);
 x = Vector<t_complex>::Zero(N);
 for (int j = 0; j != ym.size(); ++j) {
-x = x + ym(j) * v.col(j);
+vn =v.col(j);
+x = x + ym(j) * vn;
 }
 x = x + x0;
+if(rank==0){
+std::cout<<"GMRES converged at iteration"<<'\t'<<n<<std::endl;
+std::cout<<"The relative residual is"<<'\t'<<err(n)<<std::endl;
+}
+
 }
 else
 x = xn;

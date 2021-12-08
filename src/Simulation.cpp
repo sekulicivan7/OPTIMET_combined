@@ -413,7 +413,7 @@ void Simulation::scan_wavelengths(Run &run, std::shared_ptr<solver::AbstractSolv
   Result result(run.geometry, run.excitation);
    
   solver->solve(result.scatter_coef, result.internal_coef, result.scatter_coef_SH, result.internal_coef_SH, CLGcoeff);
-
+ 
       if (size <= NO) {  // if the number of processes is less or eq numb of part
 
     if (rank < (NO % size)) {
