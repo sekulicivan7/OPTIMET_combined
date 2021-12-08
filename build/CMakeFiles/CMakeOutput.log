@@ -1,0 +1,606 @@
+The system is: Linux - 3.10.0-1127.el7.x86_64 - x86_64
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: /shared/ucl/apps/gcc/4.9.2/bin/g++ 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+
+The CXX compiler identification is GNU, found in "/home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/3.13.3/CompilerIdCXX/a.out"
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /shared/ucl/apps/gcc/4.9.2/bin/gcc 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+
+The C compiler identification is GNU, found in "/home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/3.13.3/CompilerIdC/a.out"
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_88ffa/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_88ffa.dir/build.make CMakeFiles/cmTC_88ffa.dir/build
+gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_88ffa.dir/testCXXCompiler.cxx.o
+/shared/ucl/apps/gcc/4.9.2/bin/g++     -o CMakeFiles/cmTC_88ffa.dir/testCXXCompiler.cxx.o -c /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTC_88ffa
+/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_88ffa.dir/link.txt --verbose=1
+/shared/ucl/apps/gcc/4.9.2/bin/g++       -rdynamic CMakeFiles/cmTC_88ffa.dir/testCXXCompiler.cxx.o  -o cmTC_88ffa 
+gmake[1]: Leaving directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_dae9f/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_dae9f.dir/build.make CMakeFiles/cmTC_dae9f.dir/build
+gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_dae9f.dir/CMakeCXXCompilerABI.cpp.o
+/shared/ucl/apps/gcc/4.9.2/bin/g++     -o CMakeFiles/cmTC_dae9f.dir/CMakeCXXCompilerABI.cpp.o -c /lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/share/cmake-3.13/Modules/CMakeCXXCompilerABI.cpp
+Linking CXX executable cmTC_dae9f
+/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_dae9f.dir/link.txt --verbose=1
+/shared/ucl/apps/gcc/4.9.2/bin/g++      -v -rdynamic CMakeFiles/cmTC_dae9f.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_dae9f 
+Using built-in specs.
+COLLECT_GCC=/shared/ucl/apps/gcc/4.9.2/bin/g++
+COLLECT_LTO_WRAPPER=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/lto-wrapper
+Target: x86_64-unknown-linux-gnu
+Configured with: ../gcc-4.9.2/configure --prefix=/shared/ucl/apps/gcc/4.9.2 --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-libgcj-multifile --enable-languages=c,c++,fortran,java,lto,objc --with-cpu=corei7 --disable-multilib
+Thread model: posix
+gcc version 4.9.2 (GCC) 
+COMPILER_PATH=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/
+LIBRARY_PATH=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/:/shared/ucl/apps/gcc/4.9.2/lib/../lib64/:/shared/ucl/apps/gcc/4.9.2/lib64/../lib64/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib/:/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib/:/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib/:/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib/:/shared/ucl/apps/gsl/1.16/gcc/lib/:/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib/:/shared/ucl/apps/apr-util/1.6.1/lib/:/shared/ucl/apps/apr/1.7.0/lib/:/shared/ucl/apps/gcc/4.9.2/lib/:/shared/ucl/apps/gcc/4.9.2/lib64/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_dae9f' '-shared-libgcc' '-mtune=corei7' '-march=x86-64'
+ /lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/collect2 -plugin /lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/liblto_plugin.so -plugin-opt=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/lto-wrapper -plugin-opt=-fresolution=/tmp/ccEocntc.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_dae9f /lib/../lib64/crt1.o /lib/../lib64/crti.o /lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtbegin.o -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2 -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc -L/shared/ucl/apps/gcc/4.9.2/lib/../lib64 -L/shared/ucl/apps/gcc/4.9.2/lib64/../lib64 -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib -L/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib -L/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib -L/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib -L/shared/ucl/apps/gsl/1.16/gcc/lib -L/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib -L/shared/ucl/apps/apr-util/1.6.1/lib -L/shared/ucl/apps/apr/1.7.0/lib -L/shared/ucl/apps/gcc/4.9.2/lib -L/shared/ucl/apps/gcc/4.9.2/lib64 -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../.. CMakeFiles/cmTC_dae9f.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtend.o /lib/../lib64/crtn.o
+gmake[1]: Leaving directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+
+
+Parsed CXX implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/bin/gmake" "cmTC_dae9f/fast"]
+  ignore line: [/usr/bin/gmake -f CMakeFiles/cmTC_dae9f.dir/build.make CMakeFiles/cmTC_dae9f.dir/build]
+  ignore line: [gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp']
+  ignore line: [Building CXX object CMakeFiles/cmTC_dae9f.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/shared/ucl/apps/gcc/4.9.2/bin/g++     -o CMakeFiles/cmTC_dae9f.dir/CMakeCXXCompilerABI.cpp.o -c /lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/share/cmake-3.13/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Linking CXX executable cmTC_dae9f]
+  ignore line: [/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_dae9f.dir/link.txt --verbose=1]
+  ignore line: [/shared/ucl/apps/gcc/4.9.2/bin/g++      -v -rdynamic CMakeFiles/cmTC_dae9f.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_dae9f ]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/shared/ucl/apps/gcc/4.9.2/bin/g++]
+  ignore line: [COLLECT_LTO_WRAPPER=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/lto-wrapper]
+  ignore line: [Target: x86_64-unknown-linux-gnu]
+  ignore line: [Configured with: ../gcc-4.9.2/configure --prefix=/shared/ucl/apps/gcc/4.9.2 --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-libgcj-multifile --enable-languages=c,c++,fortran,java,lto,objc --with-cpu=corei7 --disable-multilib]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 4.9.2 (GCC) ]
+  ignore line: [COMPILER_PATH=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/]
+  ignore line: [LIBRARY_PATH=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/:/shared/ucl/apps/gcc/4.9.2/lib/../lib64/:/shared/ucl/apps/gcc/4.9.2/lib64/../lib64/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib/:/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib/:/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib/:/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib/:/shared/ucl/apps/gsl/1.16/gcc/lib/:/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib/:/shared/ucl/apps/apr-util/1.6.1/lib/:/shared/ucl/apps/apr/1.7.0/lib/:/shared/ucl/apps/gcc/4.9.2/lib/:/shared/ucl/apps/gcc/4.9.2/lib64/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_dae9f' '-shared-libgcc' '-mtune=corei7' '-march=x86-64']
+  link line: [ /lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/collect2 -plugin /lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/liblto_plugin.so -plugin-opt=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/lto-wrapper -plugin-opt=-fresolution=/tmp/ccEocntc.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_dae9f /lib/../lib64/crt1.o /lib/../lib64/crti.o /lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtbegin.o -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2 -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc -L/shared/ucl/apps/gcc/4.9.2/lib/../lib64 -L/shared/ucl/apps/gcc/4.9.2/lib64/../lib64 -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib -L/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib -L/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib -L/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib -L/shared/ucl/apps/gsl/1.16/gcc/lib -L/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib -L/shared/ucl/apps/apr-util/1.6.1/lib -L/shared/ucl/apps/apr/1.7.0/lib -L/shared/ucl/apps/gcc/4.9.2/lib -L/shared/ucl/apps/gcc/4.9.2/lib64 -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../.. CMakeFiles/cmTC_dae9f.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtend.o /lib/../lib64/crtn.o]
+    arg [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccEocntc.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [-export-dynamic] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_dae9f] ==> ignore
+    arg [/lib/../lib64/crt1.o] ==> ignore
+    arg [/lib/../lib64/crti.o] ==> ignore
+    arg [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtbegin.o] ==> ignore
+    arg [-L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2] ==> dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2]
+    arg [-L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc] ==> dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc]
+    arg [-L/shared/ucl/apps/gcc/4.9.2/lib/../lib64] ==> dir [/shared/ucl/apps/gcc/4.9.2/lib/../lib64]
+    arg [-L/shared/ucl/apps/gcc/4.9.2/lib64/../lib64] ==> dir [/shared/ucl/apps/gcc/4.9.2/lib64/../lib64]
+    arg [-L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64] ==> dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64]
+    arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+    arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+    arg [-L/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib] ==> dir [/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib]
+    arg [-L/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib] ==> dir [/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib]
+    arg [-L/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib] ==> dir [/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib]
+    arg [-L/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib] ==> dir [/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib]
+    arg [-L/shared/ucl/apps/gsl/1.16/gcc/lib] ==> dir [/shared/ucl/apps/gsl/1.16/gcc/lib]
+    arg [-L/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib] ==> dir [/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib]
+    arg [-L/shared/ucl/apps/apr-util/1.6.1/lib] ==> dir [/shared/ucl/apps/apr-util/1.6.1/lib]
+    arg [-L/shared/ucl/apps/apr/1.7.0/lib] ==> dir [/shared/ucl/apps/apr/1.7.0/lib]
+    arg [-L/shared/ucl/apps/gcc/4.9.2/lib] ==> dir [/shared/ucl/apps/gcc/4.9.2/lib]
+    arg [-L/shared/ucl/apps/gcc/4.9.2/lib64] ==> dir [/shared/ucl/apps/gcc/4.9.2/lib64]
+    arg [-L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../..] ==> dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../..]
+    arg [CMakeFiles/cmTC_dae9f.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [-lstdc++] ==> lib [stdc++]
+    arg [-lm] ==> lib [m]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lc] ==> lib [c]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtend.o] ==> ignore
+    arg [/lib/../lib64/crtn.o] ==> ignore
+  collapse library dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2] ==> [/lustre/shared/ucl/apps/gcc/4.9.2/lib/gcc/x86_64-unknown-linux-gnu/4.9.2]
+  collapse library dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc] ==> [/lustre/shared/ucl/apps/gcc/4.9.2/lib/gcc]
+  collapse library dir [/shared/ucl/apps/gcc/4.9.2/lib/../lib64] ==> [/shared/ucl/apps/gcc/4.9.2/lib64]
+  collapse library dir [/shared/ucl/apps/gcc/4.9.2/lib64/../lib64] ==> [/shared/ucl/apps/gcc/4.9.2/lib64]
+  collapse library dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64] ==> [/lustre/shared/ucl/apps/gcc/4.9.2/lib64]
+  collapse library dir [/lib/../lib64] ==> [/lib64]
+  collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+  collapse library dir [/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib] ==> [/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib]
+  collapse library dir [/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib] ==> [/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib]
+  collapse library dir [/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib] ==> [/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib]
+  collapse library dir [/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib] ==> [/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib]
+  collapse library dir [/shared/ucl/apps/gsl/1.16/gcc/lib] ==> [/shared/ucl/apps/gsl/1.16/gcc/lib]
+  collapse library dir [/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib] ==> [/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib]
+  collapse library dir [/shared/ucl/apps/apr-util/1.6.1/lib] ==> [/shared/ucl/apps/apr-util/1.6.1/lib]
+  collapse library dir [/shared/ucl/apps/apr/1.7.0/lib] ==> [/shared/ucl/apps/apr/1.7.0/lib]
+  collapse library dir [/shared/ucl/apps/gcc/4.9.2/lib] ==> [/shared/ucl/apps/gcc/4.9.2/lib]
+  collapse library dir [/shared/ucl/apps/gcc/4.9.2/lib64] ==> [/shared/ucl/apps/gcc/4.9.2/lib64]
+  collapse library dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../..] ==> [/lustre/shared/ucl/apps/gcc/4.9.2/lib]
+  implicit libs: [stdc++;m;gcc_s;gcc;c;gcc_s;gcc]
+  implicit dirs: [/lustre/shared/ucl/apps/gcc/4.9.2/lib/gcc/x86_64-unknown-linux-gnu/4.9.2;/lustre/shared/ucl/apps/gcc/4.9.2/lib/gcc;/shared/ucl/apps/gcc/4.9.2/lib64;/lustre/shared/ucl/apps/gcc/4.9.2/lib64;/lib64;/usr/lib64;/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib;/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib;/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib;/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib;/shared/ucl/apps/gsl/1.16/gcc/lib;/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib;/shared/ucl/apps/apr-util/1.6.1/lib;/shared/ucl/apps/apr/1.7.0/lib;/shared/ucl/apps/gcc/4.9.2/lib;/lustre/shared/ucl/apps/gcc/4.9.2/lib]
+  implicit fwks: []
+
+
+
+
+Detecting CXX [-std=c++14] compiler features compiled with the following output:
+Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_4081f/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_4081f.dir/build.make CMakeFiles/cmTC_4081f.dir/build
+gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_4081f.dir/feature_tests.cxx.o
+/shared/ucl/apps/gcc/4.9.2/bin/g++    -std=c++14 -o CMakeFiles/cmTC_4081f.dir/feature_tests.cxx.o -c /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_4081f
+/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4081f.dir/link.txt --verbose=1
+/shared/ucl/apps/gcc/4.9.2/bin/g++       -rdynamic CMakeFiles/cmTC_4081f.dir/feature_tests.cxx.o  -o cmTC_4081f 
+gmake[1]: Leaving directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:1cxx_alias_templates
+    Feature record: CXX_FEATURE:1cxx_alignas
+    Feature record: CXX_FEATURE:1cxx_alignof
+    Feature record: CXX_FEATURE:1cxx_attributes
+    Feature record: CXX_FEATURE:1cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:1cxx_auto_type
+    Feature record: CXX_FEATURE:1cxx_binary_literals
+    Feature record: CXX_FEATURE:1cxx_constexpr
+    Feature record: CXX_FEATURE:1cxx_contextual_conversions
+    Feature record: CXX_FEATURE:1cxx_decltype
+    Feature record: CXX_FEATURE:1cxx_decltype_auto
+    Feature record: CXX_FEATURE:1cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:1cxx_default_function_template_args
+    Feature record: CXX_FEATURE:1cxx_defaulted_functions
+    Feature record: CXX_FEATURE:1cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:1cxx_delegating_constructors
+    Feature record: CXX_FEATURE:1cxx_deleted_functions
+    Feature record: CXX_FEATURE:1cxx_digit_separators
+    Feature record: CXX_FEATURE:1cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:1cxx_explicit_conversions
+    Feature record: CXX_FEATURE:1cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:1cxx_extern_templates
+    Feature record: CXX_FEATURE:1cxx_final
+    Feature record: CXX_FEATURE:1cxx_func_identifier
+    Feature record: CXX_FEATURE:1cxx_generalized_initializers
+    Feature record: CXX_FEATURE:1cxx_generic_lambdas
+    Feature record: CXX_FEATURE:1cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:1cxx_inline_namespaces
+    Feature record: CXX_FEATURE:1cxx_lambdas
+    Feature record: CXX_FEATURE:1cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:1cxx_local_type_template_args
+    Feature record: CXX_FEATURE:1cxx_long_long_type
+    Feature record: CXX_FEATURE:1cxx_noexcept
+    Feature record: CXX_FEATURE:1cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:1cxx_nullptr
+    Feature record: CXX_FEATURE:1cxx_override
+    Feature record: CXX_FEATURE:1cxx_range_for
+    Feature record: CXX_FEATURE:1cxx_raw_string_literals
+    Feature record: CXX_FEATURE:1cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_relaxed_constexpr
+    Feature record: CXX_FEATURE:1cxx_return_type_deduction
+    Feature record: CXX_FEATURE:1cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:1cxx_rvalue_references
+    Feature record: CXX_FEATURE:1cxx_sizeof_member
+    Feature record: CXX_FEATURE:1cxx_static_assert
+    Feature record: CXX_FEATURE:1cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:1cxx_thread_local
+    Feature record: CXX_FEATURE:1cxx_trailing_return_types
+    Feature record: CXX_FEATURE:1cxx_unicode_literals
+    Feature record: CXX_FEATURE:1cxx_uniform_initialization
+    Feature record: CXX_FEATURE:1cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:1cxx_user_literals
+    Feature record: CXX_FEATURE:0cxx_variable_templates
+    Feature record: CXX_FEATURE:1cxx_variadic_macros
+    Feature record: CXX_FEATURE:1cxx_variadic_templates
+
+
+Detecting CXX [-std=c++11] compiler features compiled with the following output:
+Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_1d529/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_1d529.dir/build.make CMakeFiles/cmTC_1d529.dir/build
+gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_1d529.dir/feature_tests.cxx.o
+/shared/ucl/apps/gcc/4.9.2/bin/g++    -std=c++11 -o CMakeFiles/cmTC_1d529.dir/feature_tests.cxx.o -c /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_1d529
+/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1d529.dir/link.txt --verbose=1
+/shared/ucl/apps/gcc/4.9.2/bin/g++       -rdynamic CMakeFiles/cmTC_1d529.dir/feature_tests.cxx.o  -o cmTC_1d529 
+gmake[1]: Leaving directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:1cxx_alias_templates
+    Feature record: CXX_FEATURE:1cxx_alignas
+    Feature record: CXX_FEATURE:1cxx_alignof
+    Feature record: CXX_FEATURE:1cxx_attributes
+    Feature record: CXX_FEATURE:0cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:1cxx_auto_type
+    Feature record: CXX_FEATURE:0cxx_binary_literals
+    Feature record: CXX_FEATURE:1cxx_constexpr
+    Feature record: CXX_FEATURE:0cxx_contextual_conversions
+    Feature record: CXX_FEATURE:1cxx_decltype
+    Feature record: CXX_FEATURE:0cxx_decltype_auto
+    Feature record: CXX_FEATURE:1cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:1cxx_default_function_template_args
+    Feature record: CXX_FEATURE:1cxx_defaulted_functions
+    Feature record: CXX_FEATURE:1cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:1cxx_delegating_constructors
+    Feature record: CXX_FEATURE:1cxx_deleted_functions
+    Feature record: CXX_FEATURE:0cxx_digit_separators
+    Feature record: CXX_FEATURE:1cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:1cxx_explicit_conversions
+    Feature record: CXX_FEATURE:1cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:1cxx_extern_templates
+    Feature record: CXX_FEATURE:1cxx_final
+    Feature record: CXX_FEATURE:1cxx_func_identifier
+    Feature record: CXX_FEATURE:1cxx_generalized_initializers
+    Feature record: CXX_FEATURE:0cxx_generic_lambdas
+    Feature record: CXX_FEATURE:1cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:1cxx_inline_namespaces
+    Feature record: CXX_FEATURE:1cxx_lambdas
+    Feature record: CXX_FEATURE:0cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:1cxx_local_type_template_args
+    Feature record: CXX_FEATURE:1cxx_long_long_type
+    Feature record: CXX_FEATURE:1cxx_noexcept
+    Feature record: CXX_FEATURE:1cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:1cxx_nullptr
+    Feature record: CXX_FEATURE:1cxx_override
+    Feature record: CXX_FEATURE:1cxx_range_for
+    Feature record: CXX_FEATURE:1cxx_raw_string_literals
+    Feature record: CXX_FEATURE:1cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_relaxed_constexpr
+    Feature record: CXX_FEATURE:0cxx_return_type_deduction
+    Feature record: CXX_FEATURE:1cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:1cxx_rvalue_references
+    Feature record: CXX_FEATURE:1cxx_sizeof_member
+    Feature record: CXX_FEATURE:1cxx_static_assert
+    Feature record: CXX_FEATURE:1cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:1cxx_thread_local
+    Feature record: CXX_FEATURE:1cxx_trailing_return_types
+    Feature record: CXX_FEATURE:1cxx_unicode_literals
+    Feature record: CXX_FEATURE:1cxx_uniform_initialization
+    Feature record: CXX_FEATURE:1cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:1cxx_user_literals
+    Feature record: CXX_FEATURE:0cxx_variable_templates
+    Feature record: CXX_FEATURE:1cxx_variadic_macros
+    Feature record: CXX_FEATURE:1cxx_variadic_templates
+
+
+Detecting CXX [-std=c++98] compiler features compiled with the following output:
+Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_30f70/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_30f70.dir/build.make CMakeFiles/cmTC_30f70.dir/build
+gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_30f70.dir/feature_tests.cxx.o
+/shared/ucl/apps/gcc/4.9.2/bin/g++    -std=c++98 -o CMakeFiles/cmTC_30f70.dir/feature_tests.cxx.o -c /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_30f70
+/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_30f70.dir/link.txt --verbose=1
+/shared/ucl/apps/gcc/4.9.2/bin/g++       -rdynamic CMakeFiles/cmTC_30f70.dir/feature_tests.cxx.o  -o cmTC_30f70 
+gmake[1]: Leaving directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:0cxx_alias_templates
+    Feature record: CXX_FEATURE:0cxx_alignas
+    Feature record: CXX_FEATURE:0cxx_alignof
+    Feature record: CXX_FEATURE:0cxx_attributes
+    Feature record: CXX_FEATURE:0cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:0cxx_auto_type
+    Feature record: CXX_FEATURE:0cxx_binary_literals
+    Feature record: CXX_FEATURE:0cxx_constexpr
+    Feature record: CXX_FEATURE:0cxx_contextual_conversions
+    Feature record: CXX_FEATURE:0cxx_decltype
+    Feature record: CXX_FEATURE:0cxx_decltype_auto
+    Feature record: CXX_FEATURE:0cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:0cxx_default_function_template_args
+    Feature record: CXX_FEATURE:0cxx_defaulted_functions
+    Feature record: CXX_FEATURE:0cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:0cxx_delegating_constructors
+    Feature record: CXX_FEATURE:0cxx_deleted_functions
+    Feature record: CXX_FEATURE:0cxx_digit_separators
+    Feature record: CXX_FEATURE:0cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:0cxx_explicit_conversions
+    Feature record: CXX_FEATURE:0cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:0cxx_extern_templates
+    Feature record: CXX_FEATURE:0cxx_final
+    Feature record: CXX_FEATURE:0cxx_func_identifier
+    Feature record: CXX_FEATURE:0cxx_generalized_initializers
+    Feature record: CXX_FEATURE:0cxx_generic_lambdas
+    Feature record: CXX_FEATURE:0cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:0cxx_inline_namespaces
+    Feature record: CXX_FEATURE:0cxx_lambdas
+    Feature record: CXX_FEATURE:0cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:0cxx_local_type_template_args
+    Feature record: CXX_FEATURE:0cxx_long_long_type
+    Feature record: CXX_FEATURE:0cxx_noexcept
+    Feature record: CXX_FEATURE:0cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:0cxx_nullptr
+    Feature record: CXX_FEATURE:0cxx_override
+    Feature record: CXX_FEATURE:0cxx_range_for
+    Feature record: CXX_FEATURE:0cxx_raw_string_literals
+    Feature record: CXX_FEATURE:0cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_relaxed_constexpr
+    Feature record: CXX_FEATURE:0cxx_return_type_deduction
+    Feature record: CXX_FEATURE:0cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:0cxx_rvalue_references
+    Feature record: CXX_FEATURE:0cxx_sizeof_member
+    Feature record: CXX_FEATURE:0cxx_static_assert
+    Feature record: CXX_FEATURE:0cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:0cxx_thread_local
+    Feature record: CXX_FEATURE:0cxx_trailing_return_types
+    Feature record: CXX_FEATURE:0cxx_unicode_literals
+    Feature record: CXX_FEATURE:0cxx_uniform_initialization
+    Feature record: CXX_FEATURE:0cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:0cxx_user_literals
+    Feature record: CXX_FEATURE:0cxx_variable_templates
+    Feature record: CXX_FEATURE:0cxx_variadic_macros
+    Feature record: CXX_FEATURE:0cxx_variadic_templates
+Determining if the C compiler works passed with the following output:
+Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_e4155/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_e4155.dir/build.make CMakeFiles/cmTC_e4155.dir/build
+gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_e4155.dir/testCCompiler.c.o
+/shared/ucl/apps/gcc/4.9.2/bin/gcc    -o CMakeFiles/cmTC_e4155.dir/testCCompiler.c.o   -c /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_e4155
+/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e4155.dir/link.txt --verbose=1
+/shared/ucl/apps/gcc/4.9.2/bin/gcc      -rdynamic CMakeFiles/cmTC_e4155.dir/testCCompiler.c.o  -o cmTC_e4155 
+gmake[1]: Leaving directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_39a33/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_39a33.dir/build.make CMakeFiles/cmTC_39a33.dir/build
+gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_39a33.dir/CMakeCCompilerABI.c.o
+/shared/ucl/apps/gcc/4.9.2/bin/gcc    -o CMakeFiles/cmTC_39a33.dir/CMakeCCompilerABI.c.o   -c /lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/share/cmake-3.13/Modules/CMakeCCompilerABI.c
+Linking C executable cmTC_39a33
+/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_39a33.dir/link.txt --verbose=1
+/shared/ucl/apps/gcc/4.9.2/bin/gcc     -v -rdynamic CMakeFiles/cmTC_39a33.dir/CMakeCCompilerABI.c.o  -o cmTC_39a33 
+Using built-in specs.
+COLLECT_GCC=/shared/ucl/apps/gcc/4.9.2/bin/gcc
+COLLECT_LTO_WRAPPER=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/lto-wrapper
+Target: x86_64-unknown-linux-gnu
+Configured with: ../gcc-4.9.2/configure --prefix=/shared/ucl/apps/gcc/4.9.2 --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-libgcj-multifile --enable-languages=c,c++,fortran,java,lto,objc --with-cpu=corei7 --disable-multilib
+Thread model: posix
+gcc version 4.9.2 (GCC) 
+COMPILER_PATH=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/
+LIBRARY_PATH=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/:/shared/ucl/apps/gcc/4.9.2/lib/../lib64/:/shared/ucl/apps/gcc/4.9.2/lib64/../lib64/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib/:/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib/:/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib/:/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib/:/shared/ucl/apps/gsl/1.16/gcc/lib/:/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib/:/shared/ucl/apps/apr-util/1.6.1/lib/:/shared/ucl/apps/apr/1.7.0/lib/:/shared/ucl/apps/gcc/4.9.2/lib/:/shared/ucl/apps/gcc/4.9.2/lib64/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_39a33' '-mtune=corei7' '-march=x86-64'
+ /lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/collect2 -plugin /lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/liblto_plugin.so -plugin-opt=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/lto-wrapper -plugin-opt=-fresolution=/tmp/ccBYiY63.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --eh-frame-hdr -m elf_x86_64 -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_39a33 /lib/../lib64/crt1.o /lib/../lib64/crti.o /lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtbegin.o -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2 -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc -L/shared/ucl/apps/gcc/4.9.2/lib/../lib64 -L/shared/ucl/apps/gcc/4.9.2/lib64/../lib64 -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib -L/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib -L/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib -L/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib -L/shared/ucl/apps/gsl/1.16/gcc/lib -L/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib -L/shared/ucl/apps/apr-util/1.6.1/lib -L/shared/ucl/apps/apr/1.7.0/lib -L/shared/ucl/apps/gcc/4.9.2/lib -L/shared/ucl/apps/gcc/4.9.2/lib64 -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../.. CMakeFiles/cmTC_39a33.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtend.o /lib/../lib64/crtn.o
+gmake[1]: Leaving directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/bin/gmake" "cmTC_39a33/fast"]
+  ignore line: [/usr/bin/gmake -f CMakeFiles/cmTC_39a33.dir/build.make CMakeFiles/cmTC_39a33.dir/build]
+  ignore line: [gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp']
+  ignore line: [Building C object CMakeFiles/cmTC_39a33.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/shared/ucl/apps/gcc/4.9.2/bin/gcc    -o CMakeFiles/cmTC_39a33.dir/CMakeCCompilerABI.c.o   -c /lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/share/cmake-3.13/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTC_39a33]
+  ignore line: [/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_39a33.dir/link.txt --verbose=1]
+  ignore line: [/shared/ucl/apps/gcc/4.9.2/bin/gcc     -v -rdynamic CMakeFiles/cmTC_39a33.dir/CMakeCCompilerABI.c.o  -o cmTC_39a33 ]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/shared/ucl/apps/gcc/4.9.2/bin/gcc]
+  ignore line: [COLLECT_LTO_WRAPPER=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/lto-wrapper]
+  ignore line: [Target: x86_64-unknown-linux-gnu]
+  ignore line: [Configured with: ../gcc-4.9.2/configure --prefix=/shared/ucl/apps/gcc/4.9.2 --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-libgcj-multifile --enable-languages=c,c++,fortran,java,lto,objc --with-cpu=corei7 --disable-multilib]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 4.9.2 (GCC) ]
+  ignore line: [COMPILER_PATH=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/]
+  ignore line: [LIBRARY_PATH=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/:/shared/ucl/apps/gcc/4.9.2/lib/../lib64/:/shared/ucl/apps/gcc/4.9.2/lib64/../lib64/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib/:/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib/:/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib/:/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib/:/shared/ucl/apps/gsl/1.16/gcc/lib/:/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib/:/shared/ucl/apps/apr-util/1.6.1/lib/:/shared/ucl/apps/apr/1.7.0/lib/:/shared/ucl/apps/gcc/4.9.2/lib/:/shared/ucl/apps/gcc/4.9.2/lib64/:/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_39a33' '-mtune=corei7' '-march=x86-64']
+  link line: [ /lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/collect2 -plugin /lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/liblto_plugin.so -plugin-opt=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/lto-wrapper -plugin-opt=-fresolution=/tmp/ccBYiY63.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --eh-frame-hdr -m elf_x86_64 -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_39a33 /lib/../lib64/crt1.o /lib/../lib64/crti.o /lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtbegin.o -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2 -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc -L/shared/ucl/apps/gcc/4.9.2/lib/../lib64 -L/shared/ucl/apps/gcc/4.9.2/lib64/../lib64 -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib -L/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib -L/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib -L/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib -L/shared/ucl/apps/gsl/1.16/gcc/lib -L/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib -L/shared/ucl/apps/apr-util/1.6.1/lib -L/shared/ucl/apps/apr/1.7.0/lib -L/shared/ucl/apps/gcc/4.9.2/lib -L/shared/ucl/apps/gcc/4.9.2/lib64 -L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../.. CMakeFiles/cmTC_39a33.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtend.o /lib/../lib64/crtn.o]
+    arg [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/lustre/shared/ucl/apps/gcc/4.9.2/bin/../libexec/gcc/x86_64-unknown-linux-gnu/4.9.2/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccBYiY63.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [-export-dynamic] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_39a33] ==> ignore
+    arg [/lib/../lib64/crt1.o] ==> ignore
+    arg [/lib/../lib64/crti.o] ==> ignore
+    arg [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtbegin.o] ==> ignore
+    arg [-L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2] ==> dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2]
+    arg [-L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc] ==> dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc]
+    arg [-L/shared/ucl/apps/gcc/4.9.2/lib/../lib64] ==> dir [/shared/ucl/apps/gcc/4.9.2/lib/../lib64]
+    arg [-L/shared/ucl/apps/gcc/4.9.2/lib64/../lib64] ==> dir [/shared/ucl/apps/gcc/4.9.2/lib64/../lib64]
+    arg [-L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64] ==> dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64]
+    arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+    arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+    arg [-L/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib] ==> dir [/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib]
+    arg [-L/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib] ==> dir [/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib]
+    arg [-L/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib] ==> dir [/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib]
+    arg [-L/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib] ==> dir [/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib]
+    arg [-L/shared/ucl/apps/gsl/1.16/gcc/lib] ==> dir [/shared/ucl/apps/gsl/1.16/gcc/lib]
+    arg [-L/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib] ==> dir [/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib]
+    arg [-L/shared/ucl/apps/apr-util/1.6.1/lib] ==> dir [/shared/ucl/apps/apr-util/1.6.1/lib]
+    arg [-L/shared/ucl/apps/apr/1.7.0/lib] ==> dir [/shared/ucl/apps/apr/1.7.0/lib]
+    arg [-L/shared/ucl/apps/gcc/4.9.2/lib] ==> dir [/shared/ucl/apps/gcc/4.9.2/lib]
+    arg [-L/shared/ucl/apps/gcc/4.9.2/lib64] ==> dir [/shared/ucl/apps/gcc/4.9.2/lib64]
+    arg [-L/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../..] ==> dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../..]
+    arg [CMakeFiles/cmTC_39a33.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [-lgcc] ==> lib [gcc]
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--no-as-needed] ==> ignore
+    arg [-lc] ==> lib [c]
+    arg [-lgcc] ==> lib [gcc]
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--no-as-needed] ==> ignore
+    arg [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtend.o] ==> ignore
+    arg [/lib/../lib64/crtn.o] ==> ignore
+  collapse library dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2] ==> [/lustre/shared/ucl/apps/gcc/4.9.2/lib/gcc/x86_64-unknown-linux-gnu/4.9.2]
+  collapse library dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc] ==> [/lustre/shared/ucl/apps/gcc/4.9.2/lib/gcc]
+  collapse library dir [/shared/ucl/apps/gcc/4.9.2/lib/../lib64] ==> [/shared/ucl/apps/gcc/4.9.2/lib64]
+  collapse library dir [/shared/ucl/apps/gcc/4.9.2/lib64/../lib64] ==> [/shared/ucl/apps/gcc/4.9.2/lib64]
+  collapse library dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64] ==> [/lustre/shared/ucl/apps/gcc/4.9.2/lib64]
+  collapse library dir [/lib/../lib64] ==> [/lib64]
+  collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+  collapse library dir [/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib] ==> [/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib]
+  collapse library dir [/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib] ==> [/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib]
+  collapse library dir [/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib] ==> [/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib]
+  collapse library dir [/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib] ==> [/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib]
+  collapse library dir [/shared/ucl/apps/gsl/1.16/gcc/lib] ==> [/shared/ucl/apps/gsl/1.16/gcc/lib]
+  collapse library dir [/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib] ==> [/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib]
+  collapse library dir [/shared/ucl/apps/apr-util/1.6.1/lib] ==> [/shared/ucl/apps/apr-util/1.6.1/lib]
+  collapse library dir [/shared/ucl/apps/apr/1.7.0/lib] ==> [/shared/ucl/apps/apr/1.7.0/lib]
+  collapse library dir [/shared/ucl/apps/gcc/4.9.2/lib] ==> [/shared/ucl/apps/gcc/4.9.2/lib]
+  collapse library dir [/shared/ucl/apps/gcc/4.9.2/lib64] ==> [/shared/ucl/apps/gcc/4.9.2/lib64]
+  collapse library dir [/lustre/shared/ucl/apps/gcc/4.9.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../..] ==> [/lustre/shared/ucl/apps/gcc/4.9.2/lib]
+  implicit libs: [gcc;gcc_s;c;gcc;gcc_s]
+  implicit dirs: [/lustre/shared/ucl/apps/gcc/4.9.2/lib/gcc/x86_64-unknown-linux-gnu/4.9.2;/lustre/shared/ucl/apps/gcc/4.9.2/lib/gcc;/shared/ucl/apps/gcc/4.9.2/lib64;/lustre/shared/ucl/apps/gcc/4.9.2/lib64;/lib64;/usr/lib64;/shared/ucl/apps/f2c/2013-09-26/gnu-4.9.2/lib;/shared/ucl/apps/optimet/1.0.1/gnu-4.9.2/OPTIMET/lib;/shared/ucl/apps/scalapack/2.0.2/gnu-4.9.2/openblas-0.3.7/ompi-3.1.4/lib;/shared/ucl/apps/openblas/0.3.7-serial/gnu-4.9.2/lib;/shared/ucl/apps/gsl/1.16/gcc/lib;/shared/ucl/apps/hdf/5-1.10.5/gnu-4.9.2/lib;/shared/ucl/apps/apr-util/1.6.1/lib;/shared/ucl/apps/apr/1.7.0/lib;/shared/ucl/apps/gcc/4.9.2/lib;/lustre/shared/ucl/apps/gcc/4.9.2/lib]
+  implicit fwks: []
+
+
+
+
+Detecting C [-std=c11] compiler features compiled with the following output:
+Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_eab61/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_eab61.dir/build.make CMakeFiles/cmTC_eab61.dir/build
+gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_eab61.dir/feature_tests.c.o
+/shared/ucl/apps/gcc/4.9.2/bin/gcc   -std=c11 -o CMakeFiles/cmTC_eab61.dir/feature_tests.c.o   -c /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/feature_tests.c
+Linking C executable cmTC_eab61
+/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_eab61.dir/link.txt --verbose=1
+/shared/ucl/apps/gcc/4.9.2/bin/gcc      -rdynamic CMakeFiles/cmTC_eab61.dir/feature_tests.c.o  -o cmTC_eab61 
+gmake[1]: Leaving directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:1c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+
+
+Detecting C [-std=c99] compiler features compiled with the following output:
+Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_04d53/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_04d53.dir/build.make CMakeFiles/cmTC_04d53.dir/build
+gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_04d53.dir/feature_tests.c.o
+/shared/ucl/apps/gcc/4.9.2/bin/gcc   -std=c99 -o CMakeFiles/cmTC_04d53.dir/feature_tests.c.o   -c /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/feature_tests.c
+Linking C executable cmTC_04d53
+/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_04d53.dir/link.txt --verbose=1
+/shared/ucl/apps/gcc/4.9.2/bin/gcc      -rdynamic CMakeFiles/cmTC_04d53.dir/feature_tests.c.o  -o cmTC_04d53 
+gmake[1]: Leaving directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+
+
+Detecting C [-std=c90] compiler features compiled with the following output:
+Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_13615/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_13615.dir/build.make CMakeFiles/cmTC_13615.dir/build
+gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_13615.dir/feature_tests.c.o
+/shared/ucl/apps/gcc/4.9.2/bin/gcc   -std=c90 -o CMakeFiles/cmTC_13615.dir/feature_tests.c.o   -c /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/feature_tests.c
+Linking C executable cmTC_13615
+/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_13615.dir/link.txt --verbose=1
+/shared/ucl/apps/gcc/4.9.2/bin/gcc      -rdynamic CMakeFiles/cmTC_13615.dir/feature_tests.c.o  -o cmTC_13615 
+gmake[1]: Leaving directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:0c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:0c_variadic_macros
+Performing C++ SOURCE FILE Test has_std_cpp11 succeeded with the following output:
+Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_27f9c/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_27f9c.dir/build.make CMakeFiles/cmTC_27f9c.dir/build
+gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_27f9c.dir/src.cxx.o
+/shared/ucl/apps/gcc/4.9.2/bin/g++    -Dhas_std_cpp11   -std=c++11 -o CMakeFiles/cmTC_27f9c.dir/src.cxx.o -c /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_27f9c
+/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_27f9c.dir/link.txt --verbose=1
+/shared/ucl/apps/gcc/4.9.2/bin/g++   -Dhas_std_cpp11    -rdynamic CMakeFiles/cmTC_27f9c.dir/src.cxx.o  -o cmTC_27f9c 
+gmake[1]: Leaving directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test has_std_cpp0x succeeded with the following output:
+Change Dir: /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_a743d/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_a743d.dir/build.make CMakeFiles/cmTC_a743d.dir/build
+gmake[1]: Entering directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_a743d.dir/src.cxx.o
+/shared/ucl/apps/gcc/4.9.2/bin/g++    -Dhas_std_cpp0x   -std=c++0x -o CMakeFiles/cmTC_a743d.dir/src.cxx.o -c /home/uceeise/Scratch/OPTIMET_combined/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_a743d
+/lustre/shared/ucl/apps/cmake/3.13.3/gnu-4.9.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a743d.dir/link.txt --verbose=1
+/shared/ucl/apps/gcc/4.9.2/bin/g++   -Dhas_std_cpp0x    -rdynamic CMakeFiles/cmTC_a743d.dir/src.cxx.o  -o cmTC_a743d 
+gmake[1]: Leaving directory `/lustre/scratch/uceeise/OPTIMET_combined/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
