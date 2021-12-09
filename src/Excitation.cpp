@@ -15,17 +15,14 @@
 // along with Optimet. If not, see <http://www.gnu.org/licenses/>.
 
 #include "Excitation.h"
-
 #include "Symbol.h"
 #include "Algebra.h"
 #include "Geometry.h"
 #include "AuxCoefficients.h"
 #include "CompoundIterator.h"
-
 #include "Coupling.h"
 #include "Tools.h"
 #include "constants.h"
-
 #include <cmath>
 #include <iostream>
 

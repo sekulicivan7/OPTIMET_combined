@@ -40,7 +40,7 @@ public:
 
   ElectroMagnetic bground; /**< The properties of the background. */
   
-  bool ACA_cond_;
+  bool ACA_cond_; //condition for the ACA compression
   /**
    * Default constructor for the Geometry class. Does not initialize.
    */
@@ -92,7 +92,7 @@ public:
   int getIncLocalSH_parallel(std::vector<double *> CLGcoeff, int gran1, int gran2, std::shared_ptr<optimet::Excitation const> incWave_,
          optimet::Vector<optimet::t_complex> &internalCoef_FF_, int nMaxS_, std::complex<double> *Inc_local);     
            
- // Coefficient for absorption cross section second harmonic      
+ // Coefficient for absorption cross section second harmonic parallel    
   int AbsCSSHcoeff(std::vector<double *> CLGcoeff, int gran1, int gran2, std::shared_ptr<optimet::Excitation const> incWave_, 
             optimet::Vector<optimet::t_complex> &internalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_SH_, int 
             nMaxS_, std::complex<double> *coefABS); 
@@ -101,16 +101,6 @@ public:
   int COEFFpartSH(int objectIndex_, std::shared_ptr<optimet::Excitation const> incWave_, optimet::Vector<optimet::t_complex> 
                   &internalCoef_FF_, double r, int nMaxS_, std::complex<double> *coefXmn, std::complex<double> *coefXpl, 
                    std::vector<double *> CLGcoeff);
-
- // vectors needed for the SH arbitrary shapes
-  void getEXCvecSH_ARB3(optimet::Vector<optimet::t_complex>& EXvec, std::shared_ptr<optimet::Excitation const> excitation, optimet::Vector<optimet::t_complex> &externalCoef_FF_, int objIndex);       
-  
- void getEXCvecSH_ARB1(optimet::Vector<optimet::t_complex>& EXvec, std::shared_ptr<optimet::Excitation const> excitation, optimet::Vector<optimet::t_complex> &externalCoef_FF_, int objIndex);                                            
-// vectors needed for the SH arbitrary shape in parallel
-void getEXCvecSH_ARB3_parall(optimet::Vector<optimet::t_complex>& EXvec, std::shared_ptr<optimet::Excitation const> excitation, optimet::Vector<optimet::t_complex> &externalCoef_FF_, int gran1, int gran2);
-
-void getEXCvecSH_ARB1_parall(optimet::Vector<optimet::t_complex>& EXvec, std::shared_ptr<optimet::Excitation const> excitation, optimet::Vector<optimet::t_complex> &externalCoef_FF_, int gran1, int gran2);
-
   /**
    * Updates the Geometry object to a new Excitation.
    * @param lambda_ the new wavelength.
