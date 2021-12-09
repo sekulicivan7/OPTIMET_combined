@@ -21,7 +21,6 @@
 #include "Result.h"
 #include "Tools.h"
 #include "constants.h"
-
 #include <complex>
 #include <cstdlib>
 #include <fstream>
@@ -52,15 +51,9 @@ void Result::init(std::shared_ptr<Geometry> geometry_, std::shared_ptr<Excitatio
   scatter_coef.resize(2 * Tools::iteratorMax(nMax) * geometry->objects.size());
   internal_coef.resize(2 * Tools::iteratorMax(nMax) * geometry->objects.size());
   
-  if (geometry->objects[0].scatterer_type == "sphere"){
-  scatter_coef_SH.resize(4 * Tools::iteratorMax(nMaxS) * geometry->objects.size());
-  internal_coef_SH.resize(4 * Tools::iteratorMax(nMaxS) * geometry->objects.size());
- }
-
-else if (geometry->objects[0].scatterer_type == "arbitrary.shape"){
   scatter_coef_SH.resize(2 * Tools::iteratorMax(nMaxS) * geometry->objects.size());
   internal_coef_SH.resize(2 * Tools::iteratorMax(nMaxS) * geometry->objects.size());
-  }
+ 
 
 }
 
@@ -563,7 +556,7 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
 
 
 
-     int Result::setFields(std::vector<double> &Rr, std::vector<double> 
+ int Result::setFields(std::vector<double> &Rr, std::vector<double> 
                            &Rthe, std::vector<double> &Rphi, bool projection_, std::vector<double *> CLGcoeff) {
   
   Spherical<double> Rloc, Rrel;
