@@ -80,12 +80,9 @@ void MatrixBelos::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_,Vec
   K1ana = source_vectorSH_K1ana_parallel(*geometry, incWave, X_int_conj, X_sca_, CGcoeff);
   MPI_Barrier(MPI_COMM_WORLD);
 
-  K1 = distributed_vector_SH_AR1(*geometry, incWave, X_sca_);
-  MPI_Barrier(MPI_COMM_WORLD);
-
   if (geometry->ACA_cond_){
   X_sca_SH = Gmres_Zcomp(S_comp_SH, KmNOD, tol, maxit, *geometry);
-  PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1, K1ana);
+  PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1ana);
   }
   else{
   if(context().is_valid()) {
@@ -108,7 +105,7 @@ void MatrixBelos::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_,Vec
     // Transfer back to root
     X_sca_SH = gather_all_source_vector(std::get<0>(gls_result_SH));
 
-    PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1, K1ana);
+    PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1ana);
   }
 }
   if(context().size() != communicator().size()) {
