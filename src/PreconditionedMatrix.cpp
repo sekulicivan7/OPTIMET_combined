@@ -91,104 +91,9 @@ Vector<t_complex> gather_all_source_vector(scalapack::Matrix<t_complex> const &m
   return result_vector;
 }
 
-
 #endif
 
-Vector<t_complex> distributed_vector_SH_AR1(Geometry &geometry,
-                                           std::shared_ptr<Excitation const> incWave,
-                                           Vector<t_complex> &X_sca_) {
-  auto const nobj = geometry.objects.size();
-  if(nobj == 0)
-     return Vector<t_complex>::Zero(0); 
-  int gran, gran1, gran2;
-  mpi::Communicator communicator;
-  int rank = communicator.rank();
-  int size = communicator.size();
-  auto const nMaxS = geometry.objects.front().nMaxS;
-  t_uint const pMax = nMaxS * (nMaxS + 2);
-  Vector<t_complex> resultK1(2*nobj*pMax);
 
-  if (geometry.objects[0].scatterer_type == "arbitrary.shape"){
-
-  int TMax = nobj * pMax;
-
-  Vector<t_complex> result1(2*nobj*pMax);
- 
-  Vector<t_complex> X_sca_proc;
-
-  int sizeFFint;
-    
-    if (rank==0){
-    sizeFFint =X_sca_.size();
-    X_sca_proc = X_sca_;
-    }
-
-    MPI_Bcast(&sizeFFint, 1, MPI_INT, 0, MPI_COMM_WORLD); // broadcasting internal and external FF field coeff
-    X_sca_proc.resize(sizeFFint);
-    MPI_Bcast(&X_sca_proc(0), sizeFFint, MPI_DOUBLE_COMPLEX, 0, MPI_COMM_WORLD);
-
-
-     if (rank < (TMax % size)) {
-    gran1 = rank * (TMax/size + 1);
-    gran2 = gran1 + TMax/size + 1;
-    } else {
-    gran1 = rank * (TMax/size) + (TMax % size);
-    gran2 = gran1 + (TMax/size);
-    }
-
-    int sizeVec = 2 * (gran2 - gran1);
-
-     resultK1.setZero();
-
-    Vector<t_complex> resultProc1(sizeVec);
-
-    Vector<int> sizesProc(size), disps(size);
-
-   MPI_Allgather (&sizeVec, 1, MPI_INT, &sizesProc(0), 1, MPI_INT, MPI_COMM_WORLD);
-
-   for (int kk = 0; kk < size; kk++)
-   disps(kk) = (kk > 0) ? (disps(kk-1) + sizesProc(kk-1)) : 0;
-   
-    resultProc1 = source_vectorSH_parallelAR1(geometry, gran1, gran2, incWave, X_sca_proc);
-
-    MPI_Gatherv (&resultProc1(0), sizeVec, MPI_DOUBLE_COMPLEX, &result1(0), &sizesProc(0), &disps(0), MPI_DOUBLE_COMPLEX, 0, MPI_COMM_WORLD);
-
-    if (rank == 0){
-
-    for (int ranki = 0; ranki < size; ranki++){
-
-      if (ranki < (TMax % size)) {
-    gran1 = ranki * (TMax/size + 1);
-    gran2 = gran1 + TMax/size + 1;
-    } else {
-    gran1 = ranki * (TMax/size) + (TMax % size);
-    gran2 = gran1 + (TMax/size);
-    }
-
-      sizeVec = 2 * (gran2 - gran1);
-
-  int brojac (0);
- //single target only
-    for (int ii = gran1; ii < gran2; ii++){
- 
-   resultK1(ii) = result1(disps(ranki) + brojac);
-   resultK1(ii + pMax) = result1(disps(ranki) + (sizeVec/2) + brojac);
- 
-   brojac++;
- 
-   } // for ii
- 
-   }  // for ranki
- 
-   // just for one target
-  
-   } // if rank0
-    MPI_Bcast(&resultK1(0), 2*pMax, MPI_DOUBLE_COMPLEX, 0, MPI_COMM_WORLD); 
-     }// end if arb.shapes
- 
-       return resultK1;
- 
-       }
 
 Vector<t_complex> source_vectorSH_K1ana_parallel(Geometry &geometry,
                                            std::shared_ptr<Excitation const> incWave,
@@ -436,74 +341,6 @@ auto const nobj = geometry.objects.size();
 
    MPI_Bcast(&resultK(0), 2 * nobj *pMax, MPI_DOUBLE_COMPLEX, 0, MPI_COMM_WORLD);
   } // if sphere
-
-// arbitrary shapes
-else if (geometry.objects[0].scatterer_type == "arbitrary.shape"){
-
-    int sizeVec = 2 * (gran2 - gran1);
-
-     result3.resize(2*nobj*pMax);
-     result1.resize(2*nobj*pMax);
-     resultK3.resize(2*nobj*pMax);
-     resultK1.resize(2*nobj*pMax);
-     resultK.resize(2*nobj*pMax);
-
-     resultK.setZero();
-
-    Vector<t_complex> resultProc3(sizeVec), resultProc1(sizeVec);
-
-    Vector<int> sizesProc(size), disps(size);
-   
-   MPI_Allgather (&sizeVec, 1, MPI_INT, &sizesProc(0), 1, MPI_INT, MPI_COMM_WORLD);
-   
-   for (int kk = 0; kk < size; kk++)
-   disps(kk) = (kk > 0) ? (disps(kk-1) + sizesProc(kk-1)) : 0;
-
-    resultProc3 = source_vectorSH_parallelAR3(geometry, gran1, gran2, incWave, X_sca_proc);
-    resultProc1 = source_vectorSH_parallelAR1(geometry, gran1, gran2, incWave, X_sca_proc);
-    
-    MPI_Gatherv (&resultProc3(0), sizeVec, MPI_DOUBLE_COMPLEX, &result3(0), &sizesProc(0), &disps(0), MPI_DOUBLE_COMPLEX, 0, MPI_COMM_WORLD);
-    MPI_Gatherv (&resultProc1(0), sizeVec, MPI_DOUBLE_COMPLEX, &result1(0), &sizesProc(0), &disps(0), MPI_DOUBLE_COMPLEX, 0, MPI_COMM_WORLD);
-      
-    if (rank == 0){
-
-    for (int ranki = 0; ranki < size; ranki++){
-
-     if (ranki < (TMax % size)) {
-    gran1 = ranki * (TMax/size + 1);
-    gran2 = gran1 + TMax/size + 1;
-    } else {
-    gran1 = ranki * (TMax/size) + (TMax % size);
-    gran2 = gran1 + (TMax/size);
-    }
-
-      sizeVec = 2 * (gran2 - gran1);
-
-  int brojac (0);
- //single target only
-  for (int ii = gran1; ii < gran2; ii++){
-
-  resultK3(ii) = result3(disps(ranki) + brojac);
-  resultK3(ii + pMax) = result3(disps(ranki) + (sizeVec/2) + brojac);
-  resultK1(ii) = result1(disps(ranki) + brojac);
-  resultK1(ii + pMax) = result1(disps(ranki) + (sizeVec/2) + brojac);
-
-  brojac++;
-
-  } // for ii
-
-  }  // for ranki
-    
-   // just for one target
-   geometry.objects[0].getTLocalSH_ARB(TmatrixSH, incWave->omega(), geometry.bground);     
-   resultK = (-consCi * k_b_SH ) * resultK1 + (consCi * k_b_SH) * TmatrixSH * resultK3;
-
-   
-  }
-
-MPI_Bcast(&resultK(0), 2*pMax, MPI_DOUBLE_COMPLEX, 0, MPI_COMM_WORLD);
-
-}// end if arb.shapes
 
 return resultK;
 
@@ -769,48 +606,7 @@ preconditioned_scattering_matrixSH(std::vector<Scatterer>::const_iterator const 
  }
   
 } //if
-
-  else if (first->scatterer_type == "arbitrary.shape"){
- 
-   Matrix<t_complex> TmatrixSH (2 * n , 2 * n);
-   
-  if(first == end_first or second == end_second)
-  return Matrix<t_complex>::Zero(2 * n * (end_first - first), 2 * n * (end_second - second));
-
-  resultSH.resize(2 * n * (end_first - first), 2 * n * (end_second - second));
   
-
- size_t x(0);
-    for(auto iteri(first); iteri != end_first; ++iteri, x += 2 * n) {
-
-  iteri->getTLocalSH_ARB(TmatrixSH, incWave->omega(), bground);
-
-  size_t y(0);
-  for(auto iterj(second); iterj != end_second; ++iterj, y += 2 * n) {
-
-    
-      if(iteri == iterj) {
-        resultSH.block(x, y, 2 * n, 2 * n) = Matrix<t_complex>::Identity(2 * n, 2 * n);
-
-        
-      } else {
-
- Coupling const AB(iteri->vR - iterj->vR, 2.0 * incWave->waveK, nMaxS);
- 
-        resultSH.block(x, y, n, n) = AB.diagonal.transpose();
-        resultSH.block(x + n, y + n, n, n) = AB.diagonal.transpose();
-        resultSH.block(x, y + n, n, n) = AB.offdiagonal.transpose();
-        resultSH.block(x + n, y, n, n) = AB.offdiagonal.transpose();
-        resultSH.block(x, y, 2 * n, 2 * n) = - (TmatrixSH) * resultSH.block(x, y, 2 * n, 2 * n);
-        
-  
-      }
-  
-    }
-  
-   }
- }
-    
   return resultSH;
   
 }
@@ -1578,21 +1374,7 @@ Vector<t_complex> source_vectorSH(Geometry &geometry, std::vector<Scatterer>::co
   ii += 2 * flatMax;
 
   }
-    }
-
-else if (first->scatterer_type == "arbitrary.shape"){   
- 
- result.resize((2 * flatMax * (last - first)));
- result1.resize((2 * flatMax * (last - first)));
- result3.resize((2 * flatMax * (last - first)));
-
- // just single object
- first->getTLocalSH_ARB(TmatrixSH, incWave->omega(), geometry.bground);
- geometry.getEXCvecSH_ARB3(result3, incWave, scatteredCoef_FF_, objectIndex_);
- geometry.getEXCvecSH_ARB1(result1, incWave, scatteredCoef_FF_, objectIndex_);
- 
- result = (-consCi * k_b_SH ) * result1 + (consCi * k_b_SH ) * TmatrixSH * result3;
- }
+    }//if sphere
 
   return result;
   
@@ -1641,32 +1423,6 @@ Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_, std::
   
 }
 
-Vector<t_complex> source_vectorSHarb1(Geometry &geometry, std::vector<Scatterer>::const_iterator first,
-                                std::vector<Scatterer>::const_iterator const &last,
-                                std::shared_ptr<Excitation const> incWave, Vector<t_complex> &scatteredCoef_FF_) {
-                                
-          if(first == last)
-  return Vector<t_complex>::Zero(0);
-  
-  auto const nMaxS = first->nMaxS;
-  auto const flatMax = nMaxS * (nMaxS + 2);
-  int objectIndex_=0;
-  
-  Vector<t_complex> result;
-  
-  
-   if (first->scatterer_type == "arbitrary.shape"){   
- 
- result.resize((2 * flatMax * (last - first)));
-
- // just single object
-
- geometry.getEXCvecSH_ARB1(result, incWave, scatteredCoef_FF_, objectIndex_);
-     
-     }
-      
-   return result;
-   }
 
 Vector<t_complex> source_vectorSH_parallel(Geometry &geometry, int gran1, int gran2,
                                 std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, std::vector<double *> CGcoeff) {
@@ -1684,46 +1440,6 @@ Vector<t_complex> source_vectorSH_parallel(Geometry &geometry, int gran1, int gr
 
   return resultProc;
   
-}
-
-
-Vector<t_complex> source_vectorSH_parallelAR3(Geometry &geometry, int gran1, int gran2,
-                                std::shared_ptr<Excitation const> incWave, 
-                                 Vector<t_complex> &scatteredCoef_FF_) {
-
-if(gran1 == gran2)
-  return Vector<t_complex>::Zero(0);
-
-  auto const nMaxS = geometry.objects.front().nMaxS;
-
-  Vector<t_complex> resultProc(2*(gran2 - gran1));
-  //one object
-  geometry.getEXCvecSH_ARB3_parall(resultProc, incWave, scatteredCoef_FF_, gran1, gran2);
-
-  return resultProc;
-}
-
-
-Vector<t_complex> source_vectorSH_parallelAR1(Geometry &geometry, int gran1, int gran2,
-                                std::shared_ptr<Excitation const> incWave,
-                                 Vector<t_complex> &scatteredCoef_FF_) {
-
-if(gran1 == gran2)
-  return Vector<t_complex>::Zero(0);
-
-  auto const nMaxS = geometry.objects.front().nMaxS;
-
-  Vector<t_complex> resultProc(2*(gran2 - gran1));
-  //one object
-
-if (geometry.objects[0].scatterer_type == "arbitrary.shape"){
-
-geometry.getEXCvecSH_ARB1_parall(resultProc, incWave, scatteredCoef_FF_, gran1, gran2);
-
-}
-
-return resultProc;
-
 }
 
 Vector<t_complex> source_vector(std::vector<Scatterer> const &objects, std::shared_ptr<Excitation const> incWave, Geometry const &geometry) {
@@ -1763,24 +1479,6 @@ Vector<t_complex> source_vectorSH(Geometry &geometry, std::shared_ptr<Excitation
     if(scatterer.nMaxS != nMaxS)
       throw std::runtime_error("All objects must have same number of harmonics");
   return source_vectorSH(geometry, geometry.objects, incWave, internalCoef_FF_, scatteredCoef_FF_, CGcoeff);
-}
-
-
-Vector<t_complex> source_vectorSHarb1(Geometry &geometry, std::vector<Scatterer> const &objects, std::shared_ptr<Excitation const> incWave, Vector<t_complex> &scatteredCoef_FF_) {
-  return source_vectorSHarb1(geometry, objects.begin(), objects.end(), incWave, scatteredCoef_FF_);
-}
-
-
-
-
-Vector<t_complex> source_vectorSHarb1(Geometry &geometry, std::shared_ptr<Excitation const> incWave, Vector<t_complex> &scatteredCoef_FF_) {
-  if(geometry.objects.size() == 0)
-    return Vector<t_complex>(0, 0);
-auto const nMaxS = geometry.objects.front().nMaxS;
-  for(auto const &scatterer : geometry.objects)
-    if(scatterer.nMaxS != nMaxS)
-      throw std::runtime_error("All objects must have same number of SH harmonics");
-  return source_vectorSHarb1(geometry, geometry.objects, incWave, scatteredCoef_FF_);
 }
 
 }
