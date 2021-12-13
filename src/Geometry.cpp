@@ -214,7 +214,7 @@ else if (objects[0].scatterer_type == "arbitrary.shape"){
   }
 }
   
-
+#ifdef OPTIMET_MPI
 void Geometry::Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff, int gran1, int gran2){ 
 
    
@@ -229,6 +229,25 @@ void Geometry::Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff,
    optimet::symbol::W_10coeff(CLGcoeff[7], nMax, nMaxS, gran1, gran2);
    optimet::symbol::W_01coeff(CLGcoeff[8], nMax, nMaxS, gran1, gran2);
 }
+#else
+
+void Geometry::Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff){ 
+
+   
+   optimet::symbol::C_10m1coeff(CLGcoeff[0], nMax, nMaxS);
+   optimet::symbol::C_11m1coeff(CLGcoeff[1], nMax, nMaxS);
+   optimet::symbol::C_00m1coeff(CLGcoeff[2], nMax, nMaxS);
+   optimet::symbol::C_01m1coeff(CLGcoeff[3], nMax, nMaxS);
+   
+   optimet::symbol::W_m1m1coeff(CLGcoeff[4], nMax, nMaxS);
+   optimet::symbol::W_11coeff(CLGcoeff[5], nMax, nMaxS);
+   optimet::symbol::W_00coeff(CLGcoeff[6], nMax, nMaxS);
+   optimet::symbol::W_10coeff(CLGcoeff[7], nMax, nMaxS);
+   optimet::symbol::W_01coeff(CLGcoeff[8], nMax, nMaxS);
+}
+#endif
+
+
 
 
 
@@ -297,8 +316,7 @@ int Geometry::getIncLocalSH(std::vector<double *> CLGcoeff, int objectIndex_,
 }
 
 
-// second harmonic sources adapted for paralellization
-
+#ifdef OPTIMET_MPI
 int Geometry::getIncLocalSH_parallel(std::vector<double *> CLGcoeff, int gran1, int gran2, std::shared_ptr<optimet::Excitation const> incWave_,
                        optimet::Vector<optimet::t_complex> &internalCoef_FF_, int nMaxS_, std::complex<double> *Inc_local) {
  
@@ -362,8 +380,9 @@ int Geometry::getIncLocalSH_parallel(std::vector<double *> CLGcoeff, int gran1, 
   
   return 0;
 }
+#endif 
 
-
+#ifdef OPTIMET_MPI
  int Geometry::AbsCSSHcoeff(std::vector<double *> CLGcoeff, int gran1, int gran2, std::shared_ptr<optimet::Excitation const> incWave_, 
 optimet::Vector<optimet::t_complex> &internalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_SH_,
         int nMaxS_, std::complex<double> *coefABS) {
@@ -408,6 +427,36 @@ optimet::Vector<optimet::t_complex> &internalCoef_FF_, optimet::Vector<optimet::
     brojac++;        
     }
    
+  return 0;
+}
+#endif
+
+int Geometry::AbsCSSHcoeff(std::vector<double *> CLGcoeff, int objectIndex_, std::shared_ptr<optimet::Excitation const> incWave_,
+optimet::Vector<optimet::t_complex> &internalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_SH_,
+        int nMaxS_, std::complex<double> *coefABS) {
+
+  int NO = this->objects.size();
+   double *W_m1m1 = CLGcoeff[4];
+   double *W_11 = CLGcoeff[5];
+   double *W_00 = CLGcoeff[6];
+   CompoundIterator p;
+
+
+  auto const omega = incWave_->omega();
+  int nMax_ = this->nMax();
+  int pMax = p.max(nMaxS_);
+  std::complex<double> cmnSH, dmnSH;
+
+  for(p = 0; p < pMax; p++) {
+  cmnSH = internalCoef_SH_[objectIndex_ * 2 * pMax + p.compound];
+  dmnSH = internalCoef_SH_[pMax + objectIndex_ * 2 * pMax + p.compound];
+
+  coefABS[p] = optimet::symbol::ACSshcoeff(p, W_m1m1, W_00, W_11, nMax_, nMaxS_,
+                  internalCoef_FF_, cmnSH, dmnSH,
+                   objectIndex_,
+                  omega, objects[objectIndex_]);
+}
+                  
   return 0;
 }
 

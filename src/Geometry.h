@@ -82,20 +82,32 @@ public:
    */
   int checkInner(Spherical<double> R_);
   // Clebsch Gordan series coeff
+  #ifdef OPTIMET_MPI
   void Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff, int gran1, int gran2);
+  #else
+  void Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff);
+  #endif
 
    // Incident coefficients for the second harmonic case                  
   int getIncLocalSH(std::vector<double *> CLGcoeff, int objectIndex_, std::shared_ptr<optimet::Excitation const> incWave_,
          optimet::Vector<optimet::t_complex> &internalCoef_FF_, int nMaxS_, std::complex<double> *Inc_local); 
   
-  // Incident coefficients for the second harmonic case for parallelization                 
+  // Incident coefficients for the second harmonic case for parallelization
+  #ifdef OPTIMET_MPI                 
   int getIncLocalSH_parallel(std::vector<double *> CLGcoeff, int gran1, int gran2, std::shared_ptr<optimet::Excitation const> incWave_,
-         optimet::Vector<optimet::t_complex> &internalCoef_FF_, int nMaxS_, std::complex<double> *Inc_local);     
+         optimet::Vector<optimet::t_complex> &internalCoef_FF_, int nMaxS_, std::complex<double> *Inc_local);
+  #endif     
            
- // Coefficient for absorption cross section second harmonic parallel    
+ // Coefficient for absorption cross section second harmonic 
+ #ifdef OPTIMET_MPI    
   int AbsCSSHcoeff(std::vector<double *> CLGcoeff, int gran1, int gran2, std::shared_ptr<optimet::Excitation const> incWave_, 
             optimet::Vector<optimet::t_complex> &internalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_SH_, int 
-            nMaxS_, std::complex<double> *coefABS); 
+            nMaxS_, std::complex<double> *coefABS);
+ #endif
+
+int AbsCSSHcoeff(std::vector<double *> CLGcoeff, int objectIndex_, std::shared_ptr<optimet::Excitation const> incWave_,
+optimet::Vector<optimet::t_complex> &internalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_SH_,
+        int nMaxS_, std::complex<double> *coefABS); 
             
    // Coefficients for the particular solution of SH differential equations                                     
   int COEFFpartSH(int objectIndex_, std::shared_ptr<optimet::Excitation const> incWave_, optimet::Vector<optimet::t_complex> 
