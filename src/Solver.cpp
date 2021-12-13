@@ -68,12 +68,6 @@ Vector<t_complex> convertInternal(Vector<t_complex> const &scattered, t_real con
     result.segment(i, N).array() =
         scattered.segment(i, N).array() * object.getIaux(omega, bground).array();
     }
-   else if (object.scatterer_type == "arbitrary.shape"){
-
-    object.getQLocal(Intrmatrix, omega, bground);  
-    result.segment(i, N) = Intrmatrix * scattered.segment(i, N);
-   
-    }
 
     i += N;
 
