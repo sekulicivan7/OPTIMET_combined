@@ -100,7 +100,7 @@ Vector<t_complex> convertIndirect_SH_outer(Vector<t_complex> const &scattered, t
 }
 
 
-Vector<t_complex> convertInternal_SH(Vector<t_complex> const &scattered, Vector<t_complex> const &K_1, Vector<t_complex> const &K_1ana, t_real const &omega,
+Vector<t_complex> convertInternal_SH(Vector<t_complex> const &scattered, Vector<t_complex> const &K_1ana, t_real const &omega,
                                   ElectroMagnetic const &bground,
                                   std::vector<Scatterer> const &objects) {
   Vector<t_complex> result(scattered.size());
@@ -119,20 +119,7 @@ Vector<t_complex> convertInternal_SH(Vector<t_complex> const &scattered, Vector<
   
     i += N;
   }
- }
- else if (objects[0].scatterer_type == "arbitrary.shape"){
-  
-  for(auto const &object : objects) {
-  
-  object.getQLocalSH(Intrmatrix, omega, bground);
-    
-  result.segment(i, N) = Intrmatrix.inverse()*((-consCi/k_b_SH)*scattered.segment(i, N) + K_1.segment(i, N));
-  
-  i += N;
-  
-  }
-  
-  } 
+ } 
   return result;
 }
 
