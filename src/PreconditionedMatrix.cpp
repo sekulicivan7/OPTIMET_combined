@@ -94,7 +94,7 @@ Vector<t_complex> gather_all_source_vector(scalapack::Matrix<t_complex> const &m
 #endif
 
 
-
+#ifdef OPTIMET_MPI
 Vector<t_complex> source_vectorSH_K1ana_parallel(Geometry &geometry,
                                            std::shared_ptr<Excitation const> incWave,
                                            Vector<t_complex> &X_int_, Vector<t_complex> &X_sca_, std::vector<double *> CGcoeff) {
@@ -345,7 +345,7 @@ auto const nobj = geometry.objects.size();
 return resultK;
 
 }
-
+#endif
 
 Matrix<t_complex>
 preconditioned_scattering_matrix(std::vector<Scatterer>::const_iterator const &first,
@@ -398,7 +398,7 @@ preconditioned_scattering_matrix(std::vector<Scatterer>::const_iterator const &f
   
   return result;
 }
-
+#ifdef OPTIMET_MPI
 void Scattering_matrix_ACA_FF_parallel(Geometry const &geometry, std::shared_ptr<Excitation const> incWave, std::vector<Matrix_ACA> &S_comp){
 
  
@@ -485,7 +485,7 @@ if(rank==0)
 std::cout<<"The size of the FF scattering matrix in MB is"<< sizeMAT_vec.sum()<<std::endl;
  
 }
-
+#endif
 void Scattering_matrix_ACA_FF(Geometry const &geometry, std::shared_ptr<Excitation const> incWave, std::vector<Matrix_ACA> &S_comp){
 
  
@@ -611,7 +611,7 @@ preconditioned_scattering_matrixSH(std::vector<Scatterer>::const_iterator const 
   
 }
 
-
+#ifdef OPTIMET_MPI
 void Scattering_matrix_ACA_SH_parallel(Geometry const &geometry, std::shared_ptr<Excitation const> incWave, std::vector<Matrix_ACA> &S_comp){
 
   auto const nMaxS = geometry.objects[0].nMaxS;
@@ -696,6 +696,7 @@ if(rank==0)
 std::cout<<"The size of the SH scattering matrix in MB is"<<sizeMAT_vec.sum()<<std::endl;
   
 }
+#endif
 
 void Scattering_matrix_ACA_SH(Geometry const &geometry, std::shared_ptr<Excitation const> incWave, std::vector<Matrix_ACA> &S_comp){
 
@@ -758,7 +759,6 @@ void Scattering_matrix_ACA_SH(Geometry const &geometry, std::shared_ptr<Excitati
         
  std::cout<<"The size of the SH matrix in MB is"  << sizeMAT<< std::endl;         
 }
-
 
 
 
@@ -975,6 +975,7 @@ x = xn;
 return x;
 }
 
+#ifdef OPTIMET_MPI
 // matrix - vector product in parallel
 Vector<t_complex> matvec_parallel(std::vector<Matrix_ACA>const &S_comp, Vector<t_complex> &J, Geometry const &geometry){
 // here we go through the matrix blocks and check if it is compressed or not
@@ -1042,6 +1043,7 @@ for(int ii = gran1; ii < gran2; ii++)  {
 
 return Y_fin;
 }
+#endif
 
 // matrix-vector product in serial
 Vector<t_complex> matvec (std::vector<Matrix_ACA>const &S_comp, Vector<t_complex> &J, Geometry const &geometry){
@@ -1423,7 +1425,7 @@ Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_, std::
   
 }
 
-
+#ifdef OPTIMET_MPI
 Vector<t_complex> source_vectorSH_parallel(Geometry &geometry, int gran1, int gran2,
                                 std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, std::vector<double *> CGcoeff) {
   
@@ -1441,6 +1443,7 @@ Vector<t_complex> source_vectorSH_parallel(Geometry &geometry, int gran1, int gr
   return resultProc;
   
 }
+#endif
 
 Vector<t_complex> source_vector(std::vector<Scatterer> const &objects, std::shared_ptr<Excitation const> incWave, Geometry const &geometry) {
   return source_vector(objects.begin(), objects.end(), incWave, geometry);

@@ -229,7 +229,7 @@ void Geometry::Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff,
    optimet::symbol::W_10coeff(CLGcoeff[7], nMax, nMaxS, gran1, gran2);
    optimet::symbol::W_01coeff(CLGcoeff[8], nMax, nMaxS, gran1, gran2);
 }
-#else
+#endif
 
 void Geometry::Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff){ 
 
@@ -245,7 +245,7 @@ void Geometry::Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff)
    optimet::symbol::W_10coeff(CLGcoeff[7], nMax, nMaxS);
    optimet::symbol::W_01coeff(CLGcoeff[8], nMax, nMaxS);
 }
-#endif
+
 
 
 

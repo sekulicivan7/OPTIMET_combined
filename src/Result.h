@@ -116,37 +116,35 @@ public:
                    
 
 
-  /**
-   * Returns the Extinction Cross Section for Fundamental Frequency.
-   */
+    
+  //Returns the Extinction Cross Section for Fundamental Frequency.
+  #ifdef OPTIMET_MPI
   double getExtinctionCrossSection(int gran1, int gran2);
   
   // Scattering cross section for FF
   double getScatteringCrossSection(int gran1, int gran2);
-  /**
-   * Returns the Absorption Cross Section for Fundamental Frequency..
-   */
+
+  //Returns the Absorption Cross Section for Fundamental Frequency..
   double getAbsorptionCrossSection(int gran1, int gran2);
   
-   /* Returns the Scattering Cross Section for SH Frequency.
-   */
+   //Returns the Scattering Cross Section for SH Frequency. 
   double getScatteringCrossSection_SH(int gran1, int gran2);
   
   // Returns the Absorption Cross Section for SH Frequency.
   double getAbsorptionCrossSection_SH(std::vector<double *> CLGcoeff, int gran1, int gran2);
   
-
-  /**
-   * Populate a grid with E and H fields.
-   * @param oEGrid_FF the OutputGrid object for the E fields, fundamental freq.
-   * @param oHGrid_FF the OutputGrid object for the H fields fundamental freq.
-   * @param oEGrid_SH the OutputGrid object for the E fields, SH freq.
-   * @param oHGrid_SH the OutputGrid object for the H fields SH freq.
-   * @param projection_ defines spherical (1) or cartesian (0) projection.
-   * @return 0 if succesful, 1 otherwise.
-   */
+  //Populate a grid with E and H fields.
   int setFields(std::vector<double> &Rr, std::vector<double> &Rthe, 
 std::vector<double> &Rphi, bool projection_, std::vector<double *> CLGcoeff);
+#endif
+
+double getExtinctionCrossSection();
+double getScatteringCrossSection();
+double getAbsorptionCrossSection();
+double getScatteringCrossSection_SH();
+double getAbsorptionCrossSection_SH(std::vector<double *> CLGcoeff);
+int setFields(OutputGrid &oEGrid_FF, OutputGrid &oHGrid_FF, OutputGrid &oEGrid_SH,
+                       OutputGrid &oHGrid_SH, bool projection_, std::vector<double *> CLGcoeff);
 
 };
 }

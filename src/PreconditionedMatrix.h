@@ -57,31 +57,37 @@ Vector<t_complex> source_vectorSH_K1ana(Geometry &geometry,std::shared_ptr<Excit
 Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_, std::vector<double *> CGcoeff);
                                  
 
-//! \brief Computes source SH vector from a range of scatterers adapted for parallelization                              
+//! \brief Computes source SH vector from a range of scatterers adapted for parallelization
+#ifdef OPTIMET_MPI                              
 Vector<t_complex> source_vectorSH_parallel(Geometry &geometry, int gran1, int gran2,
                                 std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, std::vector<double *> CGcoeff);         
-
+#endif
 // computes the distributed source vector for SH on many nodes
+#ifdef OPTIMET_MPI
 Vector<t_complex> distributed_source_vector_SH_Mnode(Geometry &geometry,
                                            std::shared_ptr<Excitation const> incWave,
                                            Vector<t_complex> &X_int_, Vector<t_complex> &X_sca_, std::vector<double *> CGcoeff);
+#endif
 // computation of the second part of SH source vector in parallel, analytical
+#ifdef OPTIMET_MPI
 Vector<t_complex> source_vectorSH_K1ana_parallel(Geometry &geometry,
                                            std::shared_ptr<Excitation const> incWave,
-                                           Vector<t_complex> &X_int_, Vector<t_complex> &X_sca_, std::vector<double *> CGcoeff); 
+                                           Vector<t_complex> &X_int_, Vector<t_complex> &X_sca_, std::vector<double *> CGcoeff);
+#endif 
 
 //! Computes preconditioned scattering matrix in serial for fundamental frequency
 Matrix<t_complex> preconditioned_scattering_matrix(Geometry const &geometry,
                                                    std::shared_ptr<Excitation const> incWave);
 
 // Computes scattering matrix at FF with ACA compression parallel
+#ifdef OPTIMET_MPI
 void Scattering_matrix_ACA_FF_parallel(Geometry const &geometry,
                                                    std::shared_ptr<Excitation const> incWave, std::vector<Matrix_ACA>& S_comp);
 
 // Computes scattering matrix at SH with ACA compression parallel
 void Scattering_matrix_ACA_SH_parallel(Geometry const &geometry,
                          std::shared_ptr<Excitation const> incWave, std::vector<Matrix_ACA>& S_comp); 
-
+#endif
 // Computes scattering matrix at FF with ACA compression serial
 void Scattering_matrix_ACA_FF(Geometry const &geometry,
                                                     std::shared_ptr<Excitation const> incWave, std::vector<Matrix_ACA>& S_comp);
@@ -100,7 +106,9 @@ int getMaxInd(Vector<t_complex> &RowCol, Vector<int> &K, int kmax);
 Vector<t_complex> Gmres_Zcomp(std::vector<Matrix_ACA>const &S_comp, Vector<t_complex>const &Y, double tol, int maxit, Geometry const &geometry);  
 
 // matrix-vector product for compressed matrices in parallel
+#ifdef OPTIMET_MPI
 Vector<t_complex> matvec_parallel(std::vector<Matrix_ACA>const &S_comp, Vector<t_complex> &J, Geometry const &geometry);
+#endif
 
 // matrix-vector product for compressed matrices in serial
 Vector<t_complex> matvec(std::vector<Matrix_ACA>const &S_comp, Vector<t_complex> &J, Geometry const &geometry);
@@ -110,8 +118,7 @@ Matrix<t_complex> det_approx (double beta, int n, Matrix<t_complex> &H);
 //! Computes preconditioned scattering matrix in serial for SH frequency, scattering coefficients 
 Matrix<t_complex> preconditioned_scattering_matrixSH(Geometry const &geometry,
                                                    std::shared_ptr<Excitation const> incWave); 
-                                                                                                                                                        
-//! Computes preconditioned scattering matrix in paralllel
+#ifdef OPTIMET_SCALAPACK                                                                                                                                      //! Computes preconditioned scattering matrix in paralllel
 Matrix<t_complex> preconditioned_scattering_matrix(Geometry const &geometry,
                                                    std::shared_ptr<Excitation const> incWave,
                                                    scalapack::Context const &context,
@@ -131,6 +138,7 @@ Vector<t_complex> distributed_source_vector(Vector<t_complex> const &input,
 Vector<t_complex> distributed_source_vector_SH(Geometry &geometry, Vector<t_complex> &VecMnod,
                                            scalapack::Context const &context,
                                             scalapack::Sizes const &blocks);
+#endif
 
 #ifdef OPTIMET_SCALAPACK
 //! Gather the distributed vector into a single vector

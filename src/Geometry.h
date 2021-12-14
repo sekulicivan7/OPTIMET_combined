@@ -84,9 +84,8 @@ public:
   // Clebsch Gordan series coeff
   #ifdef OPTIMET_MPI
   void Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff, int gran1, int gran2);
-  #else
-  void Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff);
   #endif
+  void Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff);
 
    // Incident coefficients for the second harmonic case                  
   int getIncLocalSH(std::vector<double *> CLGcoeff, int objectIndex_, std::shared_ptr<optimet::Excitation const> incWave_,
