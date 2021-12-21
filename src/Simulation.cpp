@@ -69,7 +69,7 @@ int Simulation::run() {
 #ifdef OPTIMET_MPI
 void Simulation::field_simulation_parallel(Run &run, std::shared_ptr<solver::AbstractSolver> solver) {
   // Determine the simulation type and proceed accordingly
-  
+    
   Result result(run.geometry, run.excitation);
  
    int nMax = run.geometry->nMax();
@@ -580,7 +580,7 @@ void Simulation::scan_wavelengths_parallel(Run &run, std::shared_ptr<solver::Abs
 
       if(run.excitation->SH_cond){
       outSSec_SH << lam << "\t" << scaCS_SH_vec.sum() << std::endl;
-      std::cout<<scaCS_SH_vec.sum()<<std::endl;
+      std::cout<<absCS_SH_vec.sum()<<std::endl;
        }
       }
 

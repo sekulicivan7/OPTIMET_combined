@@ -24,7 +24,10 @@
 #include "Spherical.h"
 #include "SphericalP.h"
 #include <vector>
+
+#ifdef OPTIMET_MPI
 #include <mpi.h>
+#endif
 
 #include <complex>
 

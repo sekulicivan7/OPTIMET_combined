@@ -7,7 +7,7 @@
 #$ -S /bin/bash
 
 # 2. Request ten minutes of wallclock time (format hours:minutes:seconds).
-#$ -l h_rt=6:10:0
+#$ -l h_rt=01:10:0
 
 # 3. Request 1 gigabyte of RAM per process (must be an integer)
 #$ -l mem=2G
@@ -23,11 +23,11 @@ module load openblas/0.3.7-serial/gnu-4.9.2 scalapack/2.0.2/gnu-4.9.2/openblas-0
 
 module list
 
-cd /home/uceeise/Scratch/OPTIMET/build_belos
+cd /home/uceeise/Scratch/OPTIMET_combined/build
 make
 
 # 5. Set the name of the job.
-#$ -N TwoSpheresSi
+#$ -N TwoSpheresAu
 
 # 6. Select the MPI parallel environment and number of processes.
 #$ -pe mpi 50
@@ -36,9 +36,9 @@ make
 # a necessary step with the upgraded software stack as compute nodes cannot
 # write to $HOME.
 
-#$ -wd /home/uceeise/Scratch/OPTIMET/examples/output
+#$ -wd /home/uceeise/Scratch/OPTIMET_combined/examples/output
 
 # 8. Run our MPI job.  GERun is a wrapper that launches MPI jobs on our clusters.
-cd /home/uceeise/Scratch/OPTIMET/examples
-gerun /home/uceeise/Scratch/OPTIMET/build_belos/Optimet3D TwoSpheresSilicon.xml
+cd /home/uceeise/Scratch/OPTIMET_combined/examples
+gerun /home/uceeise/Scratch/OPTIMET_combined/build/Optimet3D TwoSpheres.xml
 

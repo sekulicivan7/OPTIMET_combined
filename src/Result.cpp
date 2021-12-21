@@ -774,12 +774,14 @@ double Result::getAbsorptionCrossSection_SH(std::vector<double *> CLGcoeff) {
 
   std::complex<double>  sigma;
   double absCS(0.0);
+
+  int nobj = geometry->objects.size();
  
-  int sizeCFsh = 2 * nMaxS * (nMaxS + 2);
+  int sizeCFsh = nMaxS * (nMaxS + 2);
 
   Vector<t_complex> coeffSH(sizeCFsh);
   
-  for(size_t objIndex = 0; objIndex < geometry->objects.size(); objIndex++) {
+  for(size_t objIndex = 0; objIndex < nobj; objIndex++) {
   
   sigma = - std::complex<double>(0.0, 1.0) * consEpsilon0 * 2.0 * omega * (geometry->objects[objIndex].elmag.epsilon_r_SH - 1.0);
   

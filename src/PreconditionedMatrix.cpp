@@ -1314,6 +1314,7 @@ Matrix<t_complex> preconditioned_scattering_matrix(Geometry const &geometry,
                                                    scalapack::Context const &,
                                                    scalapack::Sizes const &) {
   return preconditioned_scattering_matrix(geometry, incWave);
+}
 
 Matrix<t_complex> preconditioned_scattering_matrix_SH(Geometry const &geometry,
                                                    std::shared_ptr<Excitation const> incWave,
