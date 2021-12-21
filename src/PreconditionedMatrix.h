@@ -103,7 +103,7 @@ void ACA_compression(Matrix<t_complex> &U, Matrix<t_complex> &V, Matrix<t_comple
 int getMaxInd(Vector<t_complex> &RowCol, Vector<int> &K, int kmax);
 
 //the gmres solver for ACA compressed matrices                                                   
-Vector<t_complex> Gmres_Zcomp(std::vector<Matrix_ACA>const &S_comp, Vector<t_complex>const &Y, double tol, int maxit, Geometry const &geometry);  
+Vector<t_complex> Gmres_Zcomp(std::vector<Matrix_ACA>const &S_comp, Vector<t_complex>const &Y, double tol, int maxit, int no_rest, Geometry const &geometry);  
 
 // matrix-vector product for compressed matrices in parallel
 #ifdef OPTIMET_MPI

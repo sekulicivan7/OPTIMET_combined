@@ -55,12 +55,13 @@ void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vect
                       Vector<t_complex> &X_int_SH, std::vector<double *> CGcoeff) const {
  
     double tol = 1e-6;
-    int maxit = 340;
+    int maxit = 3;
+    int no_rest = 5;
     Vector<t_complex> Q;
     
     if (geometry->ACA_cond_){
     Q = source_vector(*geometry, incWave);
-    X_sca_ = Gmres_Zcomp(S_comp_FF, Q, tol, maxit, *geometry);
+    X_sca_ = Gmres_Zcomp(S_comp_FF, Q, tol, maxit, no_rest, *geometry);
     PreconditionedMatrix::unprecondition(X_sca_, X_int_);
     }
     else {
@@ -95,7 +96,7 @@ void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vect
   MPI_Barrier(MPI_COMM_WORLD);
 
   if (geometry->ACA_cond_){
-  X_sca_SH = Gmres_Zcomp(S_comp_SH, KmNOD, tol, maxit, *geometry);
+  X_sca_SH = Gmres_Zcomp(S_comp_SH, KmNOD, tol, maxit, no_rest, *geometry);
   PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1ana);
   }
   else{   

@@ -890,30 +890,45 @@ for (int j = 0; j < (K.size()-1); ++j) {
 return imax;
 }
 
-// gmres solver for compressed matrices, compressed blocks are always square, with number of rows kmax
-Vector<t_complex> Gmres_Zcomp(std::vector<Matrix_ACA>const &S_comp, Vector<t_complex>const &Y, double tol, int maxit, Geometry const &geometry){
+// gmres solver for compressed matrices, compressed blocks are always square
+Vector<t_complex> Gmres_Zcomp(std::vector<Matrix_ACA>const &S_comp, Vector<t_complex>const &Y, double tol, int maxit, int no_rest, Geometry const &geometry){
 
 int N = Y.size(); // right hand side
-int n = 0;
+int n(0), brojac(0);
 mpi::Communicator communicator;
 int rank = communicator.rank();
-Vector<t_complex> x0 = Vector<t_complex>::Zero(N);
-Vector<t_complex> vn(N) , w(N) , vt(N) , gi(2), gipom, ym, x;
-Vector<t_complex> xn = Vector<t_complex>::Zero(N);
+
+Vector<t_complex> vn(N) , w(N) , vt(N), res(N), gipom, ym, x, gi;
+x = Vector<t_complex>::Zero(N);
 Vector<double> err(1);
+err(0) = 1;
 
 Eigen::SparseMatrix<t_complex, Eigen::ColMajor> v(N , maxit+1);
-Eigen::SparseVector<t_complex> Y_sps(N), w_sps(N);
+Eigen::SparseVector<t_complex>  w_sps(N), res_sps(N);
 Matrix<t_complex> H = Matrix<t_complex>::Zero(maxit + 1 , maxit);
-Matrix<t_complex> Rigi(2,2) , Ri(2 , 1), Ripom;
+Matrix<t_complex> Rigi, Ri, Ripom;
 
-double beta = Y.norm();
-Y_sps = Y.sparseView();
-v.col(0) = Y_sps / beta ;
+double beta;
 double abs_y = Y.norm();
-err(0) = 1.0 ; 
 
-while ((n < (maxit)) && (err(n) > tol)){
+for (int rest = 1;  rest <= no_rest; ++rest) {
+
+if(err(n)<=tol)
+break;
+
+#ifdef OPTIMET_MPI
+w = matvec_parallel(S_comp , x, geometry);
+#else
+w = matvec(S_comp , x, geometry);
+#endif
+
+res = Y - w;
+beta = res.norm();
+res_sps = res.sparseView();
+v.col(0) = res_sps / beta;
+
+n = 0; 
+while ((n < maxit) && (err(n) > tol)){
 
 vn= v.col(n);
 
@@ -933,17 +948,14 @@ H(n+1 , n) = w.norm();
 w_sps = w.sparseView();
 v.col(n+1) = w_sps / H(n+1,n);
  
-if(n>0)
 Rigi.conservativeResize(n+2 , n+2);
 
 Rigi = det_approx (beta , n , H);
 
-if(n>0)
 Ri.conservativeResize(n+2 , n+1);
 
 Ri = Rigi.block(0 , 0 , n+2 , n+1);
 
-if(n>0)
 gi.conservativeResize(n+2);
 
 gi = Rigi.col(n+1);
@@ -951,26 +963,25 @@ gi = Rigi.col(n+1);
 err.conservativeResize(n+2);
 err(n+1) = abs(gi(n+1))/abs_y;
 n = n + 1;
+brojac++;
 }
 
-if (n>0){
 Ripom = Ri.block(0,0,n,n);
 gipom = gi.segment(0 , n);
 ym = Ripom.colPivHouseholderQr().solve(gipom);
-x = Vector<t_complex>::Zero(N);
+
 for (int j = 0; j != ym.size(); ++j) {
 vn =v.col(j);
 x = x + ym(j) * vn;
 }
-x = x + x0;
+
+}// for restart
+
 if(rank==0){
-std::cout<<"GMRES converged at iteration"<<'\t'<<n<<std::endl;
+std::cout<<"GMRES converged at iteration"<<'\t'<<brojac<<std::endl;
 std::cout<<"The relative residual is"<<'\t'<<err(n)<<std::endl;
 }
 
-}
-else
-x = xn;
 
 return x;
 }
@@ -1077,11 +1088,11 @@ return Y;
 
 Matrix<t_complex> det_approx (double beta, int n, Matrix<t_complex> &H){
 
-Matrix<t_complex> Rigi(2,2), Ri(2,1), W, POM(2,2);
-if(n>0){
+Matrix<t_complex> Rigi, Ri, W, POM(2,2);
+
 Rigi.conservativeResize(n+2 , n+2);
 Ri.conservativeResize(n+2 , n+1);
-}
+
 
 Vector<t_complex> gi = Vector<t_complex>::Zero(n+2);
 t_complex hi1, hi2, temp, c, s;

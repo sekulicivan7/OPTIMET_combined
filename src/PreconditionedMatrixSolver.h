@@ -50,9 +50,10 @@ public:
 
     double tol = 1e-6;
     int maxit = 340;
+    int no_rest = 1;
 
     if (geometry->ACA_cond_)
-    X_sca_ = Gmres_Zcomp(S_comp_FF, Q, tol, maxit, *geometry);
+    X_sca_ = Gmres_Zcomp(S_comp_FF, Q, tol, maxit, no_rest, *geometry);
     else
     X_sca_ = S.colPivHouseholderQr().solve(Q);
     
@@ -69,7 +70,7 @@ public:
     K1ana = source_vectorSH_K1ana(*geometry, incWave, X_int_conj, X_sca_, CGcoeff);
     
     if (geometry->ACA_cond_)
-    X_sca_SH = Gmres_Zcomp(S_comp_SH, K, tol, maxit, *geometry);
+    X_sca_SH = Gmres_Zcomp(S_comp_SH, K, tol, maxit, no_rest, *geometry);
     else
     X_sca_SH = V.colPivHouseholderQr().solve(K);
         

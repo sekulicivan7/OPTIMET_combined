@@ -1,9 +1,9 @@
 <simulation>
-  <harmonics nmax="10" />
+  <harmonics nmax="8" />
   <ACA compression="yes" />
 </simulation>
 <source type="planewave">
-  <wavelength value="800" />
+  <wavelength value="1200" />
   <propagation theta="45.0" phi="90.0" />
   <polarization Etheta.real="1.0" Etheta.imag="0.0" Ephi.real="0.0" Ephi.imag="0.0" />
   <SHsources condition="yes" />
@@ -11,20 +11,19 @@
 <geometry>
   <structure type="cube">
     <object type="sphere">
-    <properties radius="100.0" />
+    <properties radius="50.0" />
     <epsilon type="SiliconModel"/>
     <mu type="relative" value.real="1.0" value.imag="0.0" />
     </object>
-    <properties points="10" distance="350.0" />
+    <properties points="3" distance="300.0" />
    </structure>
 </geometry>
-<output type="field">
-<grid type="cartesian">
-    <x min ="-150" max="3500" steps="191" />
-    <y min ="-150" max="3500" steps="191" />
-    <z min ="699.9" max="700.1" steps="2" />
-</grid>
+<output type="response">
+  <scan type="A+E">
+    <wavelength initial="500" final="501" stepsize="1" />
+  </scan>
 </output>
+
 
 
 
