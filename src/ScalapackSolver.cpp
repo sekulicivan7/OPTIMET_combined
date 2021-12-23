@@ -53,10 +53,12 @@ Scalapack::parallel_input_SH(Vector<t_complex> &K, int Dims) const {
 
 void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vector<t_complex> &X_sca_SH,
                       Vector<t_complex> &X_int_SH, std::vector<double *> CGcoeff) const {
- 
+    
+    // parameters for ACA-gmres solver
     double tol = 1e-6;
-    int maxit = 3;
-    int no_rest = 5;
+    int maxit = 250;
+    int no_rest = 3;
+    // FF part
     Vector<t_complex> Q;
     
     if (geometry->ACA_cond_){
@@ -68,7 +70,6 @@ void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vect
     if(context().is_valid()) {
     auto input = parallel_input();
     // Now the actual work
-   // auto start3 = high_resolution_clock::now();
     auto const gls_result =
         scalapack::general_linear_system(std::get<0>(input), std::get<1>(input));
     
@@ -108,8 +109,6 @@ void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vect
     K = distributed_source_vector_SH(*geometry, KmNOD, context(), block_size());
      auto input_SH = parallel_input_SH(K, Dims);
     // Now the actual work
-   //  auto start4 = high_resolution_clock::now();
- 
     auto const gls_result_SH =
         scalapack::general_linear_system(std::get<0>(input_SH), std::get<1>(input_SH));
 

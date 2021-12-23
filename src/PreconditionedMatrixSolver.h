@@ -46,12 +46,12 @@ public:
 
               Vector<t_complex> &X_int_SH, std::vector<double *> CGcoeff) const override {
   
-    // fundamental frequency
-
+    // parameters for ACA-gmres solver
     double tol = 1e-6;
-    int maxit = 340;
-    int no_rest = 1;
-
+    int maxit = 240;
+    int no_rest = 2;
+    
+    // FF case
     if (geometry->ACA_cond_)
     X_sca_ = Gmres_Zcomp(S_comp_FF, Q, tol, maxit, no_rest, *geometry);
     else
@@ -59,7 +59,7 @@ public:
     
     unprecondition(X_sca_, X_int_);
     
-    // SH frequency
+    // SH case
     if(incWave->SH_cond){
 
     Vector<t_complex> K, K1ana, X_int_conj;
@@ -105,7 +105,7 @@ protected:
   Matrix<t_complex> S;
   //! Sources fundamental frequency
   Vector<t_complex> Q;
-  // Second harmonic scattering matrix
+  // SH scattering matrix
   Matrix<t_complex> V;
 
   std::vector<Matrix_ACA> S_comp_FF;
@@ -123,8 +123,7 @@ protected:
     X_int_SH = AbstractSolver::solveInternal_SH(X_sca_SH, K1ana);
     
     }
-
-   
+  
 };
 }
 }

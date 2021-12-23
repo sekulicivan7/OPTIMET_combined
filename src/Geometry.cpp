@@ -247,12 +247,6 @@ void Geometry::Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff)
 }
 
 
-
-
-
-
-// Second harmonic sources
-
 int Geometry::getIncLocalSH(std::vector<double *> CLGcoeff, int objectIndex_, 
                          std::shared_ptr<optimet::Excitation const> incWave_,
                        optimet::Vector<optimet::t_complex> &internalCoef_FF_, int nMaxS_, 

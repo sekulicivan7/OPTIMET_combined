@@ -78,7 +78,6 @@ protected:
 
 private:
   std::string caseFile; /**< Name of the case without extensions. */
-  //! \details Fake if not compiled with MPI
   mpi::Communicator communicator_;
 };
 }

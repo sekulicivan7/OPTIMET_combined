@@ -33,8 +33,8 @@
 
 namespace optimet {
 /**
- * The Result class is used to provide post simulation
- * output functions including field profiles, absorbption
+ * The Result class is used to provide post processing
+ * output functions including field profiles, absorption
  * and extinction cross sections, and scattering
  * coefficients.
  */
@@ -50,11 +50,11 @@ private:
   optimet::t_uint nMax;
   optimet::t_uint nMaxS;
 public:
-  Vector<t_complex> scatter_coef;   /**< The scattering coefficients. */
-  Vector<t_complex> internal_coef;  /**< The internal coefficients. */
+  Vector<t_complex> scatter_coef;   /**< The scattering coefficients FF */
+  Vector<t_complex> internal_coef;  /**< The internal coefficients FF */
   Vector<t_complex> scatter_coef_SH;   /**< The scattering coefficients. second harmonic */
   Vector<t_complex> internal_coef_SH;  /**< The internal coefficients. second harmonic */
-  std::vector<double *> CLGcoeff; // Coefficients needed for SH source calculations
+  std::vector<double *> CLGcoeff; // Clebsch Gordan Coefficients needed for SH source calculations
   /**
    * Initialization constructor for the Result class.
    * Fundamental Frequency version.
@@ -107,33 +107,31 @@ public:
 
 
   /**
-   * Returns the E and H fields at a given point.
+   * Returns the E and H fields, FF and SH, at a given point.
    * @param R_ the coordinates of the point.
    * @param EField_ SphericalP vector that will store the E field.
    * @param HField_ SphericalP vector that will store the H field.
    * @param projection_ defines spherical (1) or cartesian (0) projection.
    */
   void getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> &EField_FF,
-                   SphericalP<std::complex<double>> &HField_FF, SphericalP<std::complex<double>> &EField_SH,
-                   SphericalP<std::complex<double>> &HField_SH, bool projection_, std::complex<double> *coeffXmn, std::complex<double> *coeffXpl) const;
+      SphericalP<std::complex<double>> &HField_FF, SphericalP<std::complex<double>> &EField_SH,
+      SphericalP<std::complex<double>> &HField_SH, bool projection_, std::complex<double> *coeffXmn, std::complex<double> *coeffXpl) const;
                    
-
-
     
-  //Returns the Extinction Cross Section for Fundamental Frequency.
+  //Extinction Cross Section for Fundamental Frequency.
   #ifdef OPTIMET_MPI
   double getExtinctionCrossSection(int gran1, int gran2);
   
   // Scattering cross section for FF
   double getScatteringCrossSection(int gran1, int gran2);
 
-  //Returns the Absorption Cross Section for Fundamental Frequency..
+  //Absorption Cross Section for Fundamental Frequency.
   double getAbsorptionCrossSection(int gran1, int gran2);
   
-   //Returns the Scattering Cross Section for SH Frequency. 
+   //Scattering Cross Section for SH Frequency. 
   double getScatteringCrossSection_SH(int gran1, int gran2);
   
-  // Returns the Absorption Cross Section for SH Frequency.
+  //Absorption Cross Section for SH Frequency.
   double getAbsorptionCrossSection_SH(std::vector<double *> CLGcoeff, int gran1, int gran2);
   
   //Populate a grid with E and H fields.

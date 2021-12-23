@@ -48,11 +48,8 @@ void Scatterer::getTLocal(optimet::Matrix<optimet::t_complex>& Tmatrix,
   auto const k_s = omega_ * std::sqrt(elmag.epsilon * elmag.mu);
   auto const k_b = omega_ * std::sqrt(bground.epsilon * bground.mu);
   
-
   auto const rho = k_s / k_b;
   auto const r_0 = k_b * radius;
-  
-  
   auto const mu_sob = elmag.mu / bground.mu;
 
   auto const Jn = bessel<Bessel>(r_0, nMax);
@@ -60,7 +57,6 @@ void Scatterer::getTLocal(optimet::Matrix<optimet::t_complex>& Tmatrix,
   auto const Hn = bessel<Hankel1>(r_0, nMax);
   auto const Hnrho = bessel<Hankel1>(rho * r_0, nMax);
    
-
   std::complex<double> zeta_b2 = std::sqrt(bground.mu / bground.epsilon);
   std::complex<double> zeta_j2 = std::sqrt(elmag.mu / elmag.epsilon); 
   std::complex<double> zeta_boj2 = zeta_b2 / zeta_j2;  
@@ -86,18 +82,13 @@ void Scatterer::getTLocal(optimet::Matrix<optimet::t_complex>& Tmatrix,
     // TE Part  b_n coefficients fundamental frequency
     auto const TE = (psi / ksi) * (mu_sob * dpsi / psi - rho * dpsirho / psirho) /
                     (rho * dpsirho / psirho - mu_sob * dksi / ksi);
-                  
-                                        
-     
+                    
     result.segment(current, 2 * n + 1).fill(TE);
     
-
     // TM part  a_n coefficients fundamental frequency
     auto const TM = (psi / ksi) * (mu_sob * dpsirho / psirho - rho * dpsi / psi) /
                     (rho * dksi / ksi - mu_sob * dpsirho / psirho);  
-                    
-                                                
-                    
+                                       
     result.segment(current + N, 2 * n + 1).fill(TM);
     
 }
@@ -173,13 +164,10 @@ optimet::Vector<optimet::t_complex>
 Scatterer::getTLocalSH1_outer(optimet::t_real omega_, ElectroMagnetic const &bground) const {
   using namespace optimet;
   
-  
     // SH frequency coefficients 
   auto const k_s_SH = 2 * omega_ * std::sqrt(elmag.epsilon_SH * elmag.mu_SH);
   auto const k_b_SH = 2 * omega_ * std::sqrt(bground.epsilon * bground.mu);
-  
-
-   
+    
   auto const rho_SH = k_s_SH / k_b_SH;
   auto const r_0_SH = k_b_SH * radius;
   
@@ -196,12 +184,10 @@ Scatterer::getTLocalSH1_outer(optimet::t_real omega_, ElectroMagnetic const &bgr
 
   auto const N = HarmonicsIterator::max_flat(nMaxS) - 1;
   
-  
   Vector<t_complex> resultSH1 = Vector<t_complex>::Zero(2 * N);
  
   for(t_uint n(1), current(0); n <= nMaxS; current += 2 * n + 1, ++n) {
-    
-    
+      
       // SH frequency functions
     auto const psi_SH = r_0_SH * std::get<0>(Jn_SH)[n];
     auto const dpsi_SH = r_0_SH * std::get<1>(Jn_SH)[n] + std::get<0>(Jn_SH)[n];
@@ -216,17 +202,12 @@ Scatterer::getTLocalSH1_outer(optimet::t_real omega_, ElectroMagnetic const &bgr
     // TE1 Part  b_n' coefficients SH frequency                
     auto const TE_SH1 = - x_b2 * psirho_SH / (zeta_boj2 * ksi_SH * dpsirho_SH - psirho_SH * dksi_SH); 
     
-
     resultSH1.segment(current, 2 * n + 1).fill(TE_SH1);
- 
-                
-    // TM1 Part  a_n' coefficients SH frequency  
+             
+    // TM1 Part  a_n' coefficients SH frequency   
+    auto const TM_SH1 = - x_b2 * dpsirho_SH / (zeta_boj2 * psirho_SH * dksi_SH - ksi_SH * dpsirho_SH);
     
-     auto const TM_SH1 = - x_b2 * dpsirho_SH / (zeta_boj2 * psirho_SH * dksi_SH - ksi_SH * dpsirho_SH);
-    
-
     resultSH1.segment(current + N, 2 * n + 1).fill(TM_SH1);
-    
     
   }
   
@@ -274,15 +255,14 @@ Scatterer::getTLocalSH2_outer(optimet::t_real omega_, ElectroMagnetic const &bgr
     auto const dpsirho_SH = r_0_SH * rho_SH * std::get<1>(Jrho_SH)[n] + std::get<0>(Jrho_SH)[n];
     
      
-    // TE 2 Part  b_n'' coefficients SH frequency 
+    // TE2 Part  b_n'' coefficients SH frequency 
     auto const TE_SH2 = zeta_boj2 * x_b2 * dpsirho_SH / (zeta_boj2 * ksi_SH * dpsirho_SH - psirho_SH * dksi_SH);
               
     resultSH2.segment(current, 2 * n + 1).fill(TE_SH2);
     
   
-    // TM 2 Part  a_n'' coefficients SH frequency  
-    
-     auto const TM_SH2 =   zeta_boj2 * x_b2 * psirho_SH / (zeta_boj2 * psirho_SH * dksi_SH - ksi_SH * dpsirho_SH);
+    // TM2 Part  a_n'' coefficients SH frequency  
+    auto const TM_SH2 =   zeta_boj2 * x_b2 * psirho_SH / (zeta_boj2 * psirho_SH * dksi_SH - ksi_SH * dpsirho_SH);
                 
     resultSH2.segment(current + N, 2 * n + 1).fill(TM_SH2);
     

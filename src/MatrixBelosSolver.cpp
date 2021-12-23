@@ -49,8 +49,6 @@ void MatrixBelos::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_,Vec
       Scalapack::solve(X_sca_, X_int_, X_sca_SH, X_int_SH, CGcoeff);
       return;
     }
-    //belos_parameters()->set("Maximum Iterations", uppLIM);
-    //belos_parameters()->set("Num Blocks", 1000);
 
     // FF part
     auto input = parallel_input();

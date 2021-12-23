@@ -40,7 +40,7 @@ public:
 
   ElectroMagnetic bground; /**< The properties of the background. */
   
-  bool ACA_cond_; //condition for the ACA compression
+  bool ACA_cond_; //condition for the existence of ACA compression
   /**
    * Default constructor for the Geometry class. Does not initialize.
    */
@@ -72,7 +72,7 @@ public:
   //! \details Fails if no objects, or if two objects overlap.
   bool is_valid() const;
   
-  // vector used in the transformation of outer to inner expansion coefficients Analytical results FF
+  // transformation of scattered to inner expansion coefficients Analytical results FF
   int getCabsAux(double omega_, int objectIndex_, int nMax_, double *Cabs_aux_);
 
   /**
@@ -91,13 +91,12 @@ public:
   int getIncLocalSH(std::vector<double *> CLGcoeff, int objectIndex_, std::shared_ptr<optimet::Excitation const> incWave_,
          optimet::Vector<optimet::t_complex> &internalCoef_FF_, int nMaxS_, std::complex<double> *Inc_local); 
   
-  // Incident coefficients for the second harmonic case for parallelization
   #ifdef OPTIMET_MPI                 
   int getIncLocalSH_parallel(std::vector<double *> CLGcoeff, int gran1, int gran2, std::shared_ptr<optimet::Excitation const> incWave_,
          optimet::Vector<optimet::t_complex> &internalCoef_FF_, int nMaxS_, std::complex<double> *Inc_local);
   #endif     
            
- // Coefficient for absorption cross section second harmonic 
+ // Coefficients for absorption cross section calculation at second harmonic 
  #ifdef OPTIMET_MPI    
   int AbsCSSHcoeff(std::vector<double *> CLGcoeff, int gran1, int gran2, std::shared_ptr<optimet::Excitation const> incWave_, 
             optimet::Vector<optimet::t_complex> &internalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_SH_, int 

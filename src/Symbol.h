@@ -30,20 +30,7 @@
 namespace optimet {
 namespace symbol {
 
-/**
- * Calculates the Wigner 3j symbol: \n
- * (j1 j2 j3 \n
- *  m1 m2 m3).
- * @param j1 coefficient.
- * @param j2 coefficient.
- * @param j3 coefficient.
- * @param m1 coefficient.
- * @param m2 coefficient.
- * @param m3 coefficient.
- * @return the Wigner 3j symbol.
- */
- 
- 
+  
 double Wigner3j(int j1, int j2, int j3, int m1, int m2, int m3);
 
 std::complex<double> up_mn(CompoundIterator &kk, double *C_10m1, double *C_11m1, int nMax, 
@@ -84,7 +71,9 @@ std::complex<double> CXp1(CompoundIterator &kk, double *W_m1m1, double *W_00, do
                             optimet::Vector<optimet::t_complex> &internalCoef_FF_,
                             double r,
                             int objectIndex_, double omega,
-                            const Scatterer &object);                            
+                            const Scatterer &object);  
+
+// Calculate Clebsch Gordan coefficients                          
 #ifdef OPTIMET_MPI                                                       
 void C_10m1coeff (double *C_10m1, int nMax, int nMaxS, int gran1, int gran2); 
 void C_11m1coeff (double *C_11m1, int nMax, int nMaxS, int gran1, int gran2);  

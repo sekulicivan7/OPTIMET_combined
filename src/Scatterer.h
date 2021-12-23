@@ -96,9 +96,9 @@ public:
   Spherical<double> vR;  /**< The coordinates of the center of the scatterer.*/
   ElectroMagnetic elmag; /**< The electromagnetic properties of the scatterer.*/
   double radius;         /**< The radius of a sphere encompassing the scatterer.*/
-  int nMax;              /**< Maximum value of the n iterator. */
-  int nMaxS;              /**< Maximum value of the n iterator SH */  
-  std::string scatterer_type; // type of scatterer, sphere or arbitrary shaped
+  int nMax;              /**< Maximum value of the nth iterator FF */
+  int nMaxS;              /**< Maximum value of the nth iterator SH */  
+  std::string scatterer_type; // type of scatterer, spherical or non-spherical
 
   // FF Tmatrix for spherical objects
   void getTLocal(optimet::Matrix<optimet::t_complex>& Tmatrix, optimet::t_real omega_, ElectroMagnetic const &bground) const;
@@ -110,18 +110,17 @@ public:
   
   optimet::Vector<optimet::t_complex> getTLocalSH2_outer(optimet::t_real omega_, ElectroMagnetic const &bground) const;
   
-  //! Coefficients for field inside a sphere FF
+  //! Coefficients for fields inside a sphere FF
   optimet::Vector<optimet::t_complex>
   getIaux(optimet::t_real omega_, ElectroMagnetic const &bground) const;
   
-  //! Coefficients for field inside a sphere SH
+  //! Coefficients for fields inside a sphere SH
   optimet::Vector<optimet::t_complex>
   getIauxSH1(optimet::t_real omega_, ElectroMagnetic const &bground) const;
   
   optimet::Vector<optimet::t_complex>
   getIauxSH2(optimet::t_real omega_, ElectroMagnetic const &bground) const;
-  
-  
+    
 };
 
 #endif /* SCATTERER_H_ */

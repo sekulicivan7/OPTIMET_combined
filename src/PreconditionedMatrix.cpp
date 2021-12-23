@@ -123,7 +123,7 @@ Vector<t_complex> source_vectorSH_K1ana_parallel(Geometry &geometry,
     }
 
     MPI_Bcast(&sizeFFint, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    X_int_proc.resize(sizeFFint); // broadcasting internal and external FF field coeff
+    X_int_proc.resize(sizeFFint); // broadcasting internal and scattering FF field coeff
     MPI_Bcast(&X_int_proc(0), sizeFFint, MPI_DOUBLE_COMPLEX, 0, MPI_COMM_WORLD);
 
    if (rank < (TMax % size)) {
@@ -249,7 +249,7 @@ auto const nobj = geometry.objects.size();
     }
     
     MPI_Bcast(&sizeFFint, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    X_int_proc.resize(sizeFFint); // broadcasting internal and external FF field coeff
+    X_int_proc.resize(sizeFFint); // broadcasting internal and scattering FF field coeff
     X_sca_proc.resize(sizeFFint);
     MPI_Bcast(&X_int_proc(0), sizeFFint, MPI_DOUBLE_COMPLEX, 0, MPI_COMM_WORLD);
     MPI_Bcast(&X_sca_proc(0), sizeFFint, MPI_DOUBLE_COMPLEX, 0, MPI_COMM_WORLD);
@@ -497,8 +497,6 @@ void Scattering_matrix_ACA_FF(Geometry const &geometry, std::shared_ptr<Excitati
   int nobj = geometry.objects.size();
   S_comp.resize(nobj*nobj);
   
-  
- 
   for(int ii = 0; ii != nobj; ++ii) {
       
      geometry.objects[ii].getTLocal(Tmatrix, incWave->omega(), geometry.bground);
@@ -890,7 +888,7 @@ for (int j = 0; j < (K.size()-1); ++j) {
 return imax;
 }
 
-// gmres solver for compressed matrices, compressed blocks are always square
+// gmres solver for ACA compressed matrices, compressed blocks are always square
 Vector<t_complex> Gmres_Zcomp(std::vector<Matrix_ACA>const &S_comp, Vector<t_complex>const &Y, double tol, int maxit, int no_rest, Geometry const &geometry){
 
 int N = Y.size(); // right hand side
@@ -1070,7 +1068,7 @@ for(int ii = 0; ii != nobj; ii++)  {
 
   distance = Tools::findDistance(geometry.objects[ii].vR, geometry.objects[jj].vR);
 
-   if (distance >= 2.0*(geometry.objects[ii].radius + geometry.objects[jj].radius)){ //admissibility
+   if (distance >= 2.0*(geometry.objects[ii].radius + geometry.objects[jj].radius)){ //ACA admissibility
       
         Y.segment(ii*N , N) = Y.segment(ii*N , N) + (S_comp[ii*nobj + jj].U)*(S_comp[ii*nobj + jj].V * J.segment(jj*N , N));
 
@@ -1177,11 +1175,11 @@ Matrix<t_complex> preconditioned_scattering_matrixSH(Geometry const &geometry,
   if(geometry.objects.size() == 0)
     return Matrix<t_complex>(0, 0);
   // Check nMax is same accross all objects
-     auto const nMaxS = geometry.objects.front().nMaxS;
-       for(auto const &scatterer : geometry.objects)
-          if(scatterer.nMaxS != nMaxS)
-                 throw std::runtime_error("All objects must have same number of SH harmonics"); 
-                   return preconditioned_scattering_matrixSH(geometry.objects, geometry.bground, incWave);
+    auto const nMaxS = geometry.objects.front().nMaxS;
+    for(auto const &scatterer : geometry.objects)
+     if(scatterer.nMaxS != nMaxS)
+     throw std::runtime_error("All objects must have same number of SH harmonics"); 
+     return preconditioned_scattering_matrixSH(geometry.objects, geometry.bground, incWave);
                       
                       }
 
@@ -1477,8 +1475,8 @@ Vector<t_complex> source_vector(Geometry const &geometry, std::shared_ptr<Excita
 
 
 
-Vector<t_complex> source_vectorSH(Geometry &geometry, std::vector<Scatterer> const &objects,
-                std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_, std::vector<double *> CGcoeff) {
+Vector<t_complex> source_vectorSH(Geometry &geometry, std::vector<Scatterer> const &objects, std::shared_ptr<Excitation const> incWave, 
+Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_, std::vector<double *> CGcoeff) {
   return source_vectorSH(geometry, objects.begin(), objects.end(), incWave, internalCoef_FF_, scatteredCoef_FF_, CGcoeff);
 }
 

@@ -100,7 +100,7 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
       std::complex<double>(0.0, 0.0), std::complex<double>(0.0, 0.0),
       std::complex<double>(0.0, 0.0));
  
-  int NO = geometry->objects.size(); // how many particles there is
+  int NO = geometry->objects.size(); // the number of particles
   
    std::complex<double> amnSH, bmnSH, cmnSH, dmnSH;
   
@@ -141,8 +141,6 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
     
 
     // Scattered field
-       // this a fundamental frequency result 
-     
     for(size_t j = 0; j < geometry->objects.size(); j++) {
       
 
@@ -167,14 +165,14 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
     }
     
   
-      // this a second harmonic frequency result 
+  // this a second harmonic frequency result 
   if(excitation->SH_cond){  
   for(size_t j = 0; j < geometry->objects.size(); j++) {
 
 
       Rrel = Tools::toPoint(R_, geometry->objects[j].vR);
       
-      optimet::AuxCoefficients aCoefSH(Rrel, std::complex<double>(2.0, 0.0) * waveK, 0, nMaxS); //radiative spherical
+      optimet::AuxCoefficients aCoefSH(Rrel, std::complex<double>(2.0, 0.0) * waveK, 0, nMaxS); //radiative VSWFs
 
       for(p = 0; p < p.max(nMaxS); p++) {
       
@@ -457,7 +455,7 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
    
    Spherical<double> Rrel = point_ - Spherical<double>(0.0, 0.0, 0.0);
   
-   optimet::Coupling const coupling(Rrel,  2.0 * waveK, nMaxS, false);  // waveK is doubled
+   optimet::Coupling const coupling(Rrel,  2.0 * waveK, nMaxS, false);  // waveK is doubled due to SH
    
     for(p = 0; p < pMax; p++)   {
     for(q = 0; q < qMax; q++) {
@@ -506,7 +504,7 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
 
   delete[] T_AB;
   
-  return  (1.0 / (4.0 * ArbCf))* temp1 ; // frequency doubled because of SH
+  return  (1.0 / (4.0 * ArbCf))* temp1 ; 
 }
 
 
@@ -515,7 +513,7 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
 
   auto const omega = excitation->omega();
       
-  int NO = geometry->objects.size(); // how many particles there is
+  int NO = geometry->objects.size(); // number of particles
   
   double absCS (0.0);
   
@@ -809,7 +807,7 @@ double Result::getAbsorptionCrossSection_SH(std::vector<double *> CLGcoeff) {
  
   std::complex<double> coeffXpl[pMaxS], coeffXmn[pMaxS];
     
-  // Calculate the fields Fundamental Frequency and SH Frequency
+  // Calculate the fields at FF and SH frequencies
 
     SphericalP<std::complex<double>> EField_FF;
     SphericalP<std::complex<double>> HField_FF;
@@ -899,7 +897,7 @@ int Result::setFields(OutputGrid &oEGrid_FF, OutputGrid &oHGrid_FF, OutputGrid &
   
   std::complex<double> coeffXpl[pMaxS], coeffXmn[pMaxS];
     
-  // Calculate the fields Fundamental Frequency and SH Frequency
+  // Calculate the fields at FF and SH frequencies
   while(!((oEGrid_FF.gridDone)&&(oEGrid_SH.gridDone))) {
     Rloc = oEGrid_FF.getPoint();
     oHGrid_FF.getPoint();

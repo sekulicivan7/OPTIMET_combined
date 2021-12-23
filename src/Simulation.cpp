@@ -444,7 +444,7 @@ void Simulation::scan_wavelengths_parallel(Run &run, std::shared_ptr<solver::Abs
     
   }
 
-  // Now scan over the wavelengths given in params
+  // Now go over the wavelength range given in input file
   double lami = run.params[0];
   double lamf = run.params[1];
   int steps = run.params[2];
@@ -465,7 +465,7 @@ void Simulation::scan_wavelengths_parallel(Run &run, std::shared_ptr<solver::Abs
     run.excitation->updateWavelength(lam);
     run.geometry->update(run.excitation);
 
-    solver->update(run); // building of the sistem matrices   
+    solver->update(run); // building of the system matrices   
 
     Vector<double> absCS_SH_vec(size), scaCS_SH_vec(size), scaCS_FF_vec(size), extCS_FF_vec(size);
 
@@ -479,7 +479,7 @@ void Simulation::scan_wavelengths_parallel(Run &run, std::shared_ptr<solver::Abs
    
   solver->solve(result.scatter_coef, result.internal_coef, result.scatter_coef_SH, result.internal_coef_SH, CLGcoeff);
  
-      if (size <= NO) {  // if the number of processes is less or eq numb of part
+      if (size <= NO) {  // if the number of processes is less or eq numb of particles
 
     if (rank < (NO % size)) {
     gran1 = rank * (NO/size + 1);
@@ -529,7 +529,7 @@ void Simulation::scan_wavelengths_parallel(Run &run, std::shared_ptr<solver::Abs
   }// if
 
 
- else if (size > NO)  {  // if the number of processes is more than numb of part
+ else if (size > NO)  {  // if the number of processes is more than numb of particles
 
     if (rank < (TMax % size)) {
     gran1AC = rank * (TMax/size + 1);
@@ -588,7 +588,6 @@ void Simulation::scan_wavelengths_parallel(Run &run, std::shared_ptr<solver::Abs
 }// else if
 
 }// for
-
 
   if(communicator().rank() == communicator().root_id()) {
 

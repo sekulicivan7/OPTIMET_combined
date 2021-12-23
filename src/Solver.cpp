@@ -76,8 +76,6 @@ Vector<t_complex> convertInternal(Vector<t_complex> const &scattered, t_real con
   return result;
 }
 
-
-
 Vector<t_complex> convertIndirect(Vector<t_complex> const &scattered, t_real const &omega,
                                   ElectroMagnetic const &bground,
                                   std::vector<Scatterer> const &objects) {
