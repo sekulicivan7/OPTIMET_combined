@@ -26,93 +26,48 @@ namespace solver {
 void MatrixBelos::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_,Vector<t_complex> &X_sca_SH,
                          Vector<t_complex> &X_int_SH, std::vector<double *> CGcoeff) const {
 
-  if(belos_parameters()->get<std::string>("Solver", "GMRES") == "scalapack")
-    return Scalapack::solve(X_sca_, X_int_, X_sca_SH, X_int_SH, CGcoeff);
-  auto const splitcomm = communicator().split(context().is_valid());
-    int nMaxS = geometry->nMaxS();
-    int N = nMaxS * (nMaxS + 2);
-    int nobj = geometry->objects.size();
-    double tol = 1e-6;
-    int maxit = 340;
-    int no_rest = 1;
-    Vector<t_complex> Q;
-
-    if (geometry->ACA_cond_){
-    Q = source_vector(*geometry, incWave);
-    X_sca_ = Gmres_Zcomp(S_comp_FF, Q, tol, maxit, no_rest, *geometry);
-    PreconditionedMatrix::unprecondition(X_sca_, X_int_);
-    }
-  else{
   if(context().is_valid()) {
-   auto const solver = belos_parameters()->get<std::string>("Solver");
-    if(solver == "scalapack") {
-      Scalapack::solve(X_sca_, X_int_, X_sca_SH, X_int_SH, CGcoeff);
-      return;
-    }
+   
+    Matrix<t_complex> TmatrixFF, RgQmatrixFF;
+    int nMax = geometry->nMax();
+    int pMax = nMax * (nMax + 2);
+    TmatrixFF = S.block(0 ,0 , 2*pMax, 2*pMax);
+    RgQmatrixFF = S.block(0 , 2*pMax , 2*pMax, 2*pMax);
 
-    // FF part
-    auto input = parallel_input();
+    X_sca_ = Q;
 
-    // Now the actual work
-    auto const gls_result = scalapack::gmres_linear_system(std::get<0>(input), std::get<1>(input),
-                                                           belos_parameters(), splitcomm);
 
-    if(std::get<1>(gls_result) != 0)
-      throw std::runtime_error("Error encountered while solving the linear system");
-    // Transfer back to root
-    X_sca_ = gather_all_source_vector(std::get<0>(gls_result));
-    PreconditionedMatrix::unprecondition(X_sca_, X_int_);
-   }
-}
-   if(context().size() != communicator().size()) {
-    broadcast_to_out_of_context(X_sca_, context(), communicator());
-    broadcast_to_out_of_context(X_int_, context(), communicator());
-   }
+    PreconditionedMatrix::unprecondition(X_sca_, X_int_, TmatrixFF, RgQmatrixFF);
+ }
 
   if(incWave->SH_cond){
-  Vector<t_complex> KmNOD, K1, X_int_conj, K1ana;
-  X_int_conj = X_int_.conjugate();
+  Vector<t_complex> KmNOD, K1;
+  Matrix<t_complex> TmatrixSH, RgQmatrixSH;
 
-  KmNOD = distributed_source_vector_SH_Mnode(*geometry, incWave, X_int_conj, X_sca_, CGcoeff);
-  MPI_Barrier(MPI_COMM_WORLD);
-  
-  K1ana = source_vectorSH_K1ana_parallel(*geometry, incWave, X_int_conj, X_sca_, CGcoeff);
+   int nMaxS = geometry->nMaxS();
+   int pMax = nMaxS * (nMaxS + 2);
+  TmatrixSH = V.block(0 ,0 , 2*pMax, 2*pMax);
+  RgQmatrixSH = V.block(0 , 2*pMax , 2*pMax, 2*pMax);
+
+
+  KmNOD = distributed_source_vector_SH_Mnode(*geometry, incWave, X_int_, X_sca_, TmatrixSH);
   MPI_Barrier(MPI_COMM_WORLD);
 
-  if (geometry->ACA_cond_){
-  X_sca_SH = Gmres_Zcomp(S_comp_SH, KmNOD, tol, maxit, no_rest, *geometry);
-  PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1ana);
-  }
-  else{
+  K1 =  distributed_vector_SH_AR1(*geometry, incWave, X_int_, X_sca_);
+  MPI_Barrier(MPI_COMM_WORLD);
+
+
   if(context().is_valid()) {
   //SH part
-   
-     Vector<t_complex> K;
-     int Dims = KmNOD.size();
 
-     K = distributed_source_vector_SH(*geometry, KmNOD,  context(), block_size());
+    X_sca_SH = KmNOD;
+
+    PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1, RgQmatrixSH);
  
-     auto input_SH = parallel_input_SH(K, Dims);
-
-   // Now the actual work
-    auto const gls_result_SH =
-    scalapack::gmres_linear_system(std::get<0>(input_SH), std::get<1>(input_SH),
-                                                           belos_parameters(), splitcomm);
-
-    if(std::get<1>(gls_result_SH) != 0)
-      throw std::runtime_error("Error encountered while solving the linear system");
-    // Transfer back to root
-    X_sca_SH = gather_all_source_vector(std::get<0>(gls_result_SH));
-
-    PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1ana);
-  }
-}
-  if(context().size() != communicator().size()) {
-
-    broadcast_to_out_of_context(X_sca_SH, context(), communicator());
-    broadcast_to_out_of_context(X_int_SH, context(), communicator());
    
   }
+  
+
  }
 }
 }

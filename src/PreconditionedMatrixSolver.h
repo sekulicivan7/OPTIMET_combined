@@ -46,84 +46,76 @@ public:
 
               Vector<t_complex> &X_int_SH, std::vector<double *> CGcoeff) const override {
   
-    // parameters for ACA-gmres solver
-    double tol = 1e-6;
-    int maxit = 240;
-    int no_rest = 2;
+    // fundamental frequency
     
-    // FF case
-    if (geometry->ACA_cond_)
-    X_sca_ = Gmres_Zcomp(S_comp_FF, Q, tol, maxit, no_rest, *geometry);
-    else
-    X_sca_ = S.colPivHouseholderQr().solve(Q);
+    Matrix<t_complex> TmatrixFF, RgQmatrixFF; 
+    int nMax = geometry->nMax();
+    int pMax = nMax * (nMax + 2);
+    TmatrixFF = S.block(0 ,0 , 2*pMax, 2*pMax);
+    RgQmatrixFF = S.block(0 , 2*pMax , 2*pMax, 2*pMax);
+ 
+    X_sca_ = Q;
     
-    unprecondition(X_sca_, X_int_);
+    unprecondition(X_sca_, X_int_, TmatrixFF, RgQmatrixFF);
+
+    Vector<t_complex> K, K1;
+    Matrix<t_complex> TmatrixSH, RgQmatrixSH;
     
-    // SH case
+    // SH frequency
     if(incWave->SH_cond){
 
-    Vector<t_complex> K, K1ana, X_int_conj;
-    X_int_conj = X_int_.conjugate();
+    int nMaxS = geometry->nMaxS();
+    int pMax = nMaxS * (nMaxS + 2);
+    TmatrixSH = V.block(0 ,0 , 2*pMax, 2*pMax);
+    RgQmatrixSH = V.block(0 , 2*pMax , 2*pMax, 2*pMax);
 
-    K = source_vectorSH(*geometry, incWave, X_int_conj, X_sca_, CGcoeff);
+    K = source_vectorSH(*geometry, incWave, X_int_, X_sca_, TmatrixSH);
 
-    K1ana = source_vectorSH_K1ana(*geometry, incWave, X_int_conj, X_sca_, CGcoeff);
+    K1 = source_vectorSHarb1(*geometry, incWave, X_int_, X_sca_);
+
+    X_sca_SH = K;
     
-    if (geometry->ACA_cond_)
-    X_sca_SH = Gmres_Zcomp(S_comp_SH, K, tol, maxit, no_rest, *geometry);
-    else
-    X_sca_SH = V.colPivHouseholderQr().solve(K);
-        
-    unprecondition_SH(X_sca_SH, X_int_SH, K1ana);
+    unprecondition_SH(X_sca_SH, X_int_SH, K1, RgQmatrixSH);
     }
   }
   
+    
 
   void update() override {
   
     Q = source_vector(*geometry, incWave);
 
-    if (geometry->ACA_cond_)
-    Scattering_matrix_ACA_FF(*geometry, incWave, S_comp_FF);
-    else
-    S = preconditioned_scattering_matrix(*geometry, incWave);
-
-    if(incWave->SH_cond){
-
-    if (geometry->ACA_cond_)
-    Scattering_matrix_ACA_SH(*geometry, incWave, S_comp_SH);
-    else
-    V = preconditioned_scattering_matrixSH(*geometry, incWave);
-
- }
+    S = getTRgQmatrix_FF_parr(*geometry, incWave);
+    if(incWave->SH_cond)
+    V = getTRgQmatrix_SH_parr(*geometry, incWave);
 
   }
   
 
 protected:
-  //! FF scattering matrix
+  
   Matrix<t_complex> S;
-  //! Sources fundamental frequency
+  
   Vector<t_complex> Q;
-  // SH scattering matrix
+  
   Matrix<t_complex> V;
-
-  std::vector<Matrix_ACA> S_comp_FF;
-  std::vector<Matrix_ACA> S_comp_SH;
+  
+  Vector<t_complex> K;
 
   //! Unpreconditions the result of preconditioned computation
-  void unprecondition(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_) const {
-    X_sca_ = AbstractSolver::convertIndirect(X_sca_);
-    X_int_ = AbstractSolver::solveInternal(X_sca_);
+  void unprecondition(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Matrix<t_complex> &Tmat, Matrix<t_complex> &RgQ) const {
+    X_sca_ = AbstractSolver::convertIndirect(X_sca_, Tmat);
+    X_int_ = AbstractSolver::solveInternal(X_sca_, RgQ);
     }
      
     
-    void unprecondition_SH(Vector<t_complex> &X_sca_SH, Vector<t_complex> &X_int_SH,  Vector<t_complex> &K1ana) const {
+    void unprecondition_SH(Vector<t_complex> &X_sca_SH, Vector<t_complex> &X_int_SH, Vector<t_complex> &K1, Matrix<t_complex> &RgQ) const {
     X_sca_SH = AbstractSolver::convertIndirect_SH_outer(X_sca_SH);
-    X_int_SH = AbstractSolver::solveInternal_SH(X_sca_SH, K1ana);
+    X_int_SH = AbstractSolver::solveInternal_SH(X_sca_SH, K1, RgQ);
     
     }
-  
+
+   
 };
 }
 }

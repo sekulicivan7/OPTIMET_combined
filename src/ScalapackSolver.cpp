@@ -54,102 +54,94 @@ Scalapack::parallel_input_SH(Vector<t_complex> &K, int Dims) const {
 void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vector<t_complex> &X_sca_SH,
                       Vector<t_complex> &X_int_SH, std::vector<double *> CGcoeff) const {
     
-    // parameters for ACA-gmres solver
-    double tol = 1e-6;
-    int maxit = 250;
-    int no_rest = 3;
-    // FF part
-    Vector<t_complex> Q;
-    
-    if (geometry->ACA_cond_){
-    Q = source_vector(*geometry, incWave);
-    X_sca_ = Gmres_Zcomp(S_comp_FF, Q, tol, maxit, no_rest, *geometry);
-    PreconditionedMatrix::unprecondition(X_sca_, X_int_);
-    }
-    else {
-    if(context().is_valid()) {
-    auto input = parallel_input();
-    // Now the actual work
-    auto const gls_result =
-        scalapack::general_linear_system(std::get<0>(input), std::get<1>(input));
-    
-    if(std::get<1>(gls_result) != 0)
-      throw std::runtime_error("Error encountered while solving the linear system");
-    // Transfer back to root
-    X_sca_ = gather_all_source_vector(std::get<0>(gls_result)); 
-    PreconditionedMatrix::unprecondition(X_sca_, X_int_);
+ if(context().is_valid()) {
+  
+     auto const nobj = geometry->objects.size();
+    Matrix<t_complex> TmatrixFF, RgQmatrixFF, SCATmatFF;
+    int nMax = geometry->nMax();
+    int pMax = nMax * (nMax + 2);
+    TmatrixFF = S.block(0 ,0 , 2*pMax, nobj*2*pMax);
+    RgQmatrixFF = S.block(0 , nobj*2*pMax , 2*pMax, nobj*2*pMax);
 
+    SCATmatFF = ScatteringMatrixFF(TmatrixFF, *geometry, incWave);
+    
+    X_sca_ = SCATmatFF.colPivHouseholderQr().solve(Q);   
+    PreconditionedMatrix::unprecondition(X_sca_, X_int_, TmatrixFF, RgQmatrixFF);
+    
+
+  //  if(communicator().rank()==0){
+   //  std::cout<<X_sca_.norm()<<std::endl;
+   //  std::cout<<X_int_.norm()<<std::endl;
+ //  }
   }
-  }
+
   if(context().size() != communicator().size()) {
     broadcast_to_out_of_context(X_sca_, context(), communicator());
     broadcast_to_out_of_context(X_int_, context(), communicator());
   }
 
-  if(incWave->SH_cond){
-  Vector<t_complex> KmNOD, K1, K1ana, X_int_conj;
-  X_int_conj = X_int_.conjugate();
-  
-  KmNOD = distributed_source_vector_SH_Mnode(*geometry, incWave, X_int_conj, X_sca_, CGcoeff);
-  MPI_Barrier(MPI_COMM_WORLD);
-  
-  K1ana = source_vectorSH_K1ana_parallel(*geometry, incWave, X_int_conj, X_sca_, CGcoeff);
-  MPI_Barrier(MPI_COMM_WORLD);
 
-  if (geometry->ACA_cond_){
-  X_sca_SH = Gmres_Zcomp(S_comp_SH, KmNOD, tol, maxit, no_rest, *geometry);
-  PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1ana);
-  }
-  else{   
+  if(incWave->SH_cond){
+  auto const nobj = geometry->objects.size();
+  Vector<t_complex> KmNOD, K1;
+  Matrix<t_complex> TmatrixSH, RgQmatrixSH, SCATmatSH;
+  int nMaxS = geometry->nMaxS();
+  int pMax = nMaxS * (nMaxS + 2);
+  TmatrixSH = V.block(0 ,0 , 2*pMax, nobj*2*pMax);
+  RgQmatrixSH = V.block(0 , nobj*2*pMax , 2*pMax, nobj*2*pMax);
+
+ // auto start = high_resolution_clock::now();
+   
+  KmNOD = distributed_source_vector_SH_Mnode(*geometry, incWave, X_int_, X_sca_, TmatrixSH);
+   
+//  auto stop = high_resolution_clock::now();
+//  auto duration = duration_cast<microseconds>(stop - start);
+//  std::cout << "RH SH vector assembly" << std::endl;
+//  std::cout << duration.count()/1e6 << std::endl; 
+  MPI_Barrier(MPI_COMM_WORLD);
+  K1 =  distributed_vector_SH_AR1(*geometry, incWave, X_int_, X_sca_);
+  MPI_Barrier(MPI_COMM_WORLD);
+      
   if(context().is_valid()) {
     //SH part
-    int Dims = KmNOD.size();
-    Vector<t_complex> K;
- 
-    K = distributed_source_vector_SH(*geometry, KmNOD, context(), block_size());
-     auto input_SH = parallel_input_SH(K, Dims);
-    // Now the actual work
-    auto const gls_result_SH =
-        scalapack::general_linear_system(std::get<0>(input_SH), std::get<1>(input_SH));
-
-    if(std::get<1>(gls_result_SH) != 0)
-      throw std::runtime_error("Error encountered while solving the linear system");
-    // Transfer back to root
-    X_sca_SH = gather_all_source_vector(std::get<0>(gls_result_SH));
-       
-    PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1ana);
     
+    SCATmatSH = ScatteringMatrixSH(TmatrixSH, *geometry, incWave);
+    X_sca_SH = SCATmatSH.colPivHouseholderQr().solve(KmNOD);
+
+    PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1, RgQmatrixSH);
+      
+  // if(communicator().rank()==0){
+   //  std::cout<<X_sca_SH.norm()<<std::endl;
+  //   std::cout<<X_int_SH.norm()<<std::endl;
+ // }
+ 
+
   }
-}
+
 if(context().size() != communicator().size()) {
     broadcast_to_out_of_context(X_sca_SH, context(), communicator());
     broadcast_to_out_of_context(X_int_SH, context(), communicator());
   }
+
+
 }
  
 }
 
 void Scalapack::update() {
 
-  Q = distributed_source_vector(source_vector(*geometry, incWave), context(), block_size());
-  MPI_Barrier(MPI_COMM_WORLD);  
+  Q = source_vector(*geometry, incWave);
+  MPI_Barrier(MPI_COMM_WORLD);
   
-  if (geometry->ACA_cond_)
-  Scattering_matrix_ACA_FF_parallel(*geometry, incWave, S_comp_FF);
-  else
-  S = preconditioned_scattering_matrix(*geometry, incWave, context(), block_size());
+  S = getTRgQmatrix_FF_parr(*geometry, incWave);
   MPI_Barrier(MPI_COMM_WORLD);
 
  if(incWave->SH_cond){
-  
-  if (geometry->ACA_cond_)
-    Scattering_matrix_ACA_SH_parallel(*geometry, incWave, S_comp_SH);
-  else
-  V = preconditioned_scattering_matrix_SH(*geometry, incWave, context(), block_size());
+  V = getTRgQmatrix_SH_parr(*geometry, incWave);
   MPI_Barrier(MPI_COMM_WORLD);
- 
  }
- 
+
+
 }
 }
 }

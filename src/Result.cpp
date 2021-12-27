@@ -21,6 +21,7 @@
 #include "Result.h"
 #include "Tools.h"
 #include "constants.h"
+
 #include <complex>
 #include <cstdlib>
 #include <fstream>
@@ -51,9 +52,15 @@ void Result::init(std::shared_ptr<Geometry> geometry_, std::shared_ptr<Excitatio
   scatter_coef.resize(2 * Tools::iteratorMax(nMax) * geometry->objects.size());
   internal_coef.resize(2 * Tools::iteratorMax(nMax) * geometry->objects.size());
   
+  if (geometry->objects[0].scatterer_type == "sphere"){
+  scatter_coef_SH.resize(4 * Tools::iteratorMax(nMaxS) * geometry->objects.size());
+  internal_coef_SH.resize(4 * Tools::iteratorMax(nMaxS) * geometry->objects.size());
+ }
+
+else if (geometry->objects[0].scatterer_type == "arbitrary.shape"){
   scatter_coef_SH.resize(2 * Tools::iteratorMax(nMaxS) * geometry->objects.size());
   internal_coef_SH.resize(2 * Tools::iteratorMax(nMaxS) * geometry->objects.size());
- 
+  }
 
 }
 
@@ -100,7 +107,7 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
       std::complex<double>(0.0, 0.0), std::complex<double>(0.0, 0.0),
       std::complex<double>(0.0, 0.0));
  
-  int NO = geometry->objects.size(); // the number of particles
+  int NO = geometry->objects.size(); // how many particles there is
   
    std::complex<double> amnSH, bmnSH, cmnSH, dmnSH;
   
@@ -141,6 +148,8 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
     
 
     // Scattered field
+       // this a fundamental frequency result 
+     
     for(size_t j = 0; j < geometry->objects.size(); j++) {
       
 
@@ -165,21 +174,21 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
     }
     
   
-  // this a second harmonic frequency result 
+      // this a second harmonic frequency result 
   if(excitation->SH_cond){  
   for(size_t j = 0; j < geometry->objects.size(); j++) {
 
 
       Rrel = Tools::toPoint(R_, geometry->objects[j].vR);
       
-      optimet::AuxCoefficients aCoefSH(Rrel, std::complex<double>(2.0, 0.0) * waveK, 0, nMaxS); //radiative VSWFs
+      optimet::AuxCoefficients aCoefSH(Rrel, std::complex<double>(2.0, 0.0) * waveK, 0, nMaxS); //radiative spherical
 
       for(p = 0; p < p.max(nMaxS); p++) {
       
       if (geometry->objects[j].scatterer_type == "sphere"){   
-      bmnSH = scatter_coef_SH[j * 2 * pMaxS + p.compound];
+      bmnSH = scatter_coef_SH[j * 4 * pMaxS + p.compound] + scatter_coef_SH[2 * pMaxS + j * 4 * pMaxS + p.compound];
       
-      amnSH = scatter_coef_SH[j * 2 * pMaxS + pMaxS + p.compound];
+      amnSH = scatter_coef_SH[j * 4 * pMaxS + pMaxS + p.compound] + scatter_coef_SH[j * 4 * pMaxS + 3 * pMaxS +  p.compound];
      }
 
       else if (geometry->objects[j].scatterer_type == "arbitrary.shape"){ 
@@ -246,9 +255,9 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
     for(p = 0; p < p.max(nMaxS); p++) {
 
     if (geometry->objects[intInd].scatterer_type == "sphere"){
-    cmnSH = internal_coef_SH[intInd * 2 * pMaxS + p.compound];
+    cmnSH = internal_coef_SH[intInd * 4 * pMaxS + p.compound] + internal_coef_SH[2 * pMaxS + intInd * 4 * pMaxS + p.compound];
 
-    dmnSH = internal_coef_SH[pMaxS + intInd * 2 * pMaxS + p.compound];
+    dmnSH = internal_coef_SH[pMaxS + intInd * 4 * pMaxS + p.compound] + internal_coef_SH[3 * pMaxS + intInd * 4 * pMaxS + p.compound];
     }
 
    if (geometry->objects[intInd].scatterer_type == "arbitrary.shape"){
@@ -301,7 +310,7 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
 }
 
 
-#ifdef OPTIMET_MPI
+
 double Result::getExtinctionCrossSection(int gran1, int gran2) {
   CompoundIterator p;
   int pMax = Tools::iteratorMax(nMax);
@@ -455,7 +464,7 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
    
    Spherical<double> Rrel = point_ - Spherical<double>(0.0, 0.0, 0.0);
   
-   optimet::Coupling const coupling(Rrel,  2.0 * waveK, nMaxS, false);  // waveK is doubled due to SH
+   optimet::Coupling const coupling(Rrel,  2.0 * waveK, nMaxS, false);  // waveK is doubled
    
     for(p = 0; p < pMax; p++)   {
     for(q = 0; q < qMax; q++) {
@@ -471,7 +480,7 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
   for(p = 0; p < 2*pMax; p++) {
   
   if (geometry->objects[0].scatterer_type == "sphere"){
-  SCcoefpom_SH[ p ] = scatter_coef_SH[j * 2 * pMax + p.compound];
+  SCcoefpom_SH[ p ] = scatter_coef_SH[j * 4 * pMax + p.compound] + scatter_coef_SH[2 * pMax + j * 4 * pMax + p.compound] ;
   ArbCf = eps_b_r * mu_b_r;
   }
 
@@ -504,7 +513,7 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
 
   delete[] T_AB;
   
-  return  (1.0 / (4.0 * ArbCf))* temp1 ; 
+  return  (1.0 / (4.0 * ArbCf))* temp1 ; // frequency doubled because of SH
 }
 
 
@@ -513,7 +522,7 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
 
   auto const omega = excitation->omega();
       
-  int NO = geometry->objects.size(); // number of particles
+  int NO = geometry->objects.size(); // how many particles there is
   
   double absCS (0.0);
   
@@ -552,249 +561,9 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
    
   }
 
-#endif
-
-double Result::getExtinctionCrossSection() {
-  CompoundIterator p;
-  int pMax = Tools::iteratorMax(nMax);
-
-  double Cext(0.);
-  std::complex<double> *Q_local = new std::complex<double>[2 * pMax];
-
-  for(size_t j = 0; j < geometry->objects.size(); j++) {
-    excitation->getIncLocal(geometry->objects[j].vR, Q_local, nMax);
-    for(p = 0; p < pMax; p++) {
-      Cext += std::real(std::conj(Q_local[p]) * scatter_coef[j * 2 * pMax + p.compound] +
-                        std::conj(Q_local[p.compound + pMax]) * scatter_coef[pMax + j * 2 * pMax + p.compound]);
-    }
-  }
-  
-  
-
-  delete[] Q_local;
-  
-  return (-1. / (std::real(waveK) * std::real(waveK))) * Cext;
-}
-
-double Result::getScatteringCrossSection() {
- 
-  CompoundIterator p, q;
-  int pMax = Tools::iteratorMax(nMax);
-  int qMax = q.max(nMax);
-
-  double temp1(0.0);
-  
-  std::complex<double> **T_AB = new std::complex<double> *[2 * (p.max(nMax))];
-  
-  std::complex<double> *SCcoefpom = new std::complex<double>[2 * pMax];
-  
-  for(p = 0; p < (int)(2 * p.max(nMax)); p++) {
-    T_AB[p] = new std::complex<double>[2 * p.max(nMax)];
-  }
-
-  auto const omega = excitation->omega();
-  
-  int NO = geometry->objects.size();
-  
-  for(size_t j = 0; j < geometry->objects.size(); j++) {
-
-   Spherical<double> point_ = geometry->objects[j].vR;
-   
-   Spherical<double> Rrel = point_ - Spherical<double>(0.0, 0.0, 0.0);
-  
-   optimet::Coupling const coupling(Rrel,  waveK, nMax, false); 
-   
-    for(p = 0; p < pMax; p++)   {
-    for(q = 0; q < qMax; q++) {
-    
-      T_AB[p][q] = coupling.diagonal(q, p);
-      T_AB[p + pMax][q + qMax] = coupling.diagonal(q, p);
-      T_AB[p + pMax][q] = coupling.offdiagonal(q, p);
-      T_AB[p][q + qMax] = coupling.offdiagonal(q, p);
-      
-    }
-  }
-  
-  for(p = 0; p < 2 * pMax; p++) {
-  
-  SCcoefpom[ p ] = scatter_coef[j * 2 * pMax + p.compound] ;
-  
-  }
-  
-   for(p = 0; p < 2 * pMax; p++) {
-   
-    for(q = 0; q < 2 * qMax; q++) {
 
 
-      temp1 += std::real( (T_AB[p][q]) * std::conj(SCcoefpom[q.compound]) * 
-      
-        std::conj(T_AB[p][q]) * SCcoefpom[q.compound] );
-      
-
-    }
-  }  
-}
-
-   delete[] SCcoefpom;
-
-  for(p = 0; p < 2 * pMax; p++) {
-    delete[] T_AB[p];
-  }
-
-  delete[] T_AB;
-  
-  return  (1. / (std::real(waveK) * std::real(waveK)))* temp1 ;
-}
-
-double Result::getAbsorptionCrossSection() {
- 
-  CompoundIterator p;
-  int pMax = Tools::iteratorMax(nMax);
-
-  double Cabs(0.);
-  double temp1(0.), temp2(0.);
-  double *Cabs_aux = new double[2 * pMax];
-
-  auto const omega = excitation->omega();
-  for(size_t j = 0; j < geometry->objects.size(); j++) {
-
-    geometry->getCabsAux(omega, j, nMax, Cabs_aux);
-
-    for(p = 0; p < pMax; p++) {
-      temp1 = abs(scatter_coef[j * 2 * pMax + p.compound]);
-      temp1 *= temp1;
-      temp2 = abs(scatter_coef[pMax + j * 2 * pMax + p.compound]);
-      temp2 *= temp2;
-      Cabs += temp1 * Cabs_aux[p.compound] + temp2 * Cabs_aux[pMax + p.compound];
-    }
-  }
-  
-  
-  delete[] Cabs_aux;
- 
-  return (1 / (std::real(waveK) * std::real(waveK))) * Cabs;
-}
-
-double Result::getScatteringCrossSection_SH() {
-  
-  CompoundIterator p, q;
-  int pMax = Tools::iteratorMax(nMaxS);
-  int qMax = q.max(nMaxS);
-  
-  double temp1(0.0), ArbCf;
-  
-  std::complex<double> **T_AB = new std::complex<double> *[2 * (p.max(nMaxS))];
-  
-  std::complex<double> *SCcoefpom_SH = new std::complex<double>[2 * pMax];
-  
-  for(p = 0; p < (int)(2 * p.max(nMaxS)); p++) {
-    T_AB[p] = new std::complex<double>[2 * p.max(nMaxS)];
-  }
-
-  auto const omega = excitation->omega();
-  
-  double mu_b_r = std::real(geometry->bground.mu_r);
-
-  double eps_b_r = std::real(geometry->bground.epsilon_r);
- 
-  
-  int NO = geometry->objects.size();
-  
-  for(size_t j = 0; j < geometry->objects.size(); j++) {
-
-   Spherical<double> point_ = geometry->objects[j].vR;
-   
-   Spherical<double> Rrel = point_ - Spherical<double>(0.0, 0.0, 0.0);
-  
-   optimet::Coupling const coupling(Rrel,  2.0 * waveK, nMaxS, false);  
-   
-    for(p = 0; p < pMax; p++)   {
-    for(q = 0; q < qMax; q++) {
-    
-      T_AB[p][q] = coupling.diagonal(q, p);
-      T_AB[p + pMax][q + qMax] = coupling.diagonal(q, p);
-      T_AB[p + pMax][q] = coupling.offdiagonal(q, p);
-      T_AB[p][q + qMax] = coupling.offdiagonal(q, p);
-      
-    }
-  }
-  
-  for(p = 0; p < 2 * pMax; p++) {
-  
-  if (geometry->objects[0].scatterer_type == "sphere"){
-  SCcoefpom_SH[ p ] = scatter_coef_SH[j * 2 * pMax + p.compound];
-  ArbCf = eps_b_r * mu_b_r;
-  }
-  
-  else if (geometry->objects[0].scatterer_type == "arbitrary.shape"){
-  SCcoefpom_SH[ p ] = scatter_coef_SH[j * 2 * pMax + p.compound];
-  
-  ArbCf = std::real(waveK) * std::real(waveK);
- 
-  }
-  
-  }
-  
-   for(p = 0; p < 2 * pMax; p++) {
-   
-    for(q = 0; q < 2 * qMax; q++) {
-
-
-      temp1 += std::real( (T_AB[p][q]) * std::conj(SCcoefpom_SH[q.compound]) * 
-      
-        std::conj(T_AB[p][q]) * SCcoefpom_SH[q.compound] );
-      
-
-    }
-  }  
-}
-
-   delete[] SCcoefpom_SH;
-
-  for(p = 0; p < 2 * pMax; p++) {
-    delete[] T_AB[p];
-  }
-
-  delete[] T_AB;
-  
-  return  (1.0 / (4.0 * ArbCf ))* temp1;
-}
-
-double Result::getAbsorptionCrossSection_SH(std::vector<double *> CLGcoeff) {
-  
-  auto const omega = excitation->omega();
-
-  std::complex<double> mu_b = geometry->bground.mu;
-
-  std::complex<double> eps_b = geometry->bground.epsilon;
-
-  std::complex<double> eta = std::sqrt (mu_b / eps_b);
-
-  std::complex<double>  sigma;
-  double absCS(0.0);
-
-  int nobj = geometry->objects.size();
- 
-  int sizeCFsh = nMaxS * (nMaxS + 2);
-
-  Vector<t_complex> coeffSH(sizeCFsh);
-  
-  for(size_t objIndex = 0; objIndex < nobj; objIndex++) {
-  
-  sigma = - std::complex<double>(0.0, 1.0) * consEpsilon0 * 2.0 * omega * (geometry->objects[objIndex].elmag.epsilon_r_SH - 1.0);
-  
-  geometry->AbsCSSHcoeff(CLGcoeff, objIndex, excitation, internal_coef, internal_coef_SH, nMaxS, coeffSH.data());
-
-  absCS = absCS +  std::real( (2.0 * eta) * 0.5 * sigma * coeffSH.sum());
-  
-  } // for  obj. index
-
-  return  absCS ;
-
-  }
-
- #ifdef OPTIMET_MPI
- int Result::setFields(std::vector<double> &Rr, std::vector<double> 
+  int Result::setFields(std::vector<double> &Rr, std::vector<double> 
                            &Rthe, std::vector<double> &Rphi, bool projection_, std::vector<double *> CLGcoeff) {
   
   Spherical<double> Rloc, Rrel;
@@ -807,7 +576,7 @@ double Result::getAbsorptionCrossSection_SH(std::vector<double *> CLGcoeff) {
  
   std::complex<double> coeffXpl[pMaxS], coeffXmn[pMaxS];
     
-  // Calculate the fields at FF and SH frequencies
+  // Calculate the fields Fundamental Frequency and SH Frequency
 
     SphericalP<std::complex<double>> EField_FF;
     SphericalP<std::complex<double>> HField_FF;
@@ -883,52 +652,7 @@ double Result::getAbsorptionCrossSection_SH(std::vector<double *> CLGcoeff) {
    MPI_Send(&sizeField, 1, MPI_INT, 0, 13, MPI_COMM_WORLD);
 
   return 0;
+
 }
-#endif
-
-int Result::setFields(OutputGrid &oEGrid_FF, OutputGrid &oHGrid_FF, OutputGrid &oEGrid_SH, 
-                       OutputGrid &oHGrid_SH, bool projection_, std::vector<double *> CLGcoeff) {
-  
-  Spherical<double> Rloc, Rrel;
-  
-  CompoundIterator p;
-  
-  int pMaxS = p.max(nMaxS);
-  
-  std::complex<double> coeffXpl[pMaxS], coeffXmn[pMaxS];
-    
-  // Calculate the fields at FF and SH frequencies
-  while(!((oEGrid_FF.gridDone)&&(oEGrid_SH.gridDone))) {
-    Rloc = oEGrid_FF.getPoint();
-    oHGrid_FF.getPoint();
-    oEGrid_SH.getPoint();
-    oHGrid_SH.getPoint();
-  
-
-    SphericalP<std::complex<double>> EField_FF;
-    SphericalP<std::complex<double>> HField_FF;
-    SphericalP<std::complex<double>> EField_SH;
-    SphericalP<std::complex<double>> HField_SH;
-    
-    int intInd = geometry->checkInner(Rloc);
-    
-    if(intInd >= 0){
-    
-    Rrel = Tools::toPoint(Rloc, geometry->objects[intInd].vR);
-    geometry->COEFFpartSH(intInd, excitation, internal_coef, Rrel.rrr, nMaxS, coeffXmn, coeffXpl, CLGcoeff);
-    
-    }
    
-    getEHFields(Rloc, EField_FF, HField_FF, EField_SH, HField_SH, projection_, coeffXmn, coeffXpl);
-    
-    
-    oHGrid_FF.pushDataNext(HField_FF);
-    oEGrid_FF.pushDataNext(EField_FF);
-    oHGrid_SH.pushDataNext(HField_SH);
-    oEGrid_SH.pushDataNext(EField_SH);
-    
-  }
-
-  return 0;
-}   
 }

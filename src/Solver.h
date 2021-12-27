@@ -37,25 +37,28 @@
 #endif
 
 namespace optimet {
-//! Computes scattering field coefficients, spheres FF
-Vector<t_complex> convertIndirect(Vector<t_complex> const &scattered, t_real const &omega,
+//! Computes coeffs scattered from spheres FF
+Vector<t_complex> convertIndirect(Vector<t_complex> const &scattered, Matrix<t_complex> const &Tmat, t_real const &omega,
                                   ElectroMagnetic const &bground, std::vector<Scatterer> const &);
                                   
                                   
-//! Computes internal field coefficients, spheres FF
-Vector<t_complex> convertInternal(Vector<t_complex> const &scattered, t_real const &omega,
+//! Computes coeffs internal to spheres FF
+Vector<t_complex> convertInternal(Vector<t_complex> const &scattered, Matrix<t_complex> const &RgQ, t_real const &omega,
                                   ElectroMagnetic const &bground, std::vector<Scatterer> const &);
   
   
-  //! Computes scattering field coefficients, spheres SH
+  //! Computes coeffs scattered from spheres SH
 Vector<t_complex> convertIndirect_SH_outer(Vector<t_complex> const &scattered, t_real const &omega,
                                   ElectroMagnetic const &bground, std::vector<Scatterer> const &); 
                                   
-//  Computes internal field coefficients, spheres SH                                
-Vector<t_complex> convertInternal_SH(Vector<t_complex> const &scattered, Vector<t_complex> const &K_1ana, t_real const &omega,
+//  Computes coeffs internal to spheres SH                                
+Vector<t_complex> convertInternal_SH(Vector<t_complex> const &scattered, Vector<t_complex> const &K_1, Matrix<t_complex> const &RgQ, t_real const &omega,
                                   ElectroMagnetic const &bground,
                                   std::vector<Scatterer> const &);                                  
-                                                                    
+                                  
+                                                                
+                                  
+                                  
 namespace solver {
 
 //! Abstract base class for all solvers
@@ -77,10 +80,10 @@ public:
   ~AbstractSolver(){};
 
   /**
-   * Solve for the scattered and internal FF and SH field coefficients using the method specified by
+   * Solve the scattered and internal coefficients using the method specified by
    * solverMethod.
-   * @parameters X_sca_ and X_sca_SH return vectors of the scattered coefficients (FF and SH).
-   * @parameters X_int_ and X_int_SH return vectors of the internal coefficients (FF and SH).
+   * @param X_sca_ the return vector for the scattered coefficients.
+   * @param X_int_ the return vector for the internal coefficients.
    * @return 0 if successful, 1 otherwise.
    */
   virtual void solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vector<t_complex> &X_sca_SH, 
@@ -99,35 +102,37 @@ public:
   }
   void update(Run const &run) { return update(run.geometry, run.excitation); }
   //! \brief Update after internal parameters changed externally
- 
+  //! \details Because that's how the original implementation rocked.
   virtual void update() = 0;
 
   //! Converts back to the scattered result from the indirect calculation
-  Vector<t_complex> convertIndirect(Vector<t_complex> const &scattered) const {
-    return optimet::convertIndirect(scattered, incWave->omega(), geometry->bground,
+  Vector<t_complex> convertIndirect(Vector<t_complex> const &scattered, Matrix<t_complex> const &Tmat) const {
+    return optimet::convertIndirect(scattered, Tmat, incWave->omega(), geometry->bground,
                                     geometry->objects);
   }
   
 
-  //! Solves for the internal coefficients at fundamental frequency
-  Vector<t_complex> solveInternal(Vector<t_complex> const &scattered) const {
-    return optimet::convertInternal(scattered, incWave->omega(), geometry->bground,
+  //! Solves for the internal coefficients fundamental frequency
+  Vector<t_complex> solveInternal(Vector<t_complex> const &scattered, Matrix<t_complex> const &RgQ) const {
+    return optimet::convertInternal(scattered, RgQ, incWave->omega(), geometry->bground,
                                     geometry->objects);
   }
   
   
-  //! Converts back to the scattered result from the indirect calculation, SH
+    //! Converts back to the scattered result from the indirect calculation SH frequency outer coefficients
   Vector<t_complex> convertIndirect_SH_outer(Vector<t_complex> const &scattered) const {
     return optimet::convertIndirect_SH_outer(scattered, incWave->omega(), geometry->bground,
                                     geometry->objects);
   }
   
-  //! Solves for the internal coefficients SH frequency
-  Vector<t_complex> solveInternal_SH(Vector<t_complex> const &scattered, Vector<t_complex> const &K_1ana) const {
-    return optimet::convertInternal_SH(scattered, K_1ana, incWave->omega(), geometry->bground,
+      //! Solves for the internal coefficients SH frequency
+  Vector<t_complex> solveInternal_SH(Vector<t_complex> const &scattered, Vector<t_complex> const &K_1, Matrix<t_complex> const &RgQ) const {
+    return optimet::convertInternal_SH(scattered, K_1, RgQ, incWave->omega(), geometry->bground,
                                     geometry->objects);
   }
 
+  
+  
   //! Number of spherical harmonics in expansion
   t_uint scattering_size() const {
     auto const n = nMax == 0 ? geometry->nMax() : nMax;

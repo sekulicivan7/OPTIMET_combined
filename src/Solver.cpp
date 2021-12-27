@@ -54,33 +54,42 @@ std::shared_ptr<AbstractSolver> factory(Run const &run) {
 }
 } // namespace solver
 
-Vector<t_complex> convertInternal(Vector<t_complex> const &scattered, t_real const &omega,
+Vector<t_complex> convertInternal(Vector<t_complex> const &scattered, Matrix<t_complex> const &RgQ, t_real const &omega,
                                   ElectroMagnetic const &bground,
                                   std::vector<Scatterer> const &objects) {
   Vector<t_complex> result(scattered.size());
-  size_t i = 0;
+  auto const nobj = objects.size();
   auto const N = 2 * objects[0].nMax * (objects[0].nMax + 2);
-  Matrix<t_complex> Intrmatrix(N, N);
+  Matrix<t_complex> Qmatsingle;
 
-  for(auto const &object : objects) {
-  
-   if (object.scatterer_type == "sphere"){
-    result.segment(i, N).array() =
-        scattered.segment(i, N).array() * object.getIaux(omega, bground).array();
-    }
+  for (int ii = 0; ii != nobj; ++ii ){
+    
+    Qmatsingle = RgQ.block(0, ii*N, N, N);
 
-    i += N;
-
-  }
-   
+    result.segment(ii*N, N) = Qmatsingle.inverse() * scattered.segment(ii*N, N);
+}   
   return result;
 }
 
-Vector<t_complex> convertIndirect(Vector<t_complex> const &scattered, t_real const &omega,
+
+
+Vector<t_complex> convertIndirect(Vector<t_complex> const &scattered, Matrix<t_complex> const &Tmat, t_real const &omega,
                                   ElectroMagnetic const &bground,
                                   std::vector<Scatterer> const &objects) {
- 
-  return scattered;
+  Vector<t_complex> result(scattered.size());
+  auto const nobj = objects.size();
+  auto const N = 2 * objects[0].nMax * (objects[0].nMax + 2);
+  Matrix<t_complex> Tmatsingle;
+  
+ for (int ii = 0; ii != nobj; ++ii ){
+
+    Tmatsingle = Tmat.block(0, ii*N, N, N);
+    
+    result.segment(ii*N, N) = Tmatsingle * scattered.segment(ii*N, N);
+     
+ }
+
+  return result;
 }
 
 
@@ -92,26 +101,25 @@ Vector<t_complex> convertIndirect_SH_outer(Vector<t_complex> const &scattered, t
 }
 
 
-Vector<t_complex> convertInternal_SH(Vector<t_complex> const &scattered, Vector<t_complex> const &K_1ana, t_real const &omega,
+Vector<t_complex> convertInternal_SH(Vector<t_complex> const &scattered, Vector<t_complex> const &K_1, Matrix<t_complex> const &RgQ, t_real const &omega,
                                   ElectroMagnetic const &bground,
                                   std::vector<Scatterer> const &objects) {
+
   Vector<t_complex> result(scattered.size());
   auto const N = 2 * objects[0].nMaxS * (objects[0].nMaxS + 2);
-  Matrix<t_complex> Intrmatrix(N, N);
-  size_t i = 0; 
- auto const k_b_SH = 2 * omega * std::sqrt(bground.epsilon * bground.mu);
+  auto const nobj = objects.size();
+  auto const k_b_SH = 2 * omega * std::sqrt(bground.epsilon * bground.mu);
+ 
+  Matrix<t_complex> Qmatsingle;
 
-  if (objects[0].scatterer_type == "sphere"){
-  for(auto const &object : objects) {
-    
-    result.segment(i, N).array() =
-        scattered.segment(i, N).array() * object.getIauxSH1(omega, bground).array();
-        
-    result.segment(i, N) = result.segment(i, N)  - K_1ana.segment(i, N);  
+  for (int ii = 0; ii != nobj; ++ii ){
+
+    Qmatsingle = RgQ.block(0, ii*N, N, N);
+   
+    result.segment(ii*N, N) = Qmatsingle.inverse()*((-consCi/k_b_SH)*scattered.segment(ii*N, N) + K_1.segment(ii*N, N));
   
-    i += N;
-  }
  } 
+   
   return result;
 }
 

@@ -27,7 +27,7 @@ ElectroMagnetic::ElectroMagnetic(std::complex<double> epsilon_r_,
 }
 
 ElectroMagnetic::~ElectroMagnetic() {
- 
+  //
 }
 
 
@@ -71,7 +71,7 @@ void ElectroMagnetic::initHydrodynamicModel_r(std::complex<double> a_,
 
 void ElectroMagnetic::populateHydrodynamicModel() {
 
-  // interpolation of gold parameters
+  // implementation of James formula;
   double input_freq = consC / lambda;
   
   double input_omega = 2*consPi*input_freq;
@@ -227,9 +227,9 @@ lambdaumSH = lambdaumFF / 2.0 ;
   epsrSH_real = std::pow (nSH, 2) - std::pow (kSH, 2);
   epsrSH_imag = 2.0 * nSH * kSH; 
   
-  epsilon_r = epsrFF_real + std::complex<double>(0.0, 1.0)*epsrFF_imag;
+  epsilon_r =  epsrFF_real + std::complex<double>(0.0, 1.0)*epsrFF_imag;
                     
-  epsilon_r_SH = epsrSH_real + std::complex<double>(0.0, 1.0)*epsrSH_imag;
+  epsilon_r_SH =  epsrSH_real + std::complex<double>(0.0, 1.0)*epsrSH_imag;
 
   epsilon_SH = epsilon_r_SH * consEpsilon0;
   
