@@ -42,11 +42,11 @@ void Geometry::pushObject(Scatterer const &object_) {
   for(auto const &obj : objects)
     if(Tools::findDistance(obj.vR, object_.vR) <= (object_.radius + obj.radius)) {
       std::ostringstream sstr;
-      sstr << "The sphere at (" << Tools::toCartesian(object_.vR).x << ", "
+      sstr << "The particle at (" << Tools::toCartesian(object_.vR).x << ", "
            << Tools::toCartesian(object_.vR).y << ", " << Tools::toCartesian(object_.vR).z << ") "
            << "overlaps with the one at (" << Tools::toCartesian(obj.vR).x << ", "
            << Tools::toCartesian(obj.vR).y << ", " << Tools::toCartesian(obj.vR).z << "), "
-           << "with radii " << object_.radius << " and " << obj.radius;
+           << "with circumscribed radii " << object_.radius << " and " << obj.radius;
       throw std::runtime_error(sstr.str());
     }
   objects.emplace_back(object_);
@@ -170,140 +170,6 @@ void Geometry::Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff,
    optimet::symbol::W_10coeff(CLGcoeff[7], nMax, nMaxS, gran1, gran2);
    optimet::symbol::W_01coeff(CLGcoeff[8], nMax, nMaxS, gran1, gran2);
 }
-
-
-
-// Second harmonic sources
-
-int Geometry::getIncLocalSH(std::vector<double *> CLGcoeff, int objectIndex_, 
-                         std::shared_ptr<optimet::Excitation const> incWave_,
-                       optimet::Vector<optimet::t_complex> &internalCoef_FF_, int nMaxS_, 
-                       std::complex<double> *Inc_local) {
-  
-  
-   double *C_10m1 = CLGcoeff[0];
-   double *C_11m1 = CLGcoeff[1];
-   double *C_00m1 = CLGcoeff[2];
-   double *C_01m1 = CLGcoeff[3];
-   
-   double *W_m1m1 = CLGcoeff[4];
-   double *W_11 = CLGcoeff[5];
-   double *W_00 = CLGcoeff[6];
-   double *W_10 = CLGcoeff[7];
-   double *W_01 = CLGcoeff[8];
-  
-                               
-  CompoundIterator p;
-  
-  int pMax = p.max(nMaxS_);
-  int nMax_ = this->nMax();
-  
-  auto const omega = incWave_->omega();
-  
-    
-    for(p = 0; p < pMax; p++) {  
-     
-    
-      Inc_local[p] =
-                optimet::symbol::vp_mn(p, C_00m1, C_01m1, nMax_,
-                                              internalCoef_FF_,
-                                              objectIndex_,
-                                              omega, objects[objectIndex_], bground);
-                                              
-                                              
-                                              
-                                            
-      Inc_local[p+pMax] = optimet::symbol::up_mn(p, C_10m1, C_11m1, nMax_,
-                                              internalCoef_FF_,
-                                              objectIndex_,
-                                              omega, objects[objectIndex_], bground);            
-       
-                                              
-                                              
-
-      Inc_local[p + 2*pMax]=  std::complex<double> (0);//<- this last bit is zero for the moment, vpp
-              
-                                  
-                  
-      Inc_local[p + 3*pMax] = optimet::symbol::upp_mn(p, W_m1m1, W_00, W_11, W_10, W_01, nMax_, 
-                  internalCoef_FF_,
-                   objectIndex_,
-                  omega, objects[objectIndex_]); 
-                                                 
-     
-    }
-
-  
-  return 0;
-}
-
-
-// second harmonic sources adapted for paralellization
-
-int Geometry::getIncLocalSH_parallel(std::vector<double *> CLGcoeff, int gran1, int gran2, std::shared_ptr<optimet::Excitation const> incWave_,
-                       optimet::Vector<optimet::t_complex> &internalCoef_FF_, int nMaxS_, std::complex<double> *Inc_local) {
- 
-   double *C_10m1 = CLGcoeff[0];
-   double *C_11m1 = CLGcoeff[1];
-   double *C_00m1 = CLGcoeff[2];
-   double *C_01m1 = CLGcoeff[3];
-   
-   double *W_m1m1 = CLGcoeff[4];
-   double *W_11 = CLGcoeff[5];
-   double *W_00 = CLGcoeff[6];
-   double *W_10 = CLGcoeff[7];
-   double *W_01 = CLGcoeff[8]; 
-                             
-  CompoundIterator p, q;
-  
-  int pMax = p.max(nMaxS_);
-  int qMax = q.max(nMaxS_);
-  int nMax_ = this->nMax();
-  int objectIndex_;
-  int brojac (0);
-  int size = gran2 - gran1;
-  
-
-  auto const omega = incWave_->omega();
-
-    
-    for(q = gran1; q < gran2; q++) {  
-     
-      objectIndex_ = q / qMax;
-
-      p = q - objectIndex_ * qMax;
-    
-       Inc_local[brojac] = optimet::symbol::vp_mn(p, C_00m1, C_01m1, nMax_,
-                                              internalCoef_FF_,
-                                              objectIndex_,
-                                              omega, objects[objectIndex_], bground);                                        
-                                              
-                                           
-      Inc_local[brojac+size] = optimet::symbol::up_mn(p, C_10m1, C_11m1, nMax_,
-                                              internalCoef_FF_,
-                                              objectIndex_,
-                                              omega, objects[objectIndex_], bground);
-
-
-       
-                                              
-      Inc_local[brojac + 2*size]=  std::complex<double> (0);//<- this last bit is zero for the moment, vpp
-              
-                                  
-                  
-      Inc_local[brojac + 3*size] = optimet::symbol::upp_mn(p, W_m1m1, W_00, W_11, W_10, W_01, nMax_, 
-                  internalCoef_FF_,
-                   objectIndex_,
-                  omega, objects[objectIndex_]); 
-                             
-      brojac++;
-     
-    }
-
-  
-  return 0;
-}
-
 
 int Geometry::COEFFpartSH(int objectIndex_, std::shared_ptr<optimet::Excitation const> incWave_, 
 optimet::Vector<optimet::t_complex> &internalCoef_FF_, double r,

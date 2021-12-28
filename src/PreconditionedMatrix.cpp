@@ -613,61 +613,6 @@ Vector<t_complex> source_vector(std::vector<Scatterer>::const_iterator first,
   return result;
 }
 
-Vector<t_complex> source_vectorSH(Geometry &geometry, std::vector<Scatterer>::const_iterator first,
-                                std::vector<Scatterer>::const_iterator const &last,
-                                std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, 
-                                  Vector<t_complex> &scatteredCoef_FF_, Matrix<t_complex> &TmatrixSH) {
-                              
-  auto const nMaxS = first->nMaxS;
-  auto const flatMax = nMaxS * (nMaxS + 2);
-  int objectIndex_=0;
-  auto const k_b_SH = 2 * incWave->omega() * std::sqrt(geometry.bground.epsilon * geometry.bground.mu);
-  Vector<t_complex> result, result1, result3;
-  
-
- if (first->scatterer_type == "arbitrary.shape"){   
- 
- result.resize((2 * flatMax * (last - first)));
- result1.resize((2 * flatMax * (last - first)));
- result3.resize((2 * flatMax * (last - first)));
-
- geometry.getEXCvecSH_ARB3(result3, incWave, scatteredCoef_FF_, internalCoef_FF_, objectIndex_);
- geometry.getEXCvecSH_ARB1(result1, incWave, scatteredCoef_FF_, internalCoef_FF_, objectIndex_);
- 
- result = (-consCi * k_b_SH / consPi) * result1 + (consCi * k_b_SH / consPi) * TmatrixSH * result3;
- }
-
-  return result;
-  
-}
-
-Vector<t_complex> source_vectorSHarb1(Geometry &geometry, std::vector<Scatterer>::const_iterator first,
-                      std::vector<Scatterer>::const_iterator const &last,
-                      std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_) {
-                                
-          if(first == last)
-  return Vector<t_complex>::Zero(0);
-  
-  auto const nMaxS = first->nMaxS;
-  auto const flatMax = nMaxS * (nMaxS + 2);
-  int objectIndex_=0;
-  
-  Vector<t_complex> result;
-  
-  
-   if (first->scatterer_type == "arbitrary.shape"){   
- 
- result.resize((2 * flatMax * (last - first)));
-
- // just single object
-
- geometry.getEXCvecSH_ARB1(result, incWave, scatteredCoef_FF_, internalCoef_FF_, objectIndex_);
-     
-     }
-      
-   return result;
-   }
-
 
 Vector<t_complex> source_vectorSH_parallelAR3(Geometry &geometry, int gran1, int gran2,
                                 std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, 
@@ -687,13 +632,11 @@ if(gran1 == gran2)
 Vector<t_complex> source_vectorSH_parallelAR1(Geometry &geometry, int gran1, int gran2,
                                 std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_,
                                  Vector<t_complex> &scatteredCoef_FF_, int objIndex) {
-
 if(gran1 == gran2)
   return Vector<t_complex>::Zero(0);
 
   Vector<t_complex> resultProc(2*(gran2 - gran1));
-  //one object
-
+  
 if (geometry.objects[0].scatterer_type == "arbitrary.shape"){
 
 geometry.getEXCvecSH_ARB1_parall(resultProc, incWave, scatteredCoef_FF_, internalCoef_FF_, gran1, gran2, objIndex);
@@ -719,48 +662,6 @@ Vector<t_complex> source_vector(Geometry const &geometry, std::shared_ptr<Excita
     if(scatterer.nMax != nMax)
       throw std::runtime_error("All objects must have same number of harmonics");
   return source_vector(geometry.objects, incWave);
-}
-
-
-
-
-Vector<t_complex> source_vectorSH(Geometry &geometry, std::vector<Scatterer> const &objects,
-  std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, 
-  Vector<t_complex> &scatteredCoef_FF_, Matrix<t_complex> &TmatrixSH) {
-  return source_vectorSH(geometry, objects.begin(), objects.end(), incWave, internalCoef_FF_, scatteredCoef_FF_, TmatrixSH);
-}
-
-
-
-
-Vector<t_complex> source_vectorSH(Geometry &geometry, std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_, Matrix<t_complex> &TmatrixSH) {
-  if(geometry.objects.size() == 0)
-    return Vector<t_complex>(0, 0);
-  // Check nMax is same accross all objects
-  auto const nMaxS = geometry.objects.front().nMaxS;
-  for(auto const &scatterer : geometry.objects)
-    if(scatterer.nMaxS != nMaxS)
-      throw std::runtime_error("All objects must have same number of harmonics");
-  return source_vectorSH(geometry, geometry.objects, incWave, internalCoef_FF_, scatteredCoef_FF_, TmatrixSH);
-}
-
-
-Vector<t_complex> source_vectorSHarb1(Geometry &geometry, std::vector<Scatterer> const &objects, std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_) {
-  return source_vectorSHarb1(geometry, objects.begin(), objects.end(), incWave, internalCoef_FF_, scatteredCoef_FF_);
-}
-
-
-
-
-Vector<t_complex> source_vectorSHarb1(Geometry &geometry, std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, 
-Vector<t_complex> &scatteredCoef_FF_) {
-  if(geometry.objects.size() == 0)
-    return Vector<t_complex>(0, 0);
-auto const nMaxS = geometry.objects.front().nMaxS;
-  for(auto const &scatterer : geometry.objects)
-    if(scatterer.nMaxS != nMaxS)
-      throw std::runtime_error("All objects must have same number of SH harmonics");
-  return source_vectorSHarb1(geometry, geometry.objects, incWave, internalCoef_FF_, scatteredCoef_FF_);
 }
 
 }

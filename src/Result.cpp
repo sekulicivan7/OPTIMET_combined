@@ -100,7 +100,7 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
       std::complex<double>(0.0, 0.0), std::complex<double>(0.0, 0.0),
       std::complex<double>(0.0, 0.0));
  
-  int NO = geometry->objects.size(); // how many particles there is
+  int NO = geometry->objects.size(); // number of particles
   
    std::complex<double> amnSH, bmnSH, cmnSH, dmnSH;
   
@@ -121,10 +121,9 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
   int intInd = geometry->checkInner(R_);
   
   
-  if(intInd < 0) // Outside a sphere
+  if(intInd < 0) // Outside a particle
   {
-    // this a fundamental frequency result - calculate the incoming
-                // field
+    // FF
     
       // Incoming field
       optimet::AuxCoefficients aCoefInc(R_, waveK, 1, nMax); //regular VSWFs
@@ -141,7 +140,6 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
     
 
     // Scattered field
-       // this a fundamental frequency result 
      
     for(size_t j = 0; j < geometry->objects.size(); j++) {
       
@@ -167,7 +165,7 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
     }
     
   
-      // this a second harmonic frequency result 
+      // SH
   if(excitation->SH_cond){  
   for(size_t j = 0; j < geometry->objects.size(); j++) {
 
@@ -200,10 +198,10 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
   } // if
  
  
-  else // Inside a sphere
+  else // Inside a particle
  
     {
-     // this is FF result  
+     // FF  
     Rrel = Tools::toPoint(R_, geometry->objects[intInd].vR);
     
     optimet::AuxCoefficients aCoefFF(Rrel, waveK_0 * sqrt(geometry->objects[intInd].elmag.epsilon_r *
@@ -230,9 +228,10 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
     }
     
     
-    // this a second harmonic frequency result
+    // SH
   if(excitation->SH_cond){  
-    optimet::AuxCoefficients aCoefSH(Rrel, std::complex<double> (2.0 , 0.0) * waveK_0 * sqrt(geometry->objects[intInd].elmag.epsilon_r_SH * geometry->objects                                      [intInd].elmag.mu_r_SH), 1, nMaxS); // regular VSWFs
+  optimet::AuxCoefficients aCoefSH(Rrel, std::complex<double> (2.0 , 0.0) * waveK_0 * 
+sqrt(geometry->objects[intInd].elmag.epsilon_r_SH * geometry->objects[intInd].elmag.mu_r_SH), 1, nMaxS); // regular VSWFs
                                    
                                    
     std::complex<double> iZ_object_SH = (consCmi / sqrt(geometry->objects[intInd].elmag.mu_SH /
@@ -260,8 +259,7 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
           Hfield_SH +
           (aCoefSH.N(static_cast<long>(p)) * (cmnSH) +
            aCoefSH.M(static_cast<long>(p)) * (dmnSH)) * iZ_object_SH * waveK_0;
-              
-
+             
    } 
  }    
 }
@@ -289,8 +287,6 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
   }
   
 }
-
-
 
 double Result::getExtinctionCrossSection(int gran1, int gran2) {
   CompoundIterator p;

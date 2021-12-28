@@ -29,43 +29,8 @@
 
 namespace optimet {
 namespace symbol {
-
-/**
- * Calculates the Wigner 3j symbol: \n
- * (j1 j2 j3 \n
- *  m1 m2 m3).
- * @param j1 coefficient.
- * @param j2 coefficient.
- * @param j3 coefficient.
- * @param m1 coefficient.
- * @param m2 coefficient.
- * @param m3 coefficient.
- * @return the Wigner 3j symbol.
- */
- 
  
 double Wigner3j(int j1, int j2, int j3, int m1, int m2, int m3);
-
-std::complex<double> up_mn(CompoundIterator &kk, double *C_10m1, double *C_11m1, int nMax, 
-                           optimet::Vector<optimet::t_complex> &internalCoef_FF_,
-                           int objectIndex_,
-                           double omega,
-                           const Scatterer &object,
-                           const ElectroMagnetic &bground);
-
-std::complex<double> vp_mn(CompoundIterator &kk, double *C_00m1, double *C_01m1, int nMax,
-                           optimet::Vector<optimet::t_complex> &internalCoef_FF_,
-                           int objectIndex_, 
-                           double omega,
-                           const Scatterer &object,
-                           const ElectroMagnetic &bground);
-
-std::complex<double> upp_mn(CompoundIterator &kk, double *W_m1m1, double *W_00, double *W_11, double *W_10, double *W_01, int nMax, 
-                           optimet::Vector<optimet::t_complex> &internalCoef_FF_,
-                           int objectIndex_,
-                           double omega,
-                           const Scatterer &object);
-                 
                            
 std::complex<double> CXm1(CompoundIterator &kk, double *W_m1m1, double *W_00, double *W_11, int nMax,
                             optimet::Vector<optimet::t_complex> &internalCoef_FF_,

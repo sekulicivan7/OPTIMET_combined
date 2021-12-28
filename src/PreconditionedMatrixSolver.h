@@ -46,38 +46,7 @@ public:
 
               Vector<t_complex> &X_int_SH, std::vector<double *> CGcoeff) const override {
   
-    // fundamental frequency
-    
-    Matrix<t_complex> TmatrixFF, RgQmatrixFF; 
-    int nMax = geometry->nMax();
-    int pMax = nMax * (nMax + 2);
-    TmatrixFF = S.block(0 ,0 , 2*pMax, 2*pMax);
-    RgQmatrixFF = S.block(0 , 2*pMax , 2*pMax, 2*pMax);
- 
-    X_sca_ = Q;
-    
-    unprecondition(X_sca_, X_int_, TmatrixFF, RgQmatrixFF);
-
-    Vector<t_complex> K, K1;
-    Matrix<t_complex> TmatrixSH, RgQmatrixSH;
-    
-    // SH frequency
-    if(incWave->SH_cond){
-
-    int nMaxS = geometry->nMaxS();
-    int pMax = nMaxS * (nMaxS + 2);
-    TmatrixSH = V.block(0 ,0 , 2*pMax, 2*pMax);
-    RgQmatrixSH = V.block(0 , 2*pMax , 2*pMax, 2*pMax);
-
-    K = source_vectorSH(*geometry, incWave, X_int_, X_sca_, TmatrixSH);
-
-    K1 = source_vectorSHarb1(*geometry, incWave, X_int_, X_sca_);
-
-    X_sca_SH = K;
-    
-    unprecondition_SH(X_sca_SH, X_int_SH, K1, RgQmatrixSH);
-    }
-  }
+       }
   
     
 
@@ -86,6 +55,7 @@ public:
     Q = source_vector(*geometry, incWave);
 
     S = getTRgQmatrix_FF_parr(*geometry, incWave);
+
     if(incWave->SH_cond)
     V = getTRgQmatrix_SH_parr(*geometry, incWave);
 

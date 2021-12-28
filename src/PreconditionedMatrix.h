@@ -32,22 +32,8 @@ source_vector(Geometry const &geometry, std::shared_ptr<Excitation const> incWav
 //! \brief Computes source vector from a range of scatterers
 Vector<t_complex> source_vector(std::vector<Scatterer>::const_iterator first,
                                 std::vector<Scatterer>::const_iterator const &last,
-                                std::shared_ptr<Excitation const> incWave);
-                                
-   
- Vector<t_complex> source_vectorSH(Geometry &geometry, std::shared_ptr<Excitation const> incWave, 
-                                   Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_,
-                                    Matrix<t_complex> &TmatrixSH);  
-                                
- //! \brief Computes source SH vector from a range of scatterers                               
-Vector<t_complex> source_vectorSH(Geometry &geometry,std::vector<Scatterer>::const_iterator first,
-                                std::vector<Scatterer>::const_iterator const &last,
-                                std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, 
-                                Vector<t_complex> &scatteredCoef_FF_, Matrix<t_complex> &TmatrixSH);
-
-// source vector needed for SH arbitrary shapes
-Vector<t_complex> source_vectorSHarb1(Geometry &geometry, std::shared_ptr<Excitation const> incWave, 
-                                 Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_);                                 
+                                std::shared_ptr<Excitation const> incWave);  
+                                                                 
                                  
 // source vectors needed for SH arbitrary shapes and parallel
 Vector<t_complex> source_vectorSH_parallelAR3(Geometry &geometry, int gran1, int gran2,

@@ -504,8 +504,6 @@ void Simulation::scan_wavelengths(Run &run, std::shared_ptr<solver::AbstractSolv
   }
 }
 
-
-
 int Simulation::done() {
   // Placeholder method. Not needed at the moment.
   return 0;

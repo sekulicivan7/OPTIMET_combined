@@ -681,8 +681,3 @@ void Scatterer::getRgQLocalSH(optimet::Vector<optimet::t_complex>& RgQmatrixSH, 
      }
                           
     
-
-
-
-
-
