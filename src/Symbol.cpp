@@ -151,7 +151,7 @@ double W(int L1, int J1, int M1, int L2, int J2, int M2, int L, int M) {
 
 } // namespace
 
-// function for upp
+// function for u'
 std::complex<double> up_mn(CompoundIterator &kk, double *C_10m1, double *C_11m1, int nMax,
                            optimet::Vector<optimet::t_complex> &internalCoef_FF_,
                            int objectIndex_, double omega,
@@ -216,7 +216,7 @@ std::complex<double> up_mn(CompoundIterator &kk, double *C_10m1, double *C_11m1,
   
 
 
-// function for the v-prime////////////////////////////////////////////////////////////////////////////
+// function for the v'
 std::complex<double> vp_mn(CompoundIterator &kk, double *C_00m1, double *C_01m1, int nMax,
                            optimet::Vector<optimet::t_complex> &internalCoef_FF_,
                            int objectIndex_,double omega,
@@ -277,8 +277,7 @@ std::complex<double> vp_mn(CompoundIterator &kk, double *C_00m1, double *C_01m1,
          (std::sqrt(mu_b / eps_b) / std::sqrt(mu_0 / eps_0));
 }
 
-// function for the uprime.prime, vprime.prime=0///
-
+// function for the u''
 std::complex<double> upp_mn(CompoundIterator &kk, double *W_m1m1, double *W_00, double *W_11, double *W_10, double *W_01, int nMax,
                             optimet::Vector<optimet::t_complex> &internalCoef_FF_,
                             int objectIndex_, double omega,
@@ -354,132 +353,6 @@ std::complex<double> upp_mn(CompoundIterator &kk, double *W_m1m1, double *W_00, 
              
          std::complex<double>(0.0, 1.0) * gamma * (eps_0 / eps_j2) * 
              std::sqrt(n * (n + 1)) * (gmn + fmn) / waveK_01 / R;
-}
-
-
-                 
- // function for absorption cross section coefficients, second harmonic
-std::complex<double> ACSshcoeff(CompoundIterator &kk, double *W_m1m1, double *W_00, double *W_11, int nMax, int nMaxS,
-                            optimet::Vector<optimet::t_complex> &internalCoef_FF_,
-                            std::complex<double> cmnSH,
-                            std::complex<double> dmnSH,
-                            int objectIndex_, double omega,
-                            const Scatterer &object) {
-  int n = kk.first;
-  int m = kk.second;
- 
-  // Basic relations
-  const double R = object.radius;
-  const std::complex<double> eps_0 = consEpsilon0;
-  const std::complex<double> mu_0 = consMu0;
-  const std::complex<double> mu_j = object.elmag.mu;
-  const std::complex<double> eps_j = object.elmag.epsilon;
-
-
-  // SH Basic relations
-
-  const std::complex<double> gamma = object.elmag.gamma;
-  const std::complex<double> eps_j2 = object.elmag.epsilon_SH;
-  const std::complex<double> mu_j2 = object.elmag.mu_SH;
-
-  // Auxiliary variables
-  const std::complex<double> waveK_01 = (omega) * std::sqrt(eps_0 * mu_0);
-  const std::complex<double> waveK_j1 = (omega) * std::sqrt(eps_j * mu_j);
-  auto const waveK_SH = 2.0 * omega * std::sqrt(eps_j2 * mu_j2);
-
-  double W00, W11, Wm1m1, r;
-
- std::complex<double> INTEGRAL(0.0, 0.0);
-
-  CompoundIterator p, q;
-  int pMax = p.max(nMax);
-  int qMax = q.max(nMax);
-
-  int size1 = pMax * qMax;
-
- std::complex<double> cmn_1, dmn_1, cmn_2, dmn_2;
- std::vector<std::complex<double>> data, ddata;
- int brojac;
- // Gauss Legendre points and weights
- std::vector<double> xi {-0.3399810435848563, 0.3399810435848563, -0.8611363115940526, 0.8611363115940526};
- std::vector<double> wi {0.6521451548625461, 0.6521451548625461, 0.3478548451374538, 0.3478548451374538};
-
-//  std::vector<double> xi {0.6612093864662645, -0.6612093864662645, -0.2386191860831969, 0.2386191860831969,-0.9324695142031521, 
-//0.9324695142031521};
-//  std::vector<double> wi {0.3607615730481386, 0.3607615730481386, 0.4679139345726910, 0.4679139345726910, 0.1713244923791704, 
-//0.1713244923791704};
-
-//std::vector<double> xi {-0.1834346424956498, 0.1834346424956498, -0.5255324099163290, 0.5255324099163290, -0.7966664774136267, 
-//0.7966664774136267, -0.9602898564975363, 0.9602898564975363};
-//std::vector<double> wi {0.3626837833783620, 0.3626837833783620, 0.3137066458778873, 0.3137066458778873, 0.2223810344533745, 
-//0.2223810344533745, 0.1012285362903763, 0.1012285362903763};
-
-for(int ii = 0; ii <  xi.size(); ii++) {
-
-  std::complex<double> COEFFXm1(0.0, 0.0);
-  std::complex<double> COEFFXm1SH(0.0, 0.0);
-  std::complex<double> COEFFX0(0.0, 0.0);
-  std::complex<double> COEFFXp1(0.0, 0.0);
-  std::complex<double> COEFFXp1SH(0.0, 0.0);
-
- r = (R / 2.0) * xi[ii] + R / 2.0;
- brojac = 0; 
-
- for(p = 0; p <  pMax; p++) {
-
- cmn_1 = internalCoef_FF_(objectIndex_ * 2 * pMax + p.compound);
-
-  dmn_1 = internalCoef_FF_(pMax + objectIndex_ * 2 * pMax + p.compound);
-
-  for(q = 0; q <  qMax; q++) {
-
-  cmn_2 = internalCoef_FF_(objectIndex_ * 2 * qMax + q.compound);
-
-   dmn_2 = internalCoef_FF_(qMax + objectIndex_ * 2 * qMax + q.compound);
-
-  Wm1m1 = W_m1m1[kk*size1 +brojac];
-
-  W11 = W_11[kk*size1 +brojac]; 
-
-  W00 = W_00[kk*size1 +brojac];
-
-   COEFFXm1 += (-eps_0 / eps_j2) * gamma * (cmn_1 * cmn_2 * W00 * F_d00(p.first, q.first, r, waveK_j1, nMax) + dmn_1 * dmn_2 * (1.0 / 
-               (std::pow(waveK_j1, 2.0))) *
-
-               (W11 * F_d11(p.first, q.first, r, waveK_j1, nMax) + Wm1m1 * std::sqrt(p.first * q.first * (p.first + 1) * (q.first + 1)) *  
-                F_dm1m1(p.first, q.first, r, waveK_j1, nMax)));
-
-   COEFFXp1 += (-eps_0 / eps_j2) * gamma * (cmn_1 * cmn_2 * W00 * std::sqrt(n * (n + 1)) * (1.0 / r) * F_00(p.first, q.first, r, waveK_j1, 
-                nMax) + dmn_1 * dmn_2 * (1.0 / (std::pow(waveK_j1, 2.0))) *
-
-             (W11 * std::sqrt(n * (n + 1)) * (1.0 / r) * F_11(p.first, q.first, r, waveK_j1, nMax) + Wm1m1 * std::sqrt(p.first * q.first * 
-              (p.first + 1) * (q.first + 1)) *
-
-               std::sqrt(n * (n + 1)) * (1.0 / r) * F_m1m1(p.first, q.first, r, waveK_j1, nMax)));
-  brojac ++;
-
-   }
-  }
-
-
-  std::tie(data, ddata) = bessel<Bessel, false>(r * waveK_SH, nMaxS);
-
-  COEFFXm1SH =  waveK_01 * dmnSH * (1.0 / waveK_SH)  * std::sqrt(n * (n + 1)) * (1.0/ r) * data[n];
-
-  COEFFX0 =  - waveK_01 * cmnSH * data[n];
-
-  COEFFXp1SH =  waveK_01 * dmnSH * (1.0 / waveK_SH) * ((1.0 / r) * data[n] +  ddata[n]);
-
-
-  INTEGRAL = INTEGRAL + wi[ii] * std::pow(r , 2.0) * ((COEFFXm1 + COEFFXm1SH) * std::conj(COEFFXm1 + COEFFXm1SH) + 
-
-             COEFFX0 *  std::conj(COEFFX0) + (COEFFXp1 + COEFFXp1SH) * std::conj(COEFFXp1 + COEFFXp1SH));
-                                                            
-
-  }
- 
-return INTEGRAL * (R / 2.0) ;
-
 }
 
 

@@ -36,7 +36,6 @@ void MatrixBelos::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_,Vec
 
     X_sca_ = Q;
 
-
     PreconditionedMatrix::unprecondition(X_sca_, X_int_, TmatrixFF, RgQmatrixFF);
  }
 
@@ -49,13 +48,11 @@ void MatrixBelos::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_,Vec
   TmatrixSH = V.block(0 ,0 , 2*pMax, 2*pMax);
   RgQmatrixSH = V.block(0 , 2*pMax , 2*pMax, 2*pMax);
 
-
   KmNOD = distributed_source_vector_SH_Mnode(*geometry, incWave, X_int_, X_sca_, TmatrixSH);
   MPI_Barrier(MPI_COMM_WORLD);
 
   K1 =  distributed_vector_SH_AR1(*geometry, incWave, X_int_, X_sca_);
   MPI_Barrier(MPI_COMM_WORLD);
-
 
   if(context().is_valid()) {
   //SH part
@@ -67,7 +64,6 @@ void MatrixBelos::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_,Vec
    
   }
   
-
  }
 }
 }

@@ -123,18 +123,10 @@ public:
   
   // Scattering cross section for FF
   double getScatteringCrossSection(int gran1, int gran2);
-  /**
-   * Returns the Absorption Cross Section for Fundamental Frequency..
-   */
-  double getAbsorptionCrossSection(int gran1, int gran2);
-  
+
    /* Returns the Scattering Cross Section for SH Frequency.
    */
-  double getScatteringCrossSection_SH(int gran1, int gran2);
-  
-  // Returns the Absorption Cross Section for SH Frequency.
-  double getAbsorptionCrossSection_SH(std::vector<double *> CLGcoeff, int gran1, int gran2);
-  
+  double getScatteringCrossSection_SH(int gran1, int gran2);  
 
   /**
    * Populate a grid with E and H fields.

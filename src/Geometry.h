@@ -66,9 +66,6 @@ public:
   //! \brief Validate geometry
   //! \details Fails if no objects, or if two objects overlap.
   bool is_valid() const;
-  
-  // vector used in the transformation of outer to inner expansion coefficients Analytical results FF
-  int getCabsAux(double omega_, int objectIndex_, int nMax_, double *Cabs_aux_);
 
   /**
    * Checks if a point R is located inside an object.
@@ -86,12 +83,7 @@ public:
   // Incident coefficients for the second harmonic case for parallelization                 
   int getIncLocalSH_parallel(std::vector<double *> CLGcoeff, int gran1, int gran2, std::shared_ptr<optimet::Excitation const> incWave_,
          optimet::Vector<optimet::t_complex> &internalCoef_FF_, int nMaxS_, std::complex<double> *Inc_local);     
-           
- // Coefficient for absorption cross section second harmonic      
-  int AbsCSSHcoeff(std::vector<double *> CLGcoeff, int gran1, int gran2, std::shared_ptr<optimet::Excitation const> incWave_, 
-            optimet::Vector<optimet::t_complex> &internalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_SH_, int 
-            nMaxS_, std::complex<double> *coefABS); 
-            
+                      
    // Coefficients for the particular solution of SH differential equations                                     
   int COEFFpartSH(int objectIndex_, std::shared_ptr<optimet::Excitation const> incWave_, optimet::Vector<optimet::t_complex> 
                   &internalCoef_FF_, double r, int nMaxS_, std::complex<double> *coefXmn, std::complex<double> *coefXpl, 

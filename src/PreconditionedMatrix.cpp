@@ -23,75 +23,7 @@
 using namespace std::chrono;
 
 namespace optimet {
-#ifdef OPTIMET_SCALAPACK
-Vector<t_complex> distributed_source_vector(Vector<t_complex> const &input,
-                                            scalapack::Context const &context,
-                                            scalapack::Sizes const &blocks) {
-                                         
-  if(not context.is_valid())
-    return Vector<t_complex>::Zero(0);
-  auto const serial = context.serial();
-  t_uint const n(input.size());
-  Eigen::Map<Matrix<t_complex> const> const input_map(input.data(), serial.is_valid() ? n : 0,
-                                                      serial.is_valid() ? 1 : 0);
-  scalapack::Matrix<t_complex const *> const serial_vector(input_map, serial, {n, 1}, {n, 1});
-  scalapack::Matrix<t_complex> result(context, {n, 1}, blocks);
-  serial_vector.transfer_to(context, result);
-  if(result.local().cols() == 0)
-   return Vector<t_complex>::Zero(0);
-  return result.local();
-}
-
-
-
-Vector<t_complex> distributed_source_vector_SH(Geometry &geometry, Vector<t_complex> &VecMnod,
-                                           scalapack::Context const &context,
-                                            scalapack::Sizes const &blocks) {
-
-  auto const nobj = geometry.objects.size();
-  if(nobj == 0)
-     return Vector<t_complex>::Zero(0);
-
-  auto const serial = context.serial();
-  t_uint const N(VecMnod.size());
-  Eigen::Map<Matrix<t_complex> const> const input_map(VecMnod.data(), serial.is_valid() ? N : 0,
-                                                      serial.is_valid() ? 1 : 0);
-  scalapack::Matrix<t_complex const *> const serial_vector(input_map, serial, {N, 1}, {N, 1});
-  scalapack::Matrix<t_complex> dist_vector(context, {N, 1}, blocks);
-  serial_vector.transfer_to(context, dist_vector);
-  if(dist_vector.local().cols() == 0)
-   return Vector<t_complex>::Zero(0);
-  
- return dist_vector.local();
-}
-
-
-Vector<t_complex> gather_all_source_vector(t_uint n, Vector<t_complex> const &input,
-                                           scalapack::Context const &context,
-                                           scalapack::Sizes const &blocks) {
-  if(not context.is_valid())
-    return Vector<t_complex>::Zero(0);
-  auto const serial = context.serial();
-  auto const parallel_vector = map_cmatrix(input, context, {n, 1}, blocks);
-  scalapack::Matrix<t_complex> result(context.serial(), {n, 1}, {n, 1});
-  parallel_vector.transfer_to(context, result);
-  return context.broadcast(result.local(), 0, 0);
-}
-
-Vector<t_complex> gather_all_source_vector(scalapack::Matrix<t_complex> const &matrix) {
-  scalapack::Matrix<t_complex> result(matrix.context().serial(), {matrix.rows(), 1},
-                                      {matrix.rows(), 1});
-  matrix.transfer_to(matrix.context(), result);
-  auto const result_vector = matrix.context().broadcast(result.local(), 0, 0);
-  if(result_vector.size() == 0)
-  return Vector<t_complex>::Zero(0);
-
-  return result_vector;
-}
-
-
-#endif
-
+#ifdef OPTIMET_MPI
 Vector<t_complex> distributed_vector_SH_AR1(Geometry &geometry,
                                            std::shared_ptr<Excitation const> incWave,
                                            Vector<t_complex> &X_int_, Vector<t_complex> &X_sca_) {
@@ -378,7 +310,6 @@ return resultKMNY;
 }
 
 
-#ifdef OPTIMET_SCALAPACK
 //Preconditioned scattering matrix for FF
 Matrix<t_complex> ScatteringMatrixFF(Matrix<t_complex> &TMatrixFF, Geometry const &geometry,
                                                    std::shared_ptr<Excitation const> incWave) {
@@ -700,8 +631,6 @@ Vector<t_complex> source_vectorSH(Geometry &geometry, std::vector<Scatterer>::co
  result1.resize((2 * flatMax * (last - first)));
  result3.resize((2 * flatMax * (last - first)));
 
- // just single object
-
  geometry.getEXCvecSH_ARB3(result3, incWave, scatteredCoef_FF_, internalCoef_FF_, objectIndex_);
  geometry.getEXCvecSH_ARB1(result1, incWave, scatteredCoef_FF_, internalCoef_FF_, objectIndex_);
  
@@ -713,8 +642,8 @@ Vector<t_complex> source_vectorSH(Geometry &geometry, std::vector<Scatterer>::co
 }
 
 Vector<t_complex> source_vectorSHarb1(Geometry &geometry, std::vector<Scatterer>::const_iterator first,
-                                std::vector<Scatterer>::const_iterator const &last,
-                                std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_) {
+                      std::vector<Scatterer>::const_iterator const &last,
+                      std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_) {
                                 
           if(first == last)
   return Vector<t_complex>::Zero(0);

@@ -67,12 +67,7 @@ void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vect
     
     X_sca_ = SCATmatFF.colPivHouseholderQr().solve(Q);   
     PreconditionedMatrix::unprecondition(X_sca_, X_int_, TmatrixFF, RgQmatrixFF);
-    
 
-  //  if(communicator().rank()==0){
-   //  std::cout<<X_sca_.norm()<<std::endl;
-   //  std::cout<<X_int_.norm()<<std::endl;
- //  }
   }
 
   if(context().size() != communicator().size()) {
@@ -89,15 +84,9 @@ void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vect
   int pMax = nMaxS * (nMaxS + 2);
   TmatrixSH = V.block(0 ,0 , 2*pMax, nobj*2*pMax);
   RgQmatrixSH = V.block(0 , nobj*2*pMax , 2*pMax, nobj*2*pMax);
-
- // auto start = high_resolution_clock::now();
    
   KmNOD = distributed_source_vector_SH_Mnode(*geometry, incWave, X_int_, X_sca_, TmatrixSH);
-   
-//  auto stop = high_resolution_clock::now();
-//  auto duration = duration_cast<microseconds>(stop - start);
-//  std::cout << "RH SH vector assembly" << std::endl;
-//  std::cout << duration.count()/1e6 << std::endl; 
+ 
   MPI_Barrier(MPI_COMM_WORLD);
   K1 =  distributed_vector_SH_AR1(*geometry, incWave, X_int_, X_sca_);
   MPI_Barrier(MPI_COMM_WORLD);
@@ -109,12 +98,6 @@ void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vect
     X_sca_SH = SCATmatSH.colPivHouseholderQr().solve(KmNOD);
 
     PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1, RgQmatrixSH);
-      
-  // if(communicator().rank()==0){
-   //  std::cout<<X_sca_SH.norm()<<std::endl;
-  //   std::cout<<X_int_SH.norm()<<std::endl;
- // }
- 
 
   }
 
@@ -122,7 +105,6 @@ if(context().size() != communicator().size()) {
     broadcast_to_out_of_context(X_sca_SH, context(), communicator());
     broadcast_to_out_of_context(X_int_SH, context(), communicator());
   }
-
 
 }
  

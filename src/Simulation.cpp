@@ -333,7 +333,7 @@ void Simulation::scan_wavelengths(Run &run, std::shared_ptr<solver::AbstractSolv
   int flatMax = nMax * (nMax + 2);
   int flatMaxS = nMaxS * (nMaxS + 2);
   int sizeCF = flatMaxS * flatMax * flatMax;
-  int gran1, gran2, gran1AC, gran2AC, gran1CG, gran2CG;
+  int gran1, gran2, gran1CG, gran2CG;
   int rank = communicator().rank();
   int size = communicator().size();
   
@@ -375,7 +375,6 @@ void Simulation::scan_wavelengths(Run &run, std::shared_ptr<solver::AbstractSolv
     
    if(run.excitation->SH_cond){  
     outSSec_SH.open(caseFile + "_ScatteringCS_SH.dat");
-    outASec_SH.open(caseFile + "_AbsorptionCS_SH.dat");
     }
     
   }
@@ -388,7 +387,7 @@ void Simulation::scan_wavelengths(Run &run, std::shared_ptr<solver::AbstractSolv
   double lam;
   double lams;
 
-  double absCS_SH(0.0), scaCS_SH(0.0), scaCS_FF(0.0), extCS_FF(0.0);
+  double scaCS_SH(0.0), scaCS_FF(0.0), extCS_FF(0.0);
   int NO = run.geometry->objects.size();
   int TMax = NO * flatMaxS;
   
@@ -403,7 +402,7 @@ void Simulation::scan_wavelengths(Run &run, std::shared_ptr<solver::AbstractSolv
 
     solver->update(run); // building of the sistem matrices   
 
-    Vector<double> absCS_SH_vec(size), scaCS_SH_vec(size), scaCS_FF_vec(size), extCS_FF_vec(size);
+    Vector<double> scaCS_SH_vec(size), scaCS_FF_vec(size), extCS_FF_vec(size);
 
     if(communicator().rank() == communicator().root_id()) {
 
@@ -425,24 +424,13 @@ void Simulation::scan_wavelengths(Run &run, std::shared_ptr<solver::AbstractSolv
     gran2 = gran1 + (NO/size);
     }
 
-    if (rank < (TMax % size)) {
-    gran1AC = rank * (TMax/size + 1);
-    gran2AC = gran1AC + TMax/size + 1;
-    } else {
-    gran1AC = rank * (TMax/size) + (TMax % size);
-    gran2AC = gran1AC + (TMax/size);
-    }
-
-
     if(run.excitation->SH_cond){
-     absCS_SH = result.getAbsorptionCrossSection_SH(CLGcoeff, gran1AC, gran2AC);
      scaCS_SH = result.getScatteringCrossSection_SH(gran1, gran2);
      }
      scaCS_FF = result.getScatteringCrossSection(gran1, gran2);
      extCS_FF = result.getExtinctionCrossSection(gran1, gran2);
 
-    if(run.excitation->SH_cond){
-    MPI_Gather(&absCS_SH, 1, MPI_DOUBLE, &absCS_SH_vec(0), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);    
+    if(run.excitation->SH_cond){    
     MPI_Gather(&scaCS_SH, 1, MPI_DOUBLE, &scaCS_SH_vec(0), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     }     
     MPI_Gather(&scaCS_FF, 1, MPI_DOUBLE, &scaCS_FF_vec(0), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -456,9 +444,8 @@ void Simulation::scan_wavelengths(Run &run, std::shared_ptr<solver::AbstractSolv
 
       if(run.excitation->SH_cond){
       outSSec_SH << lam << "\t" << scaCS_SH_vec.sum() << std::endl;
-      outASec_SH << lam << "\t" << absCS_SH_vec.sum() << std::endl;
-      std::cout<<scaCS_FF_vec.sum()<<std::endl;
-      std::cout<<scaCS_SH_vec.sum()<<std::endl;
+      //std::cout<<scaCS_FF_vec.sum()<<std::endl;
+      //std::cout<<scaCS_SH_vec.sum()<<std::endl;
      }
   }
     
@@ -466,26 +453,6 @@ void Simulation::scan_wavelengths(Run &run, std::shared_ptr<solver::AbstractSolv
 
 
  else if (size > NO)  {  // if the number of processes is more than numb of part
-
-    if (rank < (TMax % size)) {
-    gran1AC = rank * (TMax/size + 1);
-    gran2AC = gran1AC + TMax/size + 1;
-    } else {
-    gran1AC = rank * (TMax/size) + (TMax % size);
-    gran2AC = gran1AC + (TMax/size);
-    }
-    
-     if(run.excitation->SH_cond){
-       absCS_SH = result.getAbsorptionCrossSection_SH(CLGcoeff, gran1AC, gran2AC);
-    
-       MPI_Gather(&absCS_SH, 1, MPI_DOUBLE, &absCS_SH_vec(0), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
-     if(communicator().rank() == communicator().root_id()) {
-  
-      outASec_SH << lam << "\t" << absCS_SH_vec.sum() << std::endl;
-  
-      }
-     }
 
      if (rank<NO){     
      
@@ -515,8 +482,8 @@ void Simulation::scan_wavelengths(Run &run, std::shared_ptr<solver::AbstractSolv
 
       if(run.excitation->SH_cond)
       outSSec_SH << lam << "\t" << scaCS_SH_vec.sum() << std::endl;
-      std::cout<<scaCS_FF_vec.sum()<<std::endl;
-      std::cout<<scaCS_SH_vec.sum()<<std::endl;
+      //std::cout<<scaCS_FF_vec.sum()<<std::endl;
+      //std::cout<<scaCS_SH_vec.sum()<<std::endl;
     
       }
 

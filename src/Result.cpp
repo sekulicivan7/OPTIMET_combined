@@ -52,15 +52,8 @@ void Result::init(std::shared_ptr<Geometry> geometry_, std::shared_ptr<Excitatio
   scatter_coef.resize(2 * Tools::iteratorMax(nMax) * geometry->objects.size());
   internal_coef.resize(2 * Tools::iteratorMax(nMax) * geometry->objects.size());
   
-  if (geometry->objects[0].scatterer_type == "sphere"){
-  scatter_coef_SH.resize(4 * Tools::iteratorMax(nMaxS) * geometry->objects.size());
-  internal_coef_SH.resize(4 * Tools::iteratorMax(nMaxS) * geometry->objects.size());
- }
-
-else if (geometry->objects[0].scatterer_type == "arbitrary.shape"){
   scatter_coef_SH.resize(2 * Tools::iteratorMax(nMaxS) * geometry->objects.size());
   internal_coef_SH.resize(2 * Tools::iteratorMax(nMaxS) * geometry->objects.size());
-  }
 
 }
 
@@ -181,17 +174,11 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
 
       Rrel = Tools::toPoint(R_, geometry->objects[j].vR);
       
-      optimet::AuxCoefficients aCoefSH(Rrel, std::complex<double>(2.0, 0.0) * waveK, 0, nMaxS); //radiative spherical
+      optimet::AuxCoefficients aCoefSH(Rrel, std::complex<double>(2.0, 0.0) * waveK, 0, nMaxS); //radiative VSWF
 
       for(p = 0; p < p.max(nMaxS); p++) {
-      
-      if (geometry->objects[j].scatterer_type == "sphere"){   
-      bmnSH = scatter_coef_SH[j * 4 * pMaxS + p.compound] + scatter_coef_SH[2 * pMaxS + j * 4 * pMaxS + p.compound];
-      
-      amnSH = scatter_coef_SH[j * 4 * pMaxS + pMaxS + p.compound] + scatter_coef_SH[j * 4 * pMaxS + 3 * pMaxS +  p.compound];
-     }
 
-      else if (geometry->objects[j].scatterer_type == "arbitrary.shape"){ 
+      if (geometry->objects[j].scatterer_type == "arbitrary.shape"){ 
       bmnSH =  (1.0/waveK_0) * scatter_coef_SH[j * 2 * pMaxS + p.compound];
       
       amnSH =  (1.0/waveK_0) * scatter_coef_SH[j * 2 * pMaxS + pMaxS + p.compound];
@@ -253,12 +240,6 @@ void Result::getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> 
                                                                                                                                                        
 
     for(p = 0; p < p.max(nMaxS); p++) {
-
-    if (geometry->objects[intInd].scatterer_type == "sphere"){
-    cmnSH = internal_coef_SH[intInd * 4 * pMaxS + p.compound] + internal_coef_SH[2 * pMaxS + intInd * 4 * pMaxS + p.compound];
-
-    dmnSH = internal_coef_SH[pMaxS + intInd * 4 * pMaxS + p.compound] + internal_coef_SH[3 * pMaxS + intInd * 4 * pMaxS + p.compound];
-    }
 
    if (geometry->objects[intInd].scatterer_type == "arbitrary.shape"){
     cmnSH =  (1.0/waveK_0) * internal_coef_SH[intInd * 2 * pMaxS + p.compound];
@@ -406,36 +387,6 @@ double Result::getScatteringCrossSection(int gran1, int gran2) {
 }
 
 
-
-double Result::getAbsorptionCrossSection(int gran1, int gran2) {
- 
-  CompoundIterator p;
-  int pMax = p.max(nMax);
-
-  double Cabs(0.);
-  double temp1(0.), temp2(0.);
-  double *Cabs_aux = new double[2 * pMax];
-  auto const omega = excitation->omega();
-  for(int j = gran1; j < gran2; j++) {
-
-    geometry->getCabsAux(omega, j, nMax, Cabs_aux);
-
-    for(p = 0; p < pMax; p++) {
-      temp1 = abs(scatter_coef[j * 2 * pMax + p.compound]);
-      temp1 *= temp1;
-      temp2 = abs(scatter_coef[pMax + j * 2 * pMax + p.compound]);
-      temp2 *= temp2;
-      Cabs += temp1 * Cabs_aux[p.compound] + temp2 * Cabs_aux[pMax + p.compound];
-      
-    }
-  }
- 
-  delete[] Cabs_aux;
-  
-  return (1 / (std::real(waveK) * std::real(waveK))) * Cabs;
-}
-
-
 double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
  
   CompoundIterator p, q;
@@ -478,13 +429,8 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
   }
   
   for(p = 0; p < 2*pMax; p++) {
-  
-  if (geometry->objects[0].scatterer_type == "sphere"){
-  SCcoefpom_SH[ p ] = scatter_coef_SH[j * 4 * pMax + p.compound] + scatter_coef_SH[2 * pMax + j * 4 * pMax + p.compound] ;
-  ArbCf = eps_b_r * mu_b_r;
-  }
 
-  else if (geometry->objects[0].scatterer_type == "arbitrary.shape"){
+  if (geometry->objects[0].scatterer_type == "arbitrary.shape"){
   SCcoefpom_SH[ p ] = scatter_coef_SH[j * 2 * pMax + p.compound];
   
   ArbCf = std::real(waveK) * std::real(waveK);
@@ -515,54 +461,8 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
   
   return  (1.0 / (4.0 * ArbCf))* temp1 ; // frequency doubled because of SH
 }
-
-
- double Result::getAbsorptionCrossSection_SH(std::vector<double *> CLGcoeff, int gran1, int gran2) {
-
-
-  auto const omega = excitation->omega();
-      
-  int NO = geometry->objects.size(); // how many particles there is
-  
-  double absCS (0.0);
-  
-  CompoundIterator p;
-  
-  std::complex<double> mu_b = geometry->bground.mu;
-  
-  std::complex<double> eps_b = geometry->bground.epsilon;
-  
-  std::complex<double> eta = std::sqrt (mu_b / eps_b);
-  
-  int pMaxS = p.max(nMaxS);
  
-  std::complex<double>  sigma;
- 
-  int sizeCFsh = gran2-gran1; 
-
-  Vector<t_complex> coeffSH(sizeCFsh);
-
-  geometry->AbsCSSHcoeff(CLGcoeff, gran1, gran2, excitation, internal_coef, internal_coef_SH, nMaxS, coeffSH.data());
-
-  int objIndex, brojac(0);
- 
-  for(int ii = gran1; ii < gran2; ii++) {
-
-   objIndex = ii / pMaxS;
-
-  sigma = - std::complex<double>(0.0, 1.0) * consEpsilon0 * 2.0 * omega * (geometry->objects[objIndex].elmag.epsilon_r_SH - 1.0); 
-   
-    absCS = absCS +  std::real( (2.0 * eta) * 0.5 * sigma * coeffSH(brojac));
-
-   brojac++;  
-  } // for  ii
-   
-  return  absCS ;
-   
-  }
-
-
-
+  
   int Result::setFields(std::vector<double> &Rr, std::vector<double> 
                            &Rthe, std::vector<double> &Rphi, bool projection_, std::vector<double *> CLGcoeff) {
   

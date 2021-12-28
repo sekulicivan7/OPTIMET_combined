@@ -101,35 +101,16 @@ public:
   int nMaxS;              /**< Maximum value of the n iterator SH */  
   std::string scatterer_type; // type of scatterer, sphere or arbitrary shaped
 
-  // FF Tmatrix for spherical scatterers
-  void getTLocal(optimet::Matrix<optimet::t_complex>& Tmatrix, optimet::t_real omega_, ElectroMagnetic const &bground) const;
-
   // FF Q matrix
   void getQLocal(optimet::Vector<optimet::t_complex>& Qmatrix, optimet::t_real omega_, ElectroMagnetic const &bground, int gran1, int gran2) const;
 
   // FF RgQmatrix
-  void getRgQLocal(optimet::Vector<optimet::t_complex>& RgQmatrix, optimet::t_real omega_, ElectroMagnetic const &bground, int gran1, int gran2) const;
-
-  // SH Tmatrix for single spherical objects 
-  optimet::Matrix<optimet::t_complex> getTLocalSH(optimet::t_real omega_, ElectroMagnetic const &bground) const;
-  
+  void getRgQLocal(optimet::Vector<optimet::t_complex>& RgQmatrix, optimet::t_real omega_, ElectroMagnetic const &bground, int gran1, int gran2) const;  
   // SH Qmatrix for arbitrary shaped objects
   void getQLocalSH(optimet::Vector<optimet::t_complex>& QmatrixSH, optimet::t_real omega_, ElectroMagnetic const &bground, int gran1, int gran2) const;
   
   // SH RgQmatrix for arbitrary shaped objects
   void getRgQLocalSH(optimet::Vector<optimet::t_complex>& RgQmatrixSH, optimet::t_real omega_, ElectroMagnetic const &bground, int gran1, int gran2) const;
-
-  //! Coefficients for field inside a sphere FF
-  optimet::Vector<optimet::t_complex>
-  getIaux(optimet::t_real omega_, ElectroMagnetic const &bground) const;
-  
-  //! Coefficients for field inside a sphere SH
-  optimet::Vector<optimet::t_complex>
-  getIauxSH1(optimet::t_real omega_, ElectroMagnetic const &bground) const;
-  
-  optimet::Vector<optimet::t_complex>
-  getIauxSH2(optimet::t_real omega_, ElectroMagnetic const &bground) const;
-  
   
 };
 

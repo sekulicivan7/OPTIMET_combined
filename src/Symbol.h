@@ -65,14 +65,7 @@ std::complex<double> upp_mn(CompoundIterator &kk, double *W_m1m1, double *W_00, 
                            int objectIndex_,
                            double omega,
                            const Scatterer &object);
-                           
-std::complex<double> ACSshcoeff(CompoundIterator &kk, double *W_m1m1, double *W_00, double *W_11, int nMax, int nMaxS, 
-                           optimet::Vector<optimet::t_complex> &internalCoef_FF_,
-                           std::complex<double> cmnSH,
-                           std::complex<double> dmnSH,
-                           int objectIndex_,
-                           double omega,
-                           const Scatterer &object);     
+                 
                            
 std::complex<double> CXm1(CompoundIterator &kk, double *W_m1m1, double *W_00, double *W_11, int nMax,
                             optimet::Vector<optimet::t_complex> &internalCoef_FF_,

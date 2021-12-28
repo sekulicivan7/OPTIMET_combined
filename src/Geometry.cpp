@@ -84,69 +84,6 @@ bool Geometry::no_overlap(Scatterer const &object_) {
 }
 
 
-
-int Geometry::getCabsAux(double omega_, int objectIndex_, int nMax_, double *Cabs_aux_) {
-
-  std::complex<double> temp1(0., 0.);
-  double temp2(0.);
-  std::complex<double> k_s =
-      omega_ * std::sqrt(objects[objectIndex_].elmag.epsilon * objects[objectIndex_].elmag.mu);
-  std::complex<double> k_b = omega_ * std::sqrt(bground.epsilon * bground.mu);
-
-  std::complex<double> rho = k_s / k_b;
-
-  std::complex<double> r_0 = k_b * objects[objectIndex_].radius;
-
-  std::complex<double> mu_j = objects[objectIndex_].elmag.mu;
-  std::complex<double> mu_0 = bground.mu;
-
-  std::complex<double> psi(0., 0.), ksi(0., 0.);
-  std::complex<double> dpsi(0., 0.), dksi(0., 0.);
-  std::complex<double> psirho(0., 0.);
-  std::complex<double> dpsirho(0., 0.);
-
-  std::vector<std::complex<double>> J_n_data, J_n_ddata;
-  std::vector<std::complex<double>> Jrho_n_data, Jrho_n_ddata;
-  
- 
-  
-  try {
-    std::tie(J_n_data, J_n_ddata) = optimet::bessel<optimet::Bessel>(r_0, nMax_);
-    std::tie(Jrho_n_data, Jrho_n_ddata) = optimet::bessel<optimet::Bessel>(rho * r_0, nMax_);
-  } catch(std::range_error &e) { 
-    std::cerr << e.what() << std::endl;
-    return 1;
-  }
-
-  CompoundIterator p;
-
-  int pMax = p.max(nMax_);
-
-  for(p = 0; (int)p < pMax; p++) {
-    // obtain Riccati-Bessel functions
-    psi = r_0 * J_n_data[p.first];
-    dpsi = r_0 * J_n_ddata[p.first] + J_n_data[p.first];
-
-    psirho = r_0 * rho * Jrho_n_data[p.first];
-    dpsirho = r_0 * rho * Jrho_n_ddata[p.first] + Jrho_n_data[p.first];
-
-    // Stout 2002 - from scattered
-    // TE Part
-    temp1 = std::complex<double>(0., 1.) * rho * mu_0 * conj(mu_j) * conj(psirho) * dpsirho;
-    temp2 = abs((mu_j * psirho * dpsi - mu_0 * rho * dpsirho * psi));
-    temp2 *= temp2;
-    Cabs_aux_[p] = real(temp1) / temp2;
-
-    // TM part
-    temp1 = std::complex<double>(0., 1.) * conj(rho) * mu_0 * mu_j * conj(psirho) * dpsirho;
-    temp2 = abs((mu_0 * rho * psirho * dpsi - mu_j * dpsirho * psi));
-    temp2 *= temp2;
-    Cabs_aux_[(int)p + pMax] = real(temp1) / temp2;
-  }
-  return 0;
-}
-
-
 int Geometry::checkInner(Spherical<double> R_) {
   Spherical<double> Rrel;
   Cartesian <double> Rcar, centCar;
@@ -364,67 +301,6 @@ int Geometry::getIncLocalSH_parallel(std::vector<double *> CLGcoeff, int gran1, 
     }
 
   
-  return 0;
-}
-
-
- int Geometry::AbsCSSHcoeff(std::vector<double *> CLGcoeff, int gran1, int gran2, std::shared_ptr<optimet::Excitation const> incWave_, 
-optimet::Vector<optimet::t_complex> &internalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_SH_,
-        int nMaxS_, std::complex<double> *coefABS) {
-                 
-                                
-
-   double *W_m1m1 = CLGcoeff[4];
-   double *W_11 = CLGcoeff[5];
-   double *W_00 = CLGcoeff[6];
-              
-   CompoundIterator p, q;
-     
-   int pMax = p.max(nMaxS_);
-   int qMax = q.max(nMaxS_);
-   int nMax_ = this->nMax();
-
-   int objectIndex_; 
-   
-  int NO = this->objects.size();  
-
-  auto const omega = incWave_->omega();
-
-  std::complex<double> cmnSH, dmnSH;
- 
-    int brojac(0);
-   
-    for(q = gran1; q < gran2; q++) {
-
-      objectIndex_ = q / qMax;
-
-      p = q - objectIndex_ * qMax;
-  
-  if (objects[0].scatterer_type == "sphere"){   
-  
-  cmnSH = internalCoef_SH_[objectIndex_ * 4 * pMax + p.compound] + internalCoef_SH_[2 * pMax + objectIndex_ * 4 * pMax + p.compound];
-   
-  dmnSH = internalCoef_SH_[pMax + objectIndex_ * 4 * pMax + p.compound] + internalCoef_SH_[3 * pMax + 
-                           objectIndex_ * 4 * pMax + p.compound];
-  }
-
-  else if (objects[0].scatterer_type == "arbitrary.shape"){
- 
- cmnSH = (1.0 / incWave_->waveK) * internalCoef_SH_[objectIndex_ * 2 * pMax + p.compound];
-
- dmnSH = (1.0 / incWave_->waveK) * internalCoef_SH_[objectIndex_ * 2 * pMax + pMax + p.compound];
- 
- }
-     
-    
-    coefABS[brojac] = optimet::symbol::ACSshcoeff(p, W_m1m1, W_00, W_11, nMax_, nMaxS_,
-                  internalCoef_FF_, cmnSH, dmnSH,
-                   objectIndex_,
-                  omega, objects[objectIndex_]);
-
-    brojac++;        
-    }
-   
   return 0;
 }
 

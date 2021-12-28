@@ -51,11 +51,11 @@ Vector<t_complex> source_vectorSHarb1(Geometry &geometry, std::shared_ptr<Excita
                                  
 // source vectors needed for SH arbitrary shapes and parallel
 Vector<t_complex> source_vectorSH_parallelAR3(Geometry &geometry, int gran1, int gran2,
-                                std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_, int objIndex);
+          std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_, int objIndex);
 
 
 Vector<t_complex> source_vectorSH_parallelAR1(Geometry &geometry, int gran1, int gran2,
-                                std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_, int objIndex);
+              std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_, int objIndex);
 
 // computes the distributed source vector for SH on many nodes
 Vector<t_complex> distributed_source_vector_SH_Mnode(Geometry &geometry,
@@ -101,24 +101,6 @@ Matrix<t_complex> getTRgQmatrix_FF_parr(Geometry const &geometry,
 Matrix<t_complex> getTRgQmatrix_SH_parr(Geometry const &geometry,
                                                    std::shared_ptr<Excitation const> incWave
                                                    );
-//! Distributes the source vectors
-Vector<t_complex> distributed_source_vector(Vector<t_complex> const &input,
-                                            scalapack::Context const &context,
-                                            scalapack::Sizes const &blocks);
 
-
-Vector<t_complex> distributed_source_vector_SH(Geometry &geometry, Vector<t_complex> &VecMnod,
-                                           scalapack::Context const &context,
-                                            scalapack::Sizes const &blocks);
-
-#ifdef OPTIMET_SCALAPACK
-//! Gather the distributed vector into a single vector
-Vector<t_complex> gather_all_source_vector(t_uint n, Vector<t_complex> const &input,
-                                           scalapack::Context const &context,
-                                           scalapack::Sizes const &blocks);
-//! Gather the distributed vector into a single vector
-Vector<t_complex> gather_all_source_vector(scalapack::Matrix<t_complex> const &matrix);
-
-#endif
 }
 #endif
