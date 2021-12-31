@@ -54,11 +54,6 @@ public:
   
     Q = source_vector(*geometry, incWave);
 
-    S = getTRgQmatrix_FF_parr(*geometry, incWave);
-
-    if(incWave->SH_cond)
-    V = getTRgQmatrix_SH_parr(*geometry, incWave);
-
   }
   
 

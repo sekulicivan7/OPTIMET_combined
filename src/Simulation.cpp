@@ -43,13 +43,17 @@ int Simulation::run() {
 
   // Initialize the solver
   auto const solver = optimet::solver::factory(run);
-  #ifdef OPTIMET_MPI
+  
   switch(run.outputType) {
   case 0:
+    #ifdef OPTIMET_MPI
     field_simulation(run, solver);
+    #endif
     break;
   case 11:
+    #ifdef OPTIMET_MPI
     scan_wavelengths(run, solver);
+    #endif
     break;
   default:
     std::cerr << "Nothing to do?\n";
@@ -58,6 +62,7 @@ int Simulation::run() {
   return 0;
 }
 
+#ifdef OPTIMET_MPI
 void Simulation::field_simulation(Run &run, std::shared_ptr<solver::AbstractSolver> solver) {
   // Determine the simulation type and proceed accordingly
   

@@ -59,7 +59,7 @@ void ElectroMagnetic::initHydrodynamicModel_r(std::complex<double> a_,
                                        std::complex<double> d_,
                                        std::complex<double> mu_r_) {
   a_SH = a_;
-  b_SH = b_;
+  b_SH = -b_;
   d_SH = d_;
 
   mu_r = mu_r_;
