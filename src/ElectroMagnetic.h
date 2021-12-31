@@ -67,10 +67,10 @@ public:
   std::complex<double> epsilon_r; /**< The relative electric permittivity. */
   std::complex<double> mu_r;      /**< The relative magnetic permeability. */
 
-  // Second Harmonic variables
-  std::complex<double> a_SH; /**< The a Non-Linear coefficient (cfn13arx). */
-  std::complex<double> b_SH; /**< The b Non-Linear coefficient (cfn13arx). */
-  std::complex<double> d_SH; /**< The d Non-Linear coefficient (cfn13arx). */
+  // Rudnick_Stern parameters
+  std::complex<double> a_SH; 
+  std::complex<double> b_SH; 
+  std::complex<double> d_SH; 
   std::complex<double>
       epsilon_SH; /**< The absolute second harmonic electric permittivity. */
   std::complex<double>
@@ -80,9 +80,9 @@ public:
   std::complex<double>
       mu_r_SH; /**< The relative second harmonic magnetic permeability. */
       
-  std::complex<double> ksippp; // value of the surface parameter perpendicular-perpendicular-perpendicular    
+  std::complex<double> ksippp; // surface tensor entry perpend-perpend-perpend    
   
-  std::complex<double> ksiparppar; // value of the surface parameter parallel-perpendicular-parallel
+  std::complex<double> ksiparppar; // surface tensor parameter parallel-perpendicular-parallel
   
   std::complex<double> gamma; // value of the parameter gamma  
   

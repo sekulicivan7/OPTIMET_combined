@@ -55,7 +55,7 @@ void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vect
                       Vector<t_complex> &X_int_SH, std::vector<double *> CGcoeff) const {
     
  if(context().is_valid()) {
-  
+    //FF
      auto const nobj = geometry->objects.size();
     Matrix<t_complex> TmatrixFF, RgQmatrixFF, SCATmatFF;
     int nMax = geometry->nMax();
@@ -75,7 +75,7 @@ void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vect
     broadcast_to_out_of_context(X_int_, context(), communicator());
   }
 
-
+  //SH
   if(incWave->SH_cond){
   auto const nobj = geometry->objects.size();
   Vector<t_complex> KmNOD, K1;
@@ -92,7 +92,6 @@ void Scalapack::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Vect
   MPI_Barrier(MPI_COMM_WORLD);
       
   if(context().is_valid()) {
-    //SH part
     
     SCATmatSH = ScatteringMatrixSH(TmatrixSH, *geometry, incWave);
     X_sca_SH = SCATmatSH.colPivHouseholderQr().solve(KmNOD);

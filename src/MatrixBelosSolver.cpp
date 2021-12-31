@@ -25,7 +25,7 @@ namespace solver {
 
 void MatrixBelos::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_,Vector<t_complex> &X_sca_SH,
                          Vector<t_complex> &X_int_SH, std::vector<double *> CGcoeff) const {
-
+  //FF
   if(context().is_valid()) {
    
     Matrix<t_complex> TmatrixFF, RgQmatrixFF;
@@ -38,7 +38,7 @@ void MatrixBelos::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_,Vec
 
     PreconditionedMatrix::unprecondition(X_sca_, X_int_, TmatrixFF, RgQmatrixFF);
  }
-
+  //SH
   if(incWave->SH_cond){
   Vector<t_complex> KmNOD, K1;
   Matrix<t_complex> TmatrixSH, RgQmatrixSH;
@@ -55,8 +55,7 @@ void MatrixBelos::solve(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_,Vec
   MPI_Barrier(MPI_COMM_WORLD);
 
   if(context().is_valid()) {
-  //SH part
-
+  
     X_sca_SH = KmNOD;
 
     PreconditionedMatrix::unprecondition_SH(X_sca_SH, X_int_SH, K1, RgQmatrixSH);

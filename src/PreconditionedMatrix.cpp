@@ -102,8 +102,8 @@ auto const nobj = geometry.objects.size();
 
       sizeVec2 = 2 * (gran22 - gran11);
 
-  int brojac (0);
- //single target only
+    int brojac (0);
+
     for (int ii = gran11; ii < gran22; ii++){
  
    resultK1(ii) = result1(disps(ranki) + brojac);
@@ -214,7 +214,6 @@ auto const nobj = geometry.objects.size();
       sizeVec2 = 2 * (gran22 - gran11);
 
   int brojac (0);
- //single target only
   for (int ii = gran11; ii < gran22; ii++){
 
   resultK3(ii) = result3(disps(ranki) + brojac);
@@ -227,13 +226,12 @@ auto const nobj = geometry.objects.size();
   } // for ii
 
   }  // for ranki
-    
-   // just for one target     
+        
   resultK = (-consCi * k_b_SH ) * resultK1 + (consCi * k_b_SH) * TmatrixSINGLE * resultK3;
   resultKMNY.segment(objIndex*2*pMax, 2*pMax) = resultK;
   }// rank0
 
-MPI_Barrier(MPI_COMM_WORLD);
+  MPI_Barrier(MPI_COMM_WORLD);
 
 
   } // end loop on objects
@@ -311,7 +309,7 @@ return resultKMNY;
 
 
 //Preconditioned scattering matrix for FF
-Matrix<t_complex> ScatteringMatrixFF(Matrix<t_complex> &TMatrixFF, Geometry const &geometry,
+ Matrix<t_complex> ScatteringMatrixFF(Matrix<t_complex> &TMatrixFF, Geometry const &geometry,
                                                    std::shared_ptr<Excitation const> incWave) {
 
   auto const nMax = geometry.objects.front().nMax;
@@ -354,7 +352,7 @@ return result;
        }
 
 // Scattering matrix for SH
-Matrix<t_complex> ScatteringMatrixSH(Matrix<t_complex> &TMatrixSH, Geometry const &geometry,
+ Matrix<t_complex> ScatteringMatrixSH(Matrix<t_complex> &TMatrixSH, Geometry const &geometry,
                                                    std::shared_ptr<Excitation const> incWave) {
 
   auto const nMaxS = geometry.objects.front().nMaxS;
@@ -418,16 +416,16 @@ Matrix<t_complex> getTRgQmatrix_FF_parr(Geometry const &geometry,
     gran2 = gran1 + (pMax/size);
     }
 
-int numRow = gran2 - gran1;
+ int numRow = gran2 - gran1;
 
-int sizeVec = 4 * numRow * pMax;
+ int sizeVec = 4 * numRow * pMax;
 
-Vector<t_complex> QmatrixFF_proc (sizeVec);
-Vector<t_complex> RgQmatrixFF_proc (sizeVec);
-Vector<t_complex> resultQ (4 * pMax * pMax);
-Vector<t_complex> resultRgQ (4 * pMax * pMax);
-Matrix<t_complex> QmatrixFF(2*pMax, 2*pMax), RgQmatrixFF(2*pMax, 2*pMax), TmatrixFF(2*pMax, 2*pMax), TRgQmatrixFF(2*pMax, 4*nobj*pMax);
-TRgQmatrixFF.setZero();
+ Vector<t_complex> QmatrixFF_proc (sizeVec);
+ Vector<t_complex> RgQmatrixFF_proc (sizeVec);
+ Vector<t_complex> resultQ (4 * pMax * pMax);
+ Vector<t_complex> resultRgQ (4 * pMax * pMax);
+ Matrix<t_complex> QmatrixFF(2*pMax, 2*pMax), RgQmatrixFF(2*pMax, 2*pMax), TmatrixFF(2*pMax, 2*pMax), TRgQmatrixFF(2*pMax, 4*nobj*pMax);
+ TRgQmatrixFF.setZero();
 
 for (int objIndex = 0; objIndex < nobj; objIndex++){
 
@@ -465,7 +463,7 @@ for (int objIndex = 0; objIndex < nobj; objIndex++){
     sizeVec2 = pMax * (gran22 - gran11);
 
   int brojac (0);
- //single target only
+ 
    for (int ii = gran11; ii < gran22; ii++){
     for (int jj = 0; jj < pMax; jj++){
  
@@ -519,21 +517,21 @@ auto const nobj = geometry.objects.size();
     }
 
 
-int numRow = gran2 - gran1;
+ int numRow = gran2 - gran1;
 
-int sizeVec = 4 * numRow * pMax;
+ int sizeVec = 4 * numRow * pMax;
 
-Vector<t_complex> QmatrixSH_proc (sizeVec);
-Vector<t_complex> RgQmatrixSH_proc (sizeVec);
-Vector<t_complex> resultQ (4 * pMax * pMax);
-Vector<t_complex> resultRgQ (4 * pMax * pMax);
-Matrix<t_complex> QmatrixSH(2*pMax, 2*pMax), RgQmatrixSH(2*pMax, 2*pMax), TmatrixSH(2*pMax, 2*pMax), TRgQmatrixSH(2*pMax, 4*nobj*pMax);
-TRgQmatrixSH.setZero();
+ Vector<t_complex> QmatrixSH_proc (sizeVec);
+ Vector<t_complex> RgQmatrixSH_proc (sizeVec);
+ Vector<t_complex> resultQ (4 * pMax * pMax);
+ Vector<t_complex> resultRgQ (4 * pMax * pMax);
+ Matrix<t_complex> QmatrixSH(2*pMax, 2*pMax), RgQmatrixSH(2*pMax, 2*pMax), TmatrixSH(2*pMax, 2*pMax), TRgQmatrixSH(2*pMax, 4*nobj*pMax);
+ TRgQmatrixSH.setZero();
 
 for (int objIndex = 0; objIndex < nobj; objIndex++){
 
-QmatrixSH_proc = getQmatrix_SH(geometry, geometry.bground, incWave, gran1, gran2, objIndex);
-RgQmatrixSH_proc = getRgQmatrix_SH(geometry, geometry.bground, incWave, gran1, gran2, objIndex);
+ QmatrixSH_proc = getQmatrix_SH(geometry, geometry.bground, incWave, gran1, gran2, objIndex);
+ RgQmatrixSH_proc = getRgQmatrix_SH(geometry, geometry.bground, incWave, gran1, gran2, objIndex);
 
     Vector<int> sizesProc(size), disps(size);
 
@@ -613,7 +611,7 @@ Vector<t_complex> source_vector(std::vector<Scatterer>::const_iterator first,
   return result;
 }
 
-
+#ifdef OPTIMET_MPI
 Vector<t_complex> source_vectorSH_parallelAR3(Geometry &geometry, int gran1, int gran2,
                                 std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, 
                                  Vector<t_complex> &scatteredCoef_FF_, int objIndex) {
@@ -646,6 +644,7 @@ geometry.getEXCvecSH_ARB1_parall(resultProc, incWave, scatteredCoef_FF_, interna
 return resultProc;
 
 }
+#endif
 
 Vector<t_complex> source_vector(std::vector<Scatterer> const &objects, std::shared_ptr<Excitation const> incWave) {
   return source_vector(objects.begin(), objects.end(), incWave);

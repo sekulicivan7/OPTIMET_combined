@@ -62,8 +62,6 @@ public:
 
   /**
    * Initialization constructor for Scatterer.
-   * Creates a sphere scatterer centered in vR with properties elmag and
-   * radius r.
    * @param vR_ the coordinates of the center of the scatterer.
    * @param elmag_ the electromagnetic properties of the scatterer.
    * @param radius_ the radius of the virtual sphere.
@@ -74,13 +72,10 @@ public:
 
   /**
    * Initialization constructor for Scatterer.
-   * Creates a sphere scatterer centered in vR with properties elmag and
-   * radius r.
    * @param pos the position in cartesian coordinates
    * @param elmag_ the electromagnetic properties of the scatterer.
    * @param radius_ the radius of the virtual sphere.
    * @param nMax_ the maximum value of the n iterator.
-   * @see init()
    */
   template <class T>
   Scatterer(Eigen::MatrixBase<T> const &pos, ElectroMagnetic elmag, double radius, int nMax)
@@ -100,7 +95,7 @@ public:
   int nMax;              /**< Maximum value of the n iterator. */
   int nMaxS;              /**< Maximum value of the n iterator SH */  
   std::string scatterer_type; // type of scatterer, sphere or arbitrary shaped
-
+  #ifdef OPTIMET_MPI
   // FF Q matrix
   void getQLocal(optimet::Vector<optimet::t_complex>& Qmatrix, optimet::t_real omega_, ElectroMagnetic const &bground, int gran1, int gran2) const;
 
@@ -111,7 +106,7 @@ public:
   
   // SH RgQmatrix for arbitrary shaped objects
   void getRgQLocalSH(optimet::Vector<optimet::t_complex>& RgQmatrixSH, optimet::t_real omega_, ElectroMagnetic const &bground, int gran1, int gran2) const;
-  
+#endif  
 };
 
 #endif /* SCATTERER_H_ */

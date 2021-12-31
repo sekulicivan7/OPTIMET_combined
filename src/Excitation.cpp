@@ -58,7 +58,7 @@ int Excitation::populate() {
     SphericalP<std::complex<double>> B_local = coef.B(static_cast<long>(p));
 
     SphericalP<std::complex<double>> conjAux(std::conj(C_local.rrr), std::conj(C_local.the),
-                                             std::conj(C_local.phi)); // std::complex conjugate of C
+                                             std::conj(C_local.phi)); 
     dataIncAp[p] = 4 * constant::pi * std::pow(-1.0, p.second) * std::pow(consCi, p.first) *
                    coef.dn(p.first) * (conjAux * Einc) *
                    std::exp(consCmi * (double)p.second * vKInc.phi);
@@ -66,7 +66,7 @@ int Excitation::populate() {
 
     conjAux =
         SphericalP<std::complex<double>>(std::conj(B_local.rrr), std::conj(B_local.the),
-                                         std::conj(B_local.phi)); // std::complex conjugate of B
+                                         std::conj(B_local.phi)); 
     dataIncBp[p] = 4 * constant::pi * std::pow(-1.0, p.second) * std::pow(consCi, p.first - 1) *
                    coef.dn(p.first) * (conjAux * Einc) *
                    std::exp(consCmi * (double)p.second * vKInc.phi);
@@ -106,7 +106,7 @@ int Excitation::getIncLocal(Spherical<double> point_, std::complex<double> *Inc_
   for(p = 0; p < pMax; p++) {
     for(q = 0; q < qMax; q++) {
       T_AB[p][q] = coupling.diagonal(q, p);
-      T_AB[p + pMax][q + qMax] = coupling.diagonal(q, p);  // This is the transfer matrix for the incident wave
+      T_AB[p + pMax][q + qMax] = coupling.diagonal(q, p);  // This is the transfer matrix
       T_AB[p + pMax][q] = coupling.offdiagonal(q, p);
       T_AB[p][q + qMax] = coupling.offdiagonal(q, p);
       

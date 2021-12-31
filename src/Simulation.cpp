@@ -43,7 +43,7 @@ int Simulation::run() {
 
   // Initialize the solver
   auto const solver = optimet::solver::factory(run);
-
+  #ifdef OPTIMET_MPI
   switch(run.outputType) {
   case 0:
     field_simulation(run, solver);
@@ -503,6 +503,7 @@ void Simulation::scan_wavelengths(Run &run, std::shared_ptr<solver::AbstractSolv
    }
   }
 }
+#endif
 
 int Simulation::done() {
   // Placeholder method. Not needed at the moment.

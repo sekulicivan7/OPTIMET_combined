@@ -224,11 +224,11 @@ std::complex<double> CXm1(CompoundIterator &kk, double *W_m1m1, double *W_00, do
                           
                         
     brojac ++;          
-   } 
+   }
+ 
   }
         
   return COEFFXm1 ;    
-
 }
 
 
@@ -297,16 +297,16 @@ std::complex<double> CXp1(CompoundIterator &kk, double *W_m1m1, double *W_00, do
                           
    
    COEFFXp1 += (-eps_0 / eps_j2) * gamma * ( cmn_1 * cmn_2 * W00 * std::sqrt(n * (n + 1)) * (1.0 / r) * F_00(p.first, q.first, r, waveK_j1, nMax) + 
-
               dmn_1  * dmn_2 * (1.0 / (std::pow(waveK_j1, 2.0))) * (W11 * std::sqrt(n * (n + 1)) * (1.0 / r) * 
 
-       F_11(p.first, q.first, r, waveK_j1, nMax) + Wm1m1 * std::sqrt(p.first * q.first * (p.first + 1) * (q.first + 1)) * 
+               F_11(p.first, q.first, r, waveK_j1, nMax) + Wm1m1 * std::sqrt(p.first * q.first * (p.first + 1) * (q.first + 1)) * 
               
                std::sqrt(n * (n + 1)) * (1.0 / r) * F_m1m1(p.first, q.first, r, waveK_j1, nMax)));      
                
                brojac++;                  
               
-   } 
+   }
+ 
   }
   
    
@@ -315,7 +315,7 @@ std::complex<double> CXp1(CompoundIterator &kk, double *W_m1m1, double *W_00, do
 }
 
  // C numbers
-
+#ifdef OPTIMET_MPI
 void C_10m1coeff (double *C_10m1, int nMax, int nMaxS, int gran1, int gran2){
 
 CompoundIterator p, q, k;
@@ -711,8 +711,7 @@ M2 = q.second;
                       
      }
    }                   
-
+#endif
          
-
 } // namespace symbol
 } // namespace optimet

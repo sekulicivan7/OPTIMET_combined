@@ -24,15 +24,16 @@
 #include "Spherical.h"
 #include "SphericalP.h"
 #include <vector>
+#ifdef OPTIMET_MPI
 #include <mpi.h>
-
+#endif
 #include <complex>
 
 namespace optimet {
 /**
  * The Result class is used to provide post simulation
- * output functions including field profiles, absorbption
- * and extinction cross sections, and scattering
+ * output functions including field profiles, absorption
+ * and scattering cross sections, and scattering
  * coefficients.
  */
 
@@ -111,35 +112,33 @@ public:
    * @param projection_ defines spherical (1) or cartesian (0) projection.
    */
   void getEHFields(Spherical<double> R_, SphericalP<std::complex<double>> &EField_FF,
-                   SphericalP<std::complex<double>> &HField_FF, SphericalP<std::complex<double>> &EField_SH,
-                   SphericalP<std::complex<double>> &HField_SH, bool projection_, std::complex<double> *coeffXmn, std::complex<double> *coeffXpl) const;
+       SphericalP<std::complex<double>> &HField_FF, SphericalP<std::complex<double>> &EField_SH,
+       SphericalP<std::complex<double>> &HField_SH, bool projection_, std::complex<double> *coeffXmn, std::complex<double> *coeffXpl) const;
                    
-
-
-  /**
-   * Returns the Extinction Cross Section for Fundamental Frequency.
-   */
+  #ifdef OPTIMET_MPI
+  //Returns the Extinction Cross Section for Fundamental Frequency.
   double getExtinctionCrossSection(int gran1, int gran2);
   
   // Scattering cross section for FF
   double getScatteringCrossSection(int gran1, int gran2);
 
-   /* Returns the Scattering Cross Section for SH Frequency.
-   */
+  // Returns the Scattering Cross Section for SH Frequency.
   double getScatteringCrossSection_SH(int gran1, int gran2);  
+ #endif
 
   /**
    * Populate a grid with E and H fields.
    * @param oEGrid_FF the OutputGrid object for the E fields, fundamental freq.
-   * @param oHGrid_FF the OutputGrid object for the H fields fundamental freq.
+   * @param oHGrid_FF the OutputGrid object for the H fields, fundamental freq.
    * @param oEGrid_SH the OutputGrid object for the E fields, SH freq.
-   * @param oHGrid_SH the OutputGrid object for the H fields SH freq.
+   * @param oHGrid_SH the OutputGrid object for the H fields, SH freq.
    * @param projection_ defines spherical (1) or cartesian (0) projection.
    * @return 0 if succesful, 1 otherwise.
    */
-  int setFields(std::vector<double> &Rr, std::vector<double> &Rthe, 
+#ifdef OPTIMET_MPI
+ int setFields(std::vector<double> &Rr, std::vector<double> &Rthe, 
 std::vector<double> &Rphi, bool projection_, std::vector<double *> CLGcoeff);
-
+#endif
 };
 }
 #endif /* RESULT_H_ */

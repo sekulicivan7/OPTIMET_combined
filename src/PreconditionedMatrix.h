@@ -26,15 +26,15 @@
 #include <Eigen/LU>
  
 namespace optimet {
-//! \brief Computes source vector
+//Computes source vector
 Vector<t_complex>
 source_vector(Geometry const &geometry, std::shared_ptr<Excitation const> incWave);
-//! \brief Computes source vector from a range of scatterers
+//Computes source vector from a range of scatterers
 Vector<t_complex> source_vector(std::vector<Scatterer>::const_iterator first,
                                 std::vector<Scatterer>::const_iterator const &last,
                                 std::shared_ptr<Excitation const> incWave);  
                                                                  
-                                 
+#ifdef OPTIMET_MPI                                 
 // source vectors needed for SH arbitrary shapes and parallel
 Vector<t_complex> source_vectorSH_parallelAR3(Geometry &geometry, int gran1, int gran2,
           std::shared_ptr<Excitation const> incWave, Vector<t_complex> &internalCoef_FF_, Vector<t_complex> &scatteredCoef_FF_, int objIndex);
@@ -87,6 +87,6 @@ Matrix<t_complex> getTRgQmatrix_FF_parr(Geometry const &geometry,
 Matrix<t_complex> getTRgQmatrix_SH_parr(Geometry const &geometry,
                                                    std::shared_ptr<Excitation const> incWave
                                                    );
-
+#endif
 }
 #endif

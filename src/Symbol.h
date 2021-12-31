@@ -43,7 +43,7 @@ std::complex<double> CXp1(CompoundIterator &kk, double *W_m1m1, double *W_00, do
                             double r,
                             int objectIndex_, double omega,
                             const Scatterer &object);                            
-                                                       
+#ifdef OPTIMET_MPI                                                       
 void C_10m1coeff (double *C_10m1, int nMax, int nMaxS, int gran1, int gran2); 
 void C_11m1coeff (double *C_11m1, int nMax, int nMaxS, int gran1, int gran2);  
 void C_00m1coeff (double *C_00m1, int nMax, int nMaxS, int gran1, int gran2);  
@@ -52,7 +52,8 @@ void W_m1m1coeff  (double *W_m1m1, int nMax, int nMaxS, int gran1, int gran2);
 void W_11coeff  (double *W_11, int nMax, int nMaxS, int gran1, int gran2); 
 void W_00coeff  (double *W_00, int nMax, int nMaxS, int gran1, int gran2);
 void W_10coeff  (double *W_10, int nMax, int nMaxS, int gran1, int gran2);  
-void W_01coeff  (double *W_01, int nMax, int nMaxS, int gran1, int gran2);  
+void W_01coeff  (double *W_01, int nMax, int nMaxS, int gran1, int gran2);
+#endif  
 } // namespace symbol
 } // namespace optimet
 

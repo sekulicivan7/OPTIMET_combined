@@ -73,24 +73,22 @@ public:
    * @return the index of the object in which this point is or -1 if outside.
    */
   int checkInner(Spherical<double> R_);
+
+  #ifdef OPTIMET_MPI
   // Clebsch Gordan series coeff
   void Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff, int gran1, int gran2);     
-                      
+  #endif                    
    // Coefficients for the particular solution of SH differential equations                                     
   int COEFFpartSH(int objectIndex_, std::shared_ptr<optimet::Excitation const> incWave_, optimet::Vector<optimet::t_complex> 
                   &internalCoef_FF_, double r, int nMaxS_, std::complex<double> *coefXmn, std::complex<double> *coefXpl, 
                    std::vector<double *> CLGcoeff);
 
- // vectors needed for the SH arbitrary shapes
-  void getEXCvecSH_ARB3(optimet::Vector<optimet::t_complex>& EXvec, std::shared_ptr<optimet::Excitation const> excitation, optimet::Vector<optimet::t_complex> &externalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_FF_, int objIndex);       
-  
- void getEXCvecSH_ARB1(optimet::Vector<optimet::t_complex>& EXvec, std::shared_ptr<optimet::Excitation const> excitation, optimet::Vector<optimet::t_complex> &externalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_FF_, int objIndex);
-                                            
 // vectors needed for the SH arbitrary shape in parallel
+#ifdef OPTIMET_MPI
 void getEXCvecSH_ARB3_parall(optimet::Vector<optimet::t_complex>& EXvec, std::shared_ptr<optimet::Excitation const> excitation, optimet::Vector<optimet::t_complex> &externalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_FF_, int gran1, int gran2, int objIndex);
 
 void getEXCvecSH_ARB1_parall(optimet::Vector<optimet::t_complex>& EXvec, std::shared_ptr<optimet::Excitation const> excitation, optimet::Vector<optimet::t_complex> &externalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_FF_, int gran1, int gran2, int objIndex);
-
+#endif
   /**
    * Updates the Geometry object to a new Excitation.
    * @param lambda_ the new wavelength.

@@ -72,7 +72,6 @@ protected:
   
   Vector<t_complex> K;
 
-  //! Unpreconditions the result of preconditioned computation
   void unprecondition(Vector<t_complex> &X_sca_, Vector<t_complex> &X_int_, Matrix<t_complex> &Tmat, Matrix<t_complex> &RgQ) const {
     X_sca_ = AbstractSolver::convertIndirect(X_sca_, Tmat);
     X_int_ = AbstractSolver::solveInternal(X_sca_, RgQ);

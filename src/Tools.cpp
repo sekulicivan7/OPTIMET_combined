@@ -107,7 +107,7 @@ void Tools::crossTanTr(std::complex<double>* res, std::complex<double>* resCR, d
 
 }
 
-// nxnx
+// nxnxE
 void Tools::crossTan(std::complex<double>* res, std::complex<double>* resCR, double* u, std::complex<double>* v){
         
         resCR[0] = u[1] * v[2] - u[2] *  v[1];

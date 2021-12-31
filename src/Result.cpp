@@ -288,6 +288,7 @@ sqrt(geometry->objects[intInd].elmag.epsilon_r_SH * geometry->objects[intInd].el
   
 }
 
+#ifdef OPTIMET_MPI
 double Result::getExtinctionCrossSection(int gran1, int gran2) {
   CompoundIterator p;
   int pMax = Tools::iteratorMax(nMax);
@@ -457,8 +458,9 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
   
   return  (1.0 / (4.0 * ArbCf))* temp1 ; // frequency doubled because of SH
 }
+#endif
  
-  
+  #ifdef OPTIMET_MPI
   int Result::setFields(std::vector<double> &Rr, std::vector<double> 
                            &Rthe, std::vector<double> &Rphi, bool projection_, std::vector<double *> CLGcoeff) {
   
@@ -550,5 +552,5 @@ double Result::getScatteringCrossSection_SH(int gran1, int gran2) {
   return 0;
 
 }
-   
+#endif   
 }

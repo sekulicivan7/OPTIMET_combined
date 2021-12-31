@@ -41,7 +41,7 @@ public:
                               Kinc_the, Kinc_pphi). */
   long nMax;               /**< The maximum value for the n iterator. */
   unsigned long type;      /**< The Excitation type. */
-  bool SH_cond; // condition for the SH sources
+  bool SH_cond; // condition for the existence of SH sources
   Vector<t_complex> dataIncAp; /**< The incoming wave a_n^m coefficients. */
   Vector<t_complex> dataIncBp; /**< The incoming wave b_n^m coefficients. */
 

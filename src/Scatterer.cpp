@@ -36,14 +36,13 @@ topol = top;
 
 }
 
-
+#ifdef OPTIMET_MPI
 void Scatterer::getQLocal(optimet::Vector<optimet::t_complex>& Qmatrix,
  optimet::t_real omega_, ElectroMagnetic const &bground, int gran1, int gran2) const {
   using namespace optimet;
 
   auto const N = HarmonicsIterator::max_flat(nMax) - 1;
-
-  
+ 
   // calculate the Qmatrix for arbitrary shaped scatterer (evaluation of surface integrals)
   
           CompoundIterator mu1;
@@ -118,7 +117,6 @@ void Scatterer::getQLocal(optimet::Vector<optimet::t_complex>& Qmatrix,
 	
 
         optimet::AuxCoefficients aCoefext3(intpoinSph, k_b, 0, nMax); //radiative VSWF (3)
-         //optimet::AuxCoefficients aCoefext1(intpoinSph, k_b, 1, nMax); //regular VSWF (1)
         optimet::AuxCoefficients aCoefint1(intpoinSph, k_0 * sqrt(elmag.epsilon_r * elmag.mu_r), 1, nMax); //regular VSWF (1)
 
         //*****************************************
@@ -344,9 +342,7 @@ void Scatterer::getRgQLocal(optimet::Vector<optimet::t_complex>& RgQmatrix, opti
         RgQmatrix_d (brojac) = (RgI41 + RgI42);
 
         brojac++;        
-	}
-
-	
+	}	
 	}// iteration over all spherical harmonics
 
       RgQmatrix_1.head(size) = RgQmatrix_a;
@@ -357,9 +353,7 @@ void Scatterer::getRgQLocal(optimet::Vector<optimet::t_complex>& RgQmatrix, opti
 
       RgQmatrix.head(2*size) = RgQmatrix_1;
       RgQmatrix.tail(2*size) = RgQmatrix_2;
-
-   // Intrmatrix = RgQ.inverse();
-  
+ 
   }
                    
 
@@ -440,7 +434,6 @@ void Scatterer::getQLocalSH(optimet::Vector<optimet::t_complex>& QmatrixSH, opti
 	
 
         optimet::AuxCoefficients aCoefext3(intpoinSph, k_b_SH, 0, nMaxS); //radiative VSWF (3)
-       // optimet::AuxCoefficients aCoefext1(intpoinSph, k_b_SH, 1, nMaxS); //regular VSWF (1)
 	optimet::AuxCoefficients aCoefint1(intpoinSph, k_0_SH * sqrt(elmag.epsilon_r_SH * elmag.mu_r_SH), 1, nMaxS); //regular VSWF (1)
         
         //*****************************************
@@ -679,5 +672,5 @@ void Scatterer::getRgQLocalSH(optimet::Vector<optimet::t_complex>& RgQmatrixSH, 
       RgQmatrixSH.tail(2*size) = RgQmatrixSH_2;
 
      }
-                          
+ #endif                         
     

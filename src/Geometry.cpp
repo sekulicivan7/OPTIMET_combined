@@ -155,7 +155,7 @@ else if (objects[0].scatterer_type == "arbitrary.shape"){
   }
 }
 
-
+#ifdef OPTIMET_MPI
 void Geometry::Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff, int gran1, int gran2){ 
 
    
@@ -170,6 +170,7 @@ void Geometry::Coefficients(int nMax, int nMaxS, std::vector<double *> CLGcoeff,
    optimet::symbol::W_10coeff(CLGcoeff[7], nMax, nMaxS, gran1, gran2);
    optimet::symbol::W_01coeff(CLGcoeff[8], nMax, nMaxS, gran1, gran2);
 }
+#endif
 
 int Geometry::COEFFpartSH(int objectIndex_, std::shared_ptr<optimet::Excitation const> incWave_, 
 optimet::Vector<optimet::t_complex> &internalCoef_FF_, double r,
@@ -210,14 +211,7 @@ optimet::Vector<optimet::t_complex> &internalCoef_FF_, double r,
   return 0;
 }
 
-void Geometry::getEXCvecSH_ARB3(optimet::Vector<optimet::t_complex>& EXvec, std::shared_ptr<optimet::Excitation const> excitation, optimet::Vector<optimet::t_complex> &externalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_FF_, int objIndex){
-  
-  }
-
-void Geometry::getEXCvecSH_ARB1(optimet::Vector<optimet::t_complex>& EXvec, std::shared_ptr<optimet::Excitation const> excitation, optimet::Vector<optimet::t_complex> &externalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_FF_, int objIndex){
-                                                                     
-  }
-
+#ifdef OPTIMET_MPI
 void Geometry::getEXCvecSH_ARB3_parall(optimet::Vector<optimet::t_complex>& EXvec, std::shared_ptr<optimet::Excitation const> excitation, optimet::Vector<optimet::t_complex> &externalCoef_FF_, optimet::Vector<optimet::t_complex> &internalCoef_FF_, int gran1, int gran2, int objIndex){
   using namespace optimet;
   
@@ -249,9 +243,9 @@ void Geometry::getEXCvecSH_ARB3_parall(optimet::Vector<optimet::t_complex>& EXve
          auto const k_b = omega_ * std::sqrt(bground.epsilon * bground.mu);
          auto const k_s = omega_ * std::sqrt(objects[objIndex].elmag.epsilon * objects[objIndex].elmag.mu);
         
-         const std::complex<double> ksiparppar = objects[objIndex].elmag.ksiparppar; // SH coefficient
-         const std::complex<double> ksippp = objects[objIndex].elmag.ksippp; // SH coefficient
-         const std::complex<double> gamma = objects[objIndex].elmag.gamma; // SH coefficient
+         const std::complex<double> ksiparppar = objects[objIndex].elmag.ksiparppar; // SH surf tensor coefficient
+         const std::complex<double> ksippp = objects[objIndex].elmag.ksippp; // SH surf tensor coefficient
+         const std::complex<double> gamma = objects[objIndex].elmag.gamma; // SH bulk tensor coefficient
 
          auto const Cf = (k_b_SH * consEpsilon0 * gamma)/objects[objIndex].elmag.epsilon_SH;
   
@@ -388,10 +382,11 @@ void Geometry::getEXCvecSH_ARB3_parall(optimet::Vector<optimet::t_complex>& EXve
          auto const k_s_SH = 2 * omega_ * std::sqrt(objects[objIndex].elmag.epsilon_SH * objects[objIndex].elmag.mu_SH); 
          auto const k_b_SH = 2 * omega_ * std::sqrt(bground.epsilon * bground.mu);
          auto const k_b = omega_ * std::sqrt(bground.epsilon * bground.mu);
-         auto const k_s = omega_ * std::sqrt(objects[objIndex].elmag.epsilon * objects[objIndex].elmag.mu); 
-         const std::complex<double> ksiparppar = objects[objIndex].elmag.ksiparppar; // SH coefficient
-         const std::complex<double> ksippp = objects[objIndex].elmag.ksippp; // SH coefficient
-         const std::complex<double> gamma = objects[objIndex].elmag.gamma; // SH coefficient
+         auto const k_s = omega_ * std::sqrt(objects[objIndex].elmag.epsilon * objects[objIndex].elmag.mu);
+ 
+         const std::complex<double> ksiparppar = objects[objIndex].elmag.ksiparppar; // SH surface tensor coefficient
+         const std::complex<double> ksippp = objects[objIndex].elmag.ksippp; // SH surface tensor coefficient
+         const std::complex<double> gamma = objects[objIndex].elmag.gamma; // SH surface tensor coefficient
 
          auto const Cf = (k_b_SH * consEpsilon0 * gamma)/objects[objIndex].elmag.epsilon_SH;
 
@@ -500,6 +495,7 @@ void Geometry::getEXCvecSH_ARB3_parall(optimet::Vector<optimet::t_complex>& EXve
   brojac++;
   }
   }
+#endif
 
 void Geometry::update(std::shared_ptr<optimet::Excitation const> incWave_) {
   // Update the ElectroMagnetic properties of each object

@@ -155,8 +155,7 @@ public:
    
    static std::vector<double> getWeights7();
 
-   // Gauss-Legendre integration points on a line
-       
+   // Gauss-Legendre integration points on a line       
     static std::vector<double> getLineWghts4();
              
     static std::vector<double> getLinePts4();
